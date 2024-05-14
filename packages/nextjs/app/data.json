@@ -1,0 +1,17 @@
+{
+    "name": "NPC Institute NFTs",
+    "symbol": "NPC",
+    "description": "Starter NFTs that can be sparked to NPCs on npc.institute",
+    "external_url": "https://npc.institute",
+    "base_uri": "https://uri.npc.institute/",
+    "base_metadata": {
+        "name": "Spark",
+        "description": "Sparked NPC",
+        "image": "https://robohash.org",
+        "external_url": "https://npc.institute",
+        "attributes": {
+
+        }
+
+    }
+}
