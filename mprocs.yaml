@@ -2,9 +2,17 @@ procs:
   client:
     cwd: packages/nextjs
     shell: yarn dev
-  contracts:
+  hardhat-chain:
+    cwd: packages/contracts
+    shell: yarn chain
+  test-contracts:
     cwd: packages/contracts
     shell: forge test
+  deploy-contracts:
+    cwd: packages/contracts
+    shell: yarn deploy
+skipped:
   anvil:
     cwd: packages/contracts
     shell: anvil --block-time 2 --base-fee 0
+
