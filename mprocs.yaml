@@ -1,6 +1,6 @@
 procs:
   client:
-    cwd: packages/nextjs
+    cwd: packages/uri-server
     shell: yarn dev
   hardhat-chain:
     cwd: packages/contracts

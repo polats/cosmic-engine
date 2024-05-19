@@ -5,7 +5,8 @@
   "workspaces": {
     "packages": [
       "packages/contracts",
-      "packages/nextjs"
+      "packages/uri-server",
+      "packages/frontend"
     ]
   },
   "scripts": {
