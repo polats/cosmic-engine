@@ -1,14 +1,6 @@
 {
   "name": "cosmic-engine",
   "version": "0.0.1",
-  "private": true,
-  "workspaces": {
-    "packages": [
-      "packages/contracts",
-      "packages/uri-server",
-      "packages/frontend"
-    ]
-  },
   "scripts": {
     "account": "yarn workspace @se-2/hardhat account",
     "chain": "yarn workspace @se-2/hardhat chain",
@@ -37,13 +29,13 @@
     "vercel": "yarn workspace @se-2/nextjs vercel",
     "vercel:yolo": "yarn workspace @se-2/nextjs vercel:yolo"
   },
-  "packageManager": "yarn@3.2.3",
   "devDependencies": {
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3",
     "mprocs": "^0.6.4"
   },
   "engines": {
-    "node": ">=18.17.0"
-  }
+    "node": "18.x",
+    "pnpm": "8.x"
+  }  
 }

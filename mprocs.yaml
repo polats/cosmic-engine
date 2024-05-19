@@ -1,5 +1,8 @@
 procs:
-  client:
+  frontend:
+    cwd: packages/frontend
+    shell: yarn dev
+  uri-server:
     cwd: packages/uri-server
     shell: yarn dev
   hardhat-chain:
