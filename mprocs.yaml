@@ -1,9 +1,12 @@
 procs:
-  frontend:
+  frontend-3000:
     cwd: packages/frontend
     shell: yarn dev
-  uri-server:
+  uri-server-3001:
     cwd: packages/uri-server
+    shell: yarn dev
+  frames-3002:
+    cwd: packages/frames
     shell: yarn dev
   hardhat-chain:
     cwd: packages/contracts
@@ -17,5 +20,5 @@ procs:
 skipped:
   anvil:
     cwd: packages/contracts
-    shell: anvil --block-time 2 --base-fee 0
+    shell: anvil --block-time 1 --base-fee 0
 
