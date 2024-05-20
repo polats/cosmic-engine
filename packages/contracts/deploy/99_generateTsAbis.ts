@@ -101,12 +101,14 @@ function getContractDataFromDeployments() {
  */
 const generateTsAbis: DeployFunction = async function () {
   const TARGET_DIR = "../uri-server/contracts/";
+  const TARGET_FRAMES_DIR = "../frames/app/frames/contracts/";
   const allContractsData = getContractDataFromDeployments();
 
   const fileContent = Object.entries(allContractsData).reduce((content, [chainId, chainConfig]) => {
     return `${content}${parseInt(chainId).toFixed(0)}:${JSON.stringify(chainConfig, null, 2)},`;
   }, "");
 
+  // Write the file to the target directory
   if (!fs.existsSync(TARGET_DIR)) {
     fs.mkdirSync(TARGET_DIR);
   }
@@ -122,6 +124,25 @@ const generateTsAbis: DeployFunction = async function () {
   );
 
   console.log(`📝 Updated TypeScript contract definition file on ${TARGET_DIR}deployedContracts.ts`);
+
+  // Write the file to the frames directory
+  if (!fs.existsSync(TARGET_FRAMES_DIR)) {
+    fs.mkdirSync(TARGET_FRAMES_DIR);
+  }
+  fs.writeFileSync(
+    `${TARGET_FRAMES_DIR}deployedContracts.ts`,
+    prettier.format(
+      `${generatedContractComment} \n\n
+ const deployedContracts = {${fileContent}} as const;`,
+      {
+        parser: "typescript",
+      },
+    ),
+  );
+
+  console.log(`📝 Updated TypeScript contract definition file on ${TARGET_FRAMES_DIR}deployedContracts.ts`);
+
+  
 };
 
 export default generateTsAbis;
