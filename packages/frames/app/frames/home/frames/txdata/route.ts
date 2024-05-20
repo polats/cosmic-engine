@@ -5,9 +5,9 @@ import {
   getContract,
   http,
 } from "viem";
-import { optimism } from "viem/chains";
+import { hardhat, optimism } from "viem/chains";
 import { frames } from "../frames";
-import { storageRegistryABI } from "./contracts/storage-registry";
+import deployedContracts from "../../../contracts/deployedContracts";
 import { transaction } from "frames.js/core";
 
 export const POST = frames(async (ctx) => {
@@ -15,38 +15,40 @@ export const POST = frames(async (ctx) => {
     throw new Error("Invalid frame message");
   }
 
-  // Get current storage price
-  const units = 1n;
+  const chain = hardhat;
+  const chainId = chain.id;
+  const contractName = "JackpotJunction";
+  const contractAddress = deployedContracts[chainId][contractName].address;
+  const contractAbi = deployedContracts[chainId][contractName].abi;  
+  const functionName = "roll";
 
   const calldata = encodeFunctionData({
-    abi: storageRegistryABI,
-    functionName: "rent",
-    args: [BigInt(ctx.message.requesterFid), units],
+    abi: contractAbi,
+    functionName: functionName,
+    args: []
   });
 
   const publicClient = createPublicClient({
-    chain: optimism,
+    chain: chain,
     transport: http(),
   });
 
-  const STORAGE_REGISTRY_ADDRESS = "0x00000000fcCe7f938e7aE6D3c335bD6a1a7c593D";
-
-  const storageRegistry = getContract({
-    address: STORAGE_REGISTRY_ADDRESS,
-    abi: storageRegistryABI,
-    client: publicClient,
+  const contractInstance = getContract({
+    address: contractAddress,
+    abi: contractAbi,
+    client: publicClient
   });
 
-  const unitPrice = await storageRegistry.read.price([units]);
+  const costToRoll = await contractInstance.read.CostToRoll();
 
   return transaction({
-    chainId: "eip155:10", // OP Mainnet 10
+    chainId: "eip155:" + chainId,
     method: "eth_sendTransaction",
     params: {
-      abi: storageRegistryABI as Abi,
-      to: STORAGE_REGISTRY_ADDRESS,
+      abi: contractAbi as Abi,
+      to: contractAddress,
       data: calldata,
-      value: unitPrice.toString(),
+      value: costToRoll.toString(),
     },
   });
 });

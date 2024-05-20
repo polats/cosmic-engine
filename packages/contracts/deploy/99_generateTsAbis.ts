@@ -133,7 +133,7 @@ const generateTsAbis: DeployFunction = async function () {
     `${TARGET_FRAMES_DIR}deployedContracts.ts`,
     prettier.format(
       `${generatedContractComment} \n\n
- const deployedContracts = {${fileContent}} as const;`,
+ const deployedContracts = {${fileContent}} as const; \n\n export default deployedContracts`,
       {
         parser: "typescript",
       },
