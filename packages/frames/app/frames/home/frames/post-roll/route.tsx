@@ -30,7 +30,6 @@ const handleRequest = frames(async (ctx) => {
       state: {
         transactionId: transactionId
       }
-
     };
   }
 
