@@ -7,12 +7,14 @@ const NEXT_PUBLIC_HOST = process.env.NEXT_PUBLIC_HOST;
 
 const handleRequest = frames(async (ctx) => {
 
-  let state = ctx.state;
+  // transactionId means transaction was sent
+  const transactionId = ctx.searchParams.transactionId ?? ctx.state.transactionId;
   
-  console.log("state")
-  console.log(state);
+  console.log(ctx.state);
+  console.log(ctx.currentBlock);
+  console.log(ctx.blocksToAct);
 
-  if (ctx.state.transactionId) {
+  if (transactionId) {
     return {
       image: NEXT_PUBLIC_HOST + "/loading.gif",
       imageOptions: {
@@ -20,12 +22,15 @@ const handleRequest = frames(async (ctx) => {
       },
       buttons: [
         <Button
-          action="link"
-          target="/post-roll"
+          action="post"
         >
           Refresh
         </Button>,
       ],
+      state: {
+        transactionId: transactionId
+      }
+
     };
   }
 

@@ -49,7 +49,7 @@ export default async function Home({
   // Here: do a server side side effect either sync or async (using await), such as minting an NFT if you want.
   // example: load the users credentials & check they have an NFT
   console.log("info: state is:", state);
-
+  console.log(frameMessage);
   // then, when done, return next frame
   return (
     <div>

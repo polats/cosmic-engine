@@ -9,7 +9,7 @@ const handleRequest = frames(async (ctx) => {
 
   if (ctx.message?.transactionId) {
 
-    console.log(ctx.message)
+    const message: any = ctx.message;
 
     return {
       image: NEXT_PUBLIC_HOST + "/loading.gif",
@@ -19,7 +19,7 @@ const handleRequest = frames(async (ctx) => {
       buttons: [
         <Button
           action="post"
-          target="/../../post-roll"
+          target={{pathname: "/post-roll", query: message}}
         >
           Refresh
         </Button>,
@@ -29,10 +29,7 @@ const handleRequest = frames(async (ctx) => {
         >
           View on block explorer
         </Button>,
-      ],
-      state: {
-        transactionId: ctx.message?.transactionId
-      },
+      ]
     };
   }
 
