@@ -1,15 +1,26 @@
 /* eslint-disable react/jsx-key */
 import { Button } from "frames.js/next";
 import { frames } from "./frames";
+import { getTransactionDetails } from "../../../utils";
 
 const BLOCK_EXPORER_URL = "http://localhost:3001/blockexplorer/transaction/";
 const NEXT_PUBLIC_HOST = process.env.NEXT_PUBLIC_HOST;
 
 const handleRequest = frames(async (ctx) => {
 
+  // transactionId means transaction was sent
   if (ctx.message?.transactionId) {
 
-    const message: any = ctx.message;
+    const transactionId : any = ctx.message.transactionId;
+    const transaction = await getTransactionDetails(transactionId);
+    const startBlock = transaction.blockNumber.toString();
+    const fromAddress = transaction.from;
+
+    const message:any = {
+      ...ctx.message,
+      startBlock,
+      fromAddress
+    }
 
     return {
       image: NEXT_PUBLIC_HOST + "/loading.gif",

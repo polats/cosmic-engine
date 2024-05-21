@@ -7,19 +7,30 @@ const NEXT_PUBLIC_HOST = process.env.NEXT_PUBLIC_HOST;
 
 const handleRequest = frames(async (ctx) => {
 
-  // transactionId means transaction was sent
-  const transactionId = ctx.searchParams.transactionId ?? ctx.state.transactionId;
-  
-  console.log(ctx.state);
-  console.log(ctx.currentBlock);
-  console.log(ctx.blocksToAct);
+  // startBlock means transaction was sent
+  const startBlock = ctx.searchParams.startBlock ?? ctx.state.startBlock;
+  const fromAddress = ctx.searchParams.fromAddress ?? ctx.state.fromAddress;
 
-  if (transactionId) {
+  // retrieve middleware results
+  const currentBlock = ctx.currentBlock;
+  const blocksToAct = ctx.blocksToAct;
+  const outcome = ctx.outcome;
+  const callResult = ctx.callResult;
+  
+  console.log("startBlock", startBlock);
+  console.log("currentBlock", currentBlock);
+  console.log("blocksToAct", blocksToAct);
+  console.log("outcome", outcome);
+
+
+
+  if (startBlock) {
     return {
       image: NEXT_PUBLIC_HOST + "/loading.gif",
       imageOptions: {
         aspectRatio: "1.91:1",
       },
+      textInput: callResult,
       buttons: [
         <Button
           action="post"
@@ -28,7 +39,8 @@ const handleRequest = frames(async (ctx) => {
         </Button>,
       ],
       state: {
-        transactionId: transactionId
+        startBlock,
+        fromAddress
       }
     };
   }

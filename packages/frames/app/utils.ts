@@ -45,6 +45,16 @@ export function getChain() {
   return chain;
 }
 
+export async function getTransactionDetails(transactionId: any) {
+  const client = getViemPublicClient();
+  const transaction = await client.getTransaction(
+    {
+      hash: transactionId
+    }
+  )
+  return transaction;
+}
+
 export function getViemPublicClient() {
   return createPublicClient({
     chain: chain,

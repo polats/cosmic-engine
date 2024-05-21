@@ -7,16 +7,15 @@ import {
 import { FramesMiddleware } from "frames.js/types";
 
 type State = {
-  transactionBlock: string;  
-  transactionId: string;
-  outcome: string;
-  lastRollBlock: string;
+  startBlock: string;  
+  fromAddress: string;
 };
 
 type RollOutcomeContext = {
   currentBlock: bigint;
   blocksToAct: bigint;
-  // transactionBlock: string;
+  outcome: any;
+  callResult: string;
 }
 
 const rollOutcomeMiddleware: FramesMiddleware<State, RollOutcomeContext> = async (
@@ -32,18 +31,41 @@ const rollOutcomeMiddleware: FramesMiddleware<State, RollOutcomeContext> = async
   // get the current block number
   const currentBlock = await publicClient.getBlockNumber();
 
+  // cast ctx to any to access message
+  const anyCtx = ctx as any;
+  let outcome;
+  let fromAddress;
+  let callResult;
+
+  if (anyCtx.message?.state) {
+    fromAddress = JSON.parse(anyCtx.message.state).fromAddress;
+  }
+  
+  if (fromAddress) {
+    try {
+      outcome = await contractInstance.read.outcome(
+        [fromAddress, false]
+      )
+      callResult = "success";
+
+    }
+    catch (error:any) {
+      callResult = error.metaMessages?.[0];
+    }
+  }
+
   return next({
     currentBlock,
-    blocksToAct
+    blocksToAct,
+    outcome,
+    callResult
   })
 }
 
 export const frames = createFrames<State>({
   initialState: {
-    transactionBlock: "",
-    transactionId: "",
-    outcome: "",
-    lastRollBlock: ""
+    startBlock: "",
+    fromAddress: ""
   },
   basePath: "/frames/home/frames/post-roll",
   baseUrl: appURL(),
