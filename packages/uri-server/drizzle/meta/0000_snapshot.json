@@ -1,0 +1,308 @@
+{
+  "id": "ed5122c3-ed96-4cb7-a7cc-15951c7f2e91",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "6",
+  "dialect": "postgresql",
+  "tables": {
+    "public.attributes": {
+      "name": "attributes",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "attribute_type": {
+          "name": "attribute_type",
+          "type": "attributeTypes",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "value": {
+          "name": "value",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.nfts": {
+      "name": "nfts",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "image": {
+          "name": "image",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "attribute_left_hand": {
+          "name": "attribute_left_hand",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "attribute_right_hand": {
+          "name": "attribute_right_hand",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "attribute_head": {
+          "name": "attribute_head",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "attribute_mouth": {
+          "name": "attribute_mouth",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "attribute_eyes": {
+          "name": "attribute_eyes",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "attribute_top": {
+          "name": "attribute_top",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "attribute_bottom": {
+          "name": "attribute_bottom",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "attribute_skin": {
+          "name": "attribute_skin",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "attribute_shadow": {
+          "name": "attribute_shadow",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "attribute_background": {
+          "name": "attribute_background",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "nfts_attribute_left_hand_attributes_id_fk": {
+          "name": "nfts_attribute_left_hand_attributes_id_fk",
+          "tableFrom": "nfts",
+          "tableTo": "attributes",
+          "columnsFrom": [
+            "attribute_left_hand"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "nfts_attribute_right_hand_attributes_id_fk": {
+          "name": "nfts_attribute_right_hand_attributes_id_fk",
+          "tableFrom": "nfts",
+          "tableTo": "attributes",
+          "columnsFrom": [
+            "attribute_right_hand"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "nfts_attribute_head_attributes_id_fk": {
+          "name": "nfts_attribute_head_attributes_id_fk",
+          "tableFrom": "nfts",
+          "tableTo": "attributes",
+          "columnsFrom": [
+            "attribute_head"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "nfts_attribute_mouth_attributes_id_fk": {
+          "name": "nfts_attribute_mouth_attributes_id_fk",
+          "tableFrom": "nfts",
+          "tableTo": "attributes",
+          "columnsFrom": [
+            "attribute_mouth"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "nfts_attribute_eyes_attributes_id_fk": {
+          "name": "nfts_attribute_eyes_attributes_id_fk",
+          "tableFrom": "nfts",
+          "tableTo": "attributes",
+          "columnsFrom": [
+            "attribute_eyes"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "nfts_attribute_top_attributes_id_fk": {
+          "name": "nfts_attribute_top_attributes_id_fk",
+          "tableFrom": "nfts",
+          "tableTo": "attributes",
+          "columnsFrom": [
+            "attribute_top"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "nfts_attribute_bottom_attributes_id_fk": {
+          "name": "nfts_attribute_bottom_attributes_id_fk",
+          "tableFrom": "nfts",
+          "tableTo": "attributes",
+          "columnsFrom": [
+            "attribute_bottom"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "nfts_attribute_skin_attributes_id_fk": {
+          "name": "nfts_attribute_skin_attributes_id_fk",
+          "tableFrom": "nfts",
+          "tableTo": "attributes",
+          "columnsFrom": [
+            "attribute_skin"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "nfts_attribute_shadow_attributes_id_fk": {
+          "name": "nfts_attribute_shadow_attributes_id_fk",
+          "tableFrom": "nfts",
+          "tableTo": "attributes",
+          "columnsFrom": [
+            "attribute_shadow"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "nfts_attribute_background_attributes_id_fk": {
+          "name": "nfts_attribute_background_attributes_id_fk",
+          "tableFrom": "nfts",
+          "tableTo": "attributes",
+          "columnsFrom": [
+            "attribute_background"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "nfts_name_unique": {
+          "name": "nfts_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
+        },
+        "nfts_description_unique": {
+          "name": "nfts_description_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "description"
+          ]
+        },
+        "nfts_image_unique": {
+          "name": "nfts_image_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "image"
+          ]
+        }
+      }
+    }
+  },
+  "enums": {
+    "public.attributeTypes": {
+      "name": "attributeTypes",
+      "schema": "public",
+      "values": [
+        "Left Hand",
+        "Right Hand",
+        "Head",
+        "Mouth",
+        "Eyes",
+        "Top",
+        "Bottom",
+        "Skin",
+        "Shadow",
+        "Background"
+      ]
+    }
+  },
+  "schemas": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
