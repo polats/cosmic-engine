@@ -118,7 +118,8 @@ const TransactionComp = ({ txHash }: { txHash: Hash }) => {
                   <strong>Data:</strong>
                 </td>
                 <td className="form-control">
-                  <textarea readOnly value={transaction.input} className="p-0 textarea-primary bg-inherit h-[150px]" />
+                  <label htmlFor="transaction-input">Transaction Input:</label>
+                  <textarea id="transaction-input" readOnly value={transaction.input} className="p-0 textarea-primary bg-inherit h-[150px]" />
                 </td>
               </tr>
               <tr>
