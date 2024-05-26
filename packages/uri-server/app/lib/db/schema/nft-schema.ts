@@ -1,6 +1,6 @@
 import { drizzle } from 'drizzle-orm/vercel-postgres';
 import { sql } from '@vercel/postgres';
-import { serial, varchar, text, pgTable, pgSchema, integer, references, pgEnum } from 'drizzle-orm/pg-core';
+import { serial, varchar, text, pgTable, pgSchema, integer, pgEnum } from 'drizzle-orm/pg-core';
 
 export const attributeTypes = pgEnum('attributeTypes', ['Left Hand', 'Right Hand', 'Head', 'Mouth', 'Eyes', 'Top', 'Bottom', 'Skin', 'Shadow', 'Background']);
 

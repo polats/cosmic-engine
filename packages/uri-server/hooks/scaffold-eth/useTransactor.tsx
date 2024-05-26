@@ -1,4 +1,4 @@
-import { getPublicClient } from "@wagmi/core";
+import { getPublicClient } from "wagmi/actions"
 import { Hash, SendTransactionParameters, WalletClient } from "viem";
 import { useWalletClient } from "wagmi";
 import { wagmiConfig } from "~~/services/web3/wagmiConfig";

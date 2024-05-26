@@ -5,9 +5,10 @@ import { AddressComponent } from "~~/app/blockexplorer/_components/AddressCompon
 import deployedContracts from "~~/contracts/deployedContracts";
 import { isZeroAddress } from "~~/utils/scaffold-eth/common";
 import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
+import { Address } from "viem";
 
 type PageProps = {
-  params: { address: string };
+  params: { address: Address };
 };
 
 async function fetchByteCodeAndAssembly(buildInfoDirectory: string, contractPath: string) {
@@ -83,7 +84,7 @@ export function generateStaticParams() {
 }
 
 const AddressPage = async ({ params }: PageProps) => {
-  const address = params?.address as string;
+  const address = params?.address as Address;
 
   if (isZeroAddress(address)) return null;
 
