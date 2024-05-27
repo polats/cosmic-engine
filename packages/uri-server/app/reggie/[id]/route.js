@@ -4,12 +4,7 @@ import { parse, stringify } from 'svgson';
 
 export async function GET(request, { params }) {
 
-  const PUBLIC_FOLDER = process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL ?
-    "https://" + process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL :
-    "public";
-
-
-  const file = await fs.readFile(PUBLIC_FOLDER + '/reggie.svg');
+  const file = await fs.readFile(process.cwd() + '/public/reggie.svg');
 
   const obj = await parse(file);
 
