@@ -46,7 +46,7 @@
     "react-copy-to-clipboard": "^5.1.0",
     "react-dom": "18.2.0",
     "react-hot-toast": "^2.4.0",
-    "sharp": "^0.33.4",
+    "sharp": "0.32.6",
     "svgson": "^5.3.1",
     "tailwindcss": "3.3.3",
     "typescript": "5.2.2",
