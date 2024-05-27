@@ -4,7 +4,7 @@ import { parse, stringify } from 'svgson';
 
 export async function GET(request, { params }) {
 
-  const file = await fs.readFile(process.cwd() + '/public/reggie.svg');
+  const file = await fs.readFile(process.cwd() + '/svgs/reggie.svg');
 
   const obj = await parse(file);
 

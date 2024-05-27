@@ -17,6 +17,11 @@ const nextConfig = {
     images: {
         domains: ['images.ctfassets.net'],
       },    
+    experimental: {
+    outputFileTracingIncludes: {
+        '/reggie/*': ['./svgs/**/*'],
+    },
+    },      
 }
 
 module.exports = nextConfig;
