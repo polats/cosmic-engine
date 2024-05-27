@@ -1,6 +1,6 @@
 import { drizzle } from 'drizzle-orm/vercel-postgres';
 import { sql } from '@vercel/postgres';
-import { serial, varchar, text, pgTable, pgSchema, integer, pgEnum } from 'drizzle-orm/pg-core';
+import { serial, varchar, text, pgTable, pgSchema, integer, pgEnum,primaryKey } from 'drizzle-orm/pg-core';
 
 export const attributeTypes = pgEnum('attributeTypes', ['Left Hand', 'Right Hand', 'Head', 'Mouth', 'Eyes', 'Top', 'Bottom', 'Skin', 'Shadow', 'Background']);
 
@@ -15,15 +15,14 @@ export const nfts = pgTable('nfts', {
   name: varchar('name', { length: 256 }).notNull().unique(),
   description: text('description').notNull().unique(),
   image: text('image').notNull().unique(),
-  attributeLeftHand: integer('attribute_left_hand').references(() => attributes.id),
-  attributeRightHand: integer('attribute_right_hand').references(() => attributes.id),
-  attributeHead: integer('attribute_head').references(() => attributes.id),
-  attributeMouth: integer('attribute_mouth').references(() => attributes.id),
-  attributeEyes: integer('attribute_eyes').references(() => attributes.id),
-  attributeTop: integer('attribute_top').references(() => attributes.id),
-  attributeBottom: integer('attribute_bottom').references(() => attributes.id),
-  attributeSkin: integer('attribute_skin').references(() => attributes.id),
-  attributeShadow: integer('attribute_shadow').references(() => attributes.id),
-  attributeBackground: integer('attribute_background').references(() => attributes.id),
+});
+
+export const nftAttributes = pgTable('nft_attributes',{
+  nftId: integer('nft_id').notNull().references(() => nfts.id),
+  attributeId: integer('attribute_id').notNull().references(() => attributes.id)
+}, (table) => {
+  return {
+    pk: primaryKey({columns: [table.nftId, table.attributeId]})
+  };
 });
 
