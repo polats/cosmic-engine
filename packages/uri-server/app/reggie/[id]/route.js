@@ -4,8 +4,8 @@ import { parse, stringify } from 'svgson';
 
 export async function GET(request, { params }) {
 
-  const PUBLIC_FOLDER = process.env.NEXT_PUBLIC_VERCEL_URL ?
-    "https://" + process.env.NEXT_PUBLIC_VERCEL_URL :
+  const PUBLIC_FOLDER = process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL ?
+    "https://" + process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL :
     "public";
 
 
