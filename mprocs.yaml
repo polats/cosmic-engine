@@ -5,9 +5,6 @@ procs:
   uri-server-3001:
     cwd: packages/uri-server
     shell: yarn dev
-  frames-3002:
-    cwd: packages/frames
-    shell: yarn dev
   hardhat-chain:
     cwd: packages/contracts
     shell: yarn chain
@@ -18,6 +15,9 @@ procs:
     cwd: packages/contracts
     shell: yarn deploy
 skipped:
+  frames-3002:
+    cwd: packages/frames
+    shell: yarn dev
   anvil:
     cwd: packages/contracts
     shell: anvil --block-time 1 --base-fee 0
