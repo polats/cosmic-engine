@@ -6,6 +6,52 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { signIn } from '@/auth';
 import { AuthError } from 'next-auth';
+import { db } from '@/app/lib/drizzle';
+import { nfts, attributes, nft_attributes, NewNft, NewAttribute, NewNftAttribute} from '@/drizzle/schema'; 
+
+export async function addNft(
+  formState: { message: string },
+  formData: FormData
+){
+  try {
+    const name = formData.get('name');
+    const description = formData.get('description');
+    const image = formData.get('image');
+  
+    if(typeof name !== 'string' || name.length < 3) {
+      return {
+        message: "Name must be longer",
+      };
+    }
+  
+    if(typeof description !== 'string' || description.length < 1) {
+      return {
+        message: "Description cannot be empty",
+      };
+    }
+  
+    const nftToInsert = {
+      name,
+      description,
+      image
+    }
+    console.log(nftToInsert);
+    await db.insert(nfts).values(nftToInsert).execute();
+  } catch (error: unknown) {
+    if(error instanceof Error){
+      return {
+        message: error.message,
+      }
+    } else {
+      console.log('Unexpected error: ', error)
+      return {
+        message: "Something went wrong..."
+      }
+    }
+  }
+  revalidatePath('/dashboard');
+  redirect('/dashboard');
+}
 
 const FormSchema = z.object({
     id: z.string(),
