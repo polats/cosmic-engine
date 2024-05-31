@@ -18,6 +18,9 @@ const config = {
   domain: "localhost:3000",
 };
 
+import { usePrivy } from "@privy-io/react-auth";
+const PRIVY_APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
+
 export default function Home() {
   return (
     <>
@@ -35,6 +38,7 @@ export default function Home() {
 
 function Content() {
   const [error, setError] = useState(false);
+  const { login } = usePrivy();
 
   const getNonce = useCallback(async () => {
     const nonce = await getCsrfToken();
@@ -84,6 +88,12 @@ function Content() {
         </p>
         <Profile />
         <div>
+          <button
+                className="bg-violet-600 hover:bg-violet-700 py-3 px-6 text-white rounded-lg"
+                onClick={login}
+              >
+                Log in
+            </button>          
           <h2>Run this demo:</h2>
           <div
             style={{
