@@ -38,7 +38,7 @@ export default function Home() {
 
 function Content() {
   const [error, setError] = useState(false);
-  const { login } = usePrivy();
+  const { ready, authenticated, user, login, logout } = usePrivy();
 
   const getNonce = useCallback(async () => {
     const nonce = await getCsrfToken();
@@ -88,12 +88,22 @@ function Content() {
         </p>
         <Profile />
         <div>
+        {
+          ready && authenticated ? 
+              <button
+                onClick={logout}
+                className="text-sm bg-violet-200 hover:text-violet-900 py-2 px-4 rounded-md text-violet-700"
+              >
+                Logout
+              </button>     
+          :
           <button
                 className="bg-violet-600 hover:bg-violet-700 py-3 px-6 text-white rounded-lg"
                 onClick={login}
               >
                 Log in
             </button>          
+        }
           <h2>Run this demo:</h2>
           <div
             style={{
