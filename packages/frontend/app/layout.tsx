@@ -13,10 +13,6 @@ interface IScaffoldEthAppProps {
   session: Session | null;
 }
 
-const PRIVY_APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID ?? '';
-
-console.log('PRIVY_APP_ID', PRIVY_APP_ID);
-
 const ScaffoldEthApp = ({ session, children }: IScaffoldEthAppProps) => {
   return (
     <html suppressHydrationWarning>
@@ -25,19 +21,7 @@ const ScaffoldEthApp = ({ session, children }: IScaffoldEthAppProps) => {
           <ThemeProvider enableSystem>
             <ScaffoldEthAppWithProviders>
             <PrivyProvider
-                appId={PRIVY_APP_ID}
-                config={{
-                  // Customize Privy's appearance in your app
-                  appearance: {
-                    theme: 'light',
-                    accentColor: '#676FFF',
-                    // logo: 'https://your-logo-url',
-                  },
-                  // Create embedded wallets for users who don't have a wallet
-                  embeddedWallets: {
-                    createOnLogin: 'users-without-wallets',
-                  },
-                }}            
+                appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID || ""}
               >  
               {children}
               </PrivyProvider>
