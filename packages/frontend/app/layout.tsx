@@ -6,7 +6,7 @@ import "~~/styles/globals.css";
 import { SessionProvider } from "next-auth/react";
 import { ScaffoldEthAppWithProviders } from "~~/components/ScaffoldEthAppWithProviders";
 import type { Session } from "next-auth";
-import {PrivyProvider} from '@privy-io/react-auth';
+import PrivyProviderWrapper from "../components/privy-provider-wrapper";
 
 interface IScaffoldEthAppProps {
   children: React.ReactNode;
@@ -20,11 +20,9 @@ const ScaffoldEthApp = ({ session, children }: IScaffoldEthAppProps) => {
         <SessionProvider session={session}>
           <ThemeProvider enableSystem>
             <ScaffoldEthAppWithProviders>
-            <PrivyProvider
-                appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID || ""}
-              >  
+            <PrivyProviderWrapper>
               {children}
-              </PrivyProvider>
+              </PrivyProviderWrapper>
             </ScaffoldEthAppWithProviders>
           </ThemeProvider>
         </SessionProvider>
