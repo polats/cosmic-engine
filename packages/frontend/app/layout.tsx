@@ -15,6 +15,8 @@ interface IScaffoldEthAppProps {
 
 const PRIVY_APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID ?? '';
 
+console.log('PRIVY_APP_ID', PRIVY_APP_ID);
+
 const ScaffoldEthApp = ({ session, children }: IScaffoldEthAppProps) => {
   return (
     <html suppressHydrationWarning>

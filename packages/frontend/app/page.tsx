@@ -135,8 +135,6 @@ function Content() {
 function Profile() {
   const { data: session } = useSession();
 
-  console.log(session);
-
   return session ? (
     <div style={{ fontFamily: "sans-serif" }}>
       <p>Signed in as {session.user?.name}</p>
