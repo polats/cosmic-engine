@@ -56,8 +56,6 @@ export default (req: NextApiRequest, res: NextApiResponse) =>
             return null;
           }
 
-          console.log(credentials);
-
           return {
             id: fid.toString(),
             name: credentials?.name,
