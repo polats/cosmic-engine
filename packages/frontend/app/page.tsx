@@ -60,6 +60,14 @@ function Content() {
 
   return (
     <div>
+
+      <button
+        className="bg-red-600 hover:bg-red-700 py-3 px-6 text-white rounded-lg"
+        onClick={login}
+      >
+          Roll
+      </button>            
+      
       <div style={{ position: "fixed", top: "80px", right: "12px" }}>
         <SignInButton
           nonce={getNonce}
@@ -84,9 +92,12 @@ function Content() {
                 onClick={login}
               >
                 Privy Login
-            </button>          
+            </button>                    
         }
       </div>   
+
+    
+
 
       <div style={{ paddingTop: "33vh", textAlign: "center" }}>
         <h1>@farcaster/auth-kit + NextAuth</h1>
@@ -134,6 +145,8 @@ function Content() {
 
 function Profile() {
   const { data: session } = useSession();
+
+  console.log(session);
 
   return session ? (
     <div style={{ fontFamily: "sans-serif" }}>
