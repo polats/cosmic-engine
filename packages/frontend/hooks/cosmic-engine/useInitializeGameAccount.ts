@@ -3,6 +3,8 @@ import { Address } from "viem";
 import { toast } from 'react-hot-toast';
 import { getUser } from "@/lib/data";
 import { createUser } from "@/lib/actions";
+import { useGlobalState } from "~~/services/store/store";
+
 /**
  * Connects with drizzle and creates a new account if one does not exist.
  */
@@ -10,7 +12,9 @@ export function useInitializeGameAccount(address: Address) {
 
     const INITIAL_AMOUNT = 10000;
 
-    const [data, setData] = useState<string | null>(null);
+    const userCurrency = useGlobalState(({ userCurrency }) => userCurrency);
+    const setUserCurrency = useGlobalState(({ setUserCurrency }) => setUserCurrency);
+  
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -28,14 +32,14 @@ export function useInitializeGameAccount(address: Address) {
                 // retrieve user's currency
                 if (user.currency != null)
                 {
-                    setData(user.currency.toString());
+                    setUserCurrency(user.currency);
                 }
 
             } else {
 
                 // create new user
                 await createUser(address);
-                setData(INITIAL_AMOUNT.toString());
+                setUserCurrency(INITIAL_AMOUNT);
             }
         } catch (error:any) {
             console.log(error);
@@ -50,7 +54,7 @@ export function useInitializeGameAccount(address: Address) {
     }, [address]);
 
     return {
-        data,
+        userCurrency,
         isLoading,
         error
     }
