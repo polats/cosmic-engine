@@ -1,0 +1,37 @@
+{
+  "id": "4ba8e6c8-7d1f-4fd1-bd9f-c00177f5ee71",
+  "prevId": "16979065-f01e-44f7-b58d-b419f33d4ca8",
+  "version": "6",
+  "dialect": "postgresql",
+  "tables": {
+    "public.Users": {
+      "name": "Users",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "currency": {
+          "name": "currency",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

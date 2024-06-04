@@ -15,6 +15,13 @@
       "when": 1717444080062,
       "tag": "0001_productive_red_shift",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1717461387963,
+      "tag": "0002_fuzzy_smasher",
+      "breakpoints": true
     }
   ]
 }

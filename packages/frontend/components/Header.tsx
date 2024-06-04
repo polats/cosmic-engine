@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 import { Bars3Icon, BugAntIcon } from "@heroicons/react/24/outline";
 import { FaucetButton, RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
 import { useOutsideClick } from "~~/hooks/scaffold-eth";
-import { CurrencyDisplay } from "~~/components/cosmic-engine";
+import { GameAccountDisplay } from "~~/components/cosmic-engine";
 
 type HeaderMenuLink = {
   label: string;
@@ -103,7 +103,7 @@ export const Header = () => {
         </ul>
       </div>
       <div className="navbar-end flex-grow mr-4">
-        <CurrencyDisplay />
+        <GameAccountDisplay />
         <RainbowKitCustomConnectButton />
         <FaucetButton />
       </div>
