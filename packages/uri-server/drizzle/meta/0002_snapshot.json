@@ -1,0 +1,221 @@
+{
+  "id": "867a9c1c-57ef-4009-84e4-12662f749a92",
+  "prevId": "4ec78157-59c7-40a4-bd31-a3671f486261",
+  "version": "6",
+  "dialect": "postgresql",
+  "tables": {
+    "public.attributes": {
+      "name": "attributes",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "attribute_type": {
+          "name": "attribute_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "value": {
+          "name": "value",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.nft_attributes": {
+      "name": "nft_attributes",
+      "schema": "",
+      "columns": {
+        "nft_id": {
+          "name": "nft_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "attribute_id": {
+          "name": "attribute_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "nft_attributes_nft_id_nfts_id_fk": {
+          "name": "nft_attributes_nft_id_nfts_id_fk",
+          "tableFrom": "nft_attributes",
+          "tableTo": "nfts",
+          "columnsFrom": [
+            "nft_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "nft_attributes_attribute_id_attributes_id_fk": {
+          "name": "nft_attributes_attribute_id_attributes_id_fk",
+          "tableFrom": "nft_attributes",
+          "tableTo": "attributes",
+          "columnsFrom": [
+            "attribute_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "nft_attributes_nft_id_attribute_id_pk": {
+          "name": "nft_attributes_nft_id_attribute_id_pk",
+          "columns": [
+            "nft_id",
+            "attribute_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "public.nft_collection": {
+      "name": "nft_collection",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.nfts": {
+      "name": "nfts",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "image": {
+          "name": "image",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "collection_id": {
+          "name": "collection_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "nfts_collection_id_nft_collection_id_fk": {
+          "name": "nfts_collection_id_nft_collection_id_fk",
+          "tableFrom": "nfts",
+          "tableTo": "nft_collection",
+          "columnsFrom": [
+            "collection_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "nfts_name_unique": {
+          "name": "nfts_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
+        },
+        "nfts_description_unique": {
+          "name": "nfts_description_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "description"
+          ]
+        },
+        "nfts_image_unique": {
+          "name": "nfts_image_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "image"
+          ]
+        }
+      }
+    }
+  },
+  "enums": {
+    "public.attributeTypes": {
+      "name": "attributeTypes",
+      "schema": "public",
+      "values": [
+        "Left Hand",
+        "Right Hand",
+        "Head",
+        "Mouth",
+        "Eyes",
+        "Top",
+        "Bottom",
+        "Skin",
+        "Shadow",
+        "Background"
+      ]
+    }
+  },
+  "schemas": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

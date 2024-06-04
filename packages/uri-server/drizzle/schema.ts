@@ -1,5 +1,8 @@
-import { pgTable, pgEnum, serial, text, unique, varchar, foreignKey, primaryKey, integer } from "drizzle-orm/pg-core"
-import { sql } from "drizzle-orm"
+import { pgTable, pgEnum, serial, text, foreignKey, unique, varchar, integer, primaryKey } from "drizzle-orm/pg-core"
+  import { sql } from "drizzle-orm"
+
+export const attributeTypes = pgEnum("attributeTypes", ['Left Hand', 'Right Hand', 'Head', 'Mouth', 'Eyes', 'Top', 'Bottom', 'Skin', 'Shadow', 'Background'])
+
 
 export const attributes = pgTable("attributes", {
 	id: serial("id").primaryKey().notNull(),
@@ -7,19 +10,12 @@ export const attributes = pgTable("attributes", {
 	value: text("value"),
 });
 
-export const nft_collection = pgTable("nft_collection", {
-	id: serial("id").primaryKey().notNull(),
-	name: varchar("name", { length: 256 }).notNull(),
-	description: text("description").notNull(),
-})
-
-
 export const nfts = pgTable("nfts", {
 	id: serial("id").primaryKey().notNull(),
 	name: varchar("name", { length: 256 }).notNull(),
 	description: text("description").notNull(),
 	image: text("image").notNull(),
-	collection_id: integer("collection_id").references(() => nft_collection.id),
+	collection_id: integer("collection_id").references(() => nft_collection.id).notNull(),
 },
 (table) => {
 	return {
@@ -27,6 +23,12 @@ export const nfts = pgTable("nfts", {
 		nfts_description_unique: unique("nfts_description_unique").on(table.description),
 		nfts_image_unique: unique("nfts_image_unique").on(table.image),
 	}
+});
+
+export const nft_collection = pgTable("nft_collection", {
+	id: serial("id").primaryKey().notNull(),
+	name: varchar("name", { length: 256 }).notNull(),
+	description: text("description").notNull(),
 });
 
 export const nft_attributes = pgTable("nft_attributes", {

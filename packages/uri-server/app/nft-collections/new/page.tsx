@@ -1,5 +1,5 @@
 'use client';
-import {addNftCollection} from '@/app/lib/actions';
+import {addNftCollection} from '@/actions';
 import { useFormState } from 'react-dom';
 
 export default function NewCollection(){

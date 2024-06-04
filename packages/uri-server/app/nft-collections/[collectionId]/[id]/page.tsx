@@ -1,4 +1,4 @@
-import { getNftData } from "@/app/lib/actions";
+import { getNftData } from "@/actions";
 
 interface NftProps {
     params: {

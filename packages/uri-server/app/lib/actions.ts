@@ -7,144 +7,14 @@ import { redirect } from 'next/navigation';
 import { signIn } from '@/auth';
 import { AuthError } from 'next-auth';
 import { db } from '@/app/lib/drizzle';
-import { nfts, attributes, nft_attributes, nft_collection } from '@/drizzle/schema'; 
 import { eq } from 'drizzle-orm';
+import { nfts, attributes, nft_attributes, nft_collection } from '@/drizzle/schema'; 
 
 
 export type NewAttribute = typeof attributes.$inferInsert;
 export type NewNft = typeof nfts.$inferInsert;
 export type NewNftAttribute = typeof nft_attributes.$inferInsert;
 export type NewNftCollection = typeof nft_collection.$inferInsert;
-
-export async function addNftCollection (
-  formState: { message: string },
-  formData: FormData
-){
-  try {
-    const name = formData.get('name');
-    const description = formData.get('description');
-
-    if(typeof name !== 'string' || name.length < 3) {
-      return {
-        message: "Name must be longer",
-      };
-    }
-  
-    if(typeof description !== 'string' || description.length < 1) {
-      return {
-        message: "Description cannot be empty",
-      };
-    }
-
-    const nftCollectionToInsert:NewNftCollection = {
-      name,
-      description,
-    }
-    await db.insert(nft_collection).values(nftCollectionToInsert).execute();
-  } catch (error: unknown) {
-    if(error instanceof Error){
-      return {
-        message: error.message,
-      }
-    } else {
-      return {
-        message: "Something went wrong..."
-      }
-    }
-  }
-  revalidatePath('/nft-collections');
-  redirect('/nft-collections');
-}
-
-export async function addNft(
-  formState: { message: string },
-  formData: FormData
-){
-  try {
-    const name = formData.get('name');
-    const description = formData.get('description');
-    const image = formData.get('image');
-  
-    if(typeof name !== 'string' || name.length < 3) {
-      return {
-        message: "Name must be longer",
-      };
-    }
-  
-    if(typeof description !== 'string' || description.length < 1) {
-      return {
-        message: "Description cannot be empty",
-      };
-    }
-
-    if(typeof image !== 'string' || image.length < 1) {
-      return {
-        message: "Image cannot be empty",
-      };
-    }
-  
-    const nftToInsert: NewNft = {
-      name,
-      description,
-      image
-    }
-    await db.insert(nfts).values(nftToInsert).execute();
-  } catch (error: unknown) {
-    if(error instanceof Error){
-      return {
-        message: error.message,
-      }
-    } else {
-      return {
-        message: "Something went wrong..."
-      }
-    }
-  }
-  revalidatePath('/dashboard');
-  redirect('/dashboard');
-}
-
-export async function getNftCollections(){
-  try{
-    const queriedNFT = await db.query.nft_collection.findMany();
-    return queriedNFT;
-  } catch (error: unknown) {
-      throw new Error('Error fetching data');
-  }
-}
-
-export async function getNftsInCollection(collection_id:number){
-  try{
-    const queriedNFT = await db.query.nfts.findMany({
-      where: (nfts,{eq}) => eq(nfts.collection_id, collection_id)
-    });
-    return queriedNFT;
-  } catch (error: unknown) {
-      throw new Error('Error fetching data');
-  }
-}
-
-export async function getNftCollectionData(collection_id:number){
-  try {
-    const queriedNFT = await db.query.nft_collection.findFirst({
-      where: (nftCollection,{eq}) => eq(nftCollection.id, collection_id)
-    });
-    return queriedNFT;
-  } catch (error: unknown) {
-    throw new Error('Error fetching data');
-  }
-}
-
-export async function getNftData(nft_id:number){
-  try {
-    const queriedNFT = await db.query.nfts.findFirst({
-      where: (nfts,{eq}) => eq(nfts.id, nft_id)
-    });
-    return queriedNFT;
-  } catch (error: unknown) {
-    throw new Error('Error fetching data');
-  }
-}
 
 const FormSchema = z.object({
     id: z.string(),
