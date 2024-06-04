@@ -2,6 +2,7 @@ import { performRoll } from "@/lib/actions"
 import { useAccount } from "wagmi"
 import { useGlobalState } from "~~/services/store/store"
 import { useState } from "react"
+import { confetti } from "@tsparticles/confetti"
 
 export const RollButton = () => {
     const { address } = useAccount();
@@ -16,6 +17,11 @@ export const RollButton = () => {
         await performRoll(address);
         setUserCurrency(userCurrency - 100);
         setLoading(false);
+        confetti({
+            particleCount: 200,
+            spread: 140,
+            origin: { y: 0.5},
+          });
     }
     
     return (
