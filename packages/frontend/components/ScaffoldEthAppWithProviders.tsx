@@ -25,7 +25,11 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   }, [setNativeCurrencyPrice, price]);
 
   return (
+    <>
+    <Header />
     <main>{children}</main>
+    <Toaster />
+    </>
   )
 
   // return (
