@@ -63,7 +63,7 @@ export const JackpotJunction = () => {
             <div className="flex flex-col justify-center items-center grow text-center">
                 <GameAccountDisplay />
                 {/* TODO: Add array for prize pool to make wheel dynamic  */}
-                <JackpotWheel prizePool={[]}/>
+                <JackpotWheel/>
                     <div className="flex justify-center">
                 <RollButton/>   
                 </div>
