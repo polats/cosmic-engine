@@ -13,6 +13,15 @@ import { ProgressBar } from "~~/components/scaffold-eth/ProgressBar";
 import { useNativeCurrencyPrice } from "~~/hooks/scaffold-eth";
 import { useGlobalState } from "~~/services/store/store";
 import { wagmiConfig } from "~~/services/web3/wagmiConfig";
+import { AuthKitProvider } from "@farcaster/auth-kit";
+
+const farcasterAuthKitConfig = {
+  relay: "https://relay.farcaster.xyz",
+  rpcUrl: "https://mainnet.optimism.io",
+  siweUri: "http://localhost:3000/login",
+  domain: "localhost:3000",
+};
+
 
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   const price = useNativeCurrencyPrice();
@@ -25,11 +34,13 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   }, [setNativeCurrencyPrice, price]);
 
   return (
-    <>
-    <Header />
-    <main>{children}</main>
-    <Toaster />
-    </>
+    <div className="min-h-[100vh] w-full flex flex-col">
+        <Header />
+      <div className="flex flex-col grow">
+        {children}
+      </div>
+        <Toaster />
+    </div>
   )
 
   // return (
@@ -62,16 +73,22 @@ export const ScaffoldEthAppWithProviders = ({ children }: { children: React.Reac
   }, []);
 
   return (
+    <div className="h-full w-full">
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
         <ProgressBar />
+        <AuthKitProvider config={farcasterAuthKitConfig}>
         <RainbowKitProvider
           avatar={BlockieAvatar}
           theme={mounted ? (isDarkMode ? darkTheme() : lightTheme()) : lightTheme()}
         >
-          <ScaffoldEthApp>{children}</ScaffoldEthApp>
+          <ScaffoldEthApp>
+            {children}
+          </ScaffoldEthApp>
         </RainbowKitProvider>
+        </AuthKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
+    </div>
   );
 };
