@@ -102,7 +102,7 @@ function getContractDataFromDeployments() {
 const generateTsAbis: DeployFunction = async function () {
   const TARGET_DIR = "../uri-server/contracts/";
   const TARGET_FRAMES_DIR = "../frames/app/frames/contracts/";
-  const TARGET_FRONTEND_DIR = "../frontend/app/contracts/";
+  const TARGET_FRONTEND_DIR = "../frontend/contracts/";
   const allContractsData = getContractDataFromDeployments();
 
   const fileContent = Object.entries(allContractsData).reduce((content, [chainId, chainConfig]) => {
