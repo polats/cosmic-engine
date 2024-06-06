@@ -8,7 +8,6 @@
     "prettier": "prettier --write --ignore-unknown .",
     "prettier:check": "prettier --check --ignore-unknown .",
     "start": "next start",
-    "seed": "node -r dotenv/config ./scripts/seed.js",
     "lint": "next lint",
     "generate": "drizzle-kit generate",
     "migrate": "drizzle-kit migrate",

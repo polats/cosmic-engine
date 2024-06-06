@@ -1,5 +1,5 @@
 "use client"
-
+import "@farcaster/auth-kit/styles.css";
 import "@rainbow-me/rainbowkit/styles.css";
 import { ThemeProvider } from "~~/components/ThemeProvider";
 import "~~/styles/globals.css";
@@ -15,11 +15,10 @@ interface IScaffoldEthAppProps {
 
 const ScaffoldEthApp = ({ session, children }: IScaffoldEthAppProps) => {
   return (
-    <html suppressHydrationWarning>
-      <body>
+    <html suppressHydrationWarning style={{height:'100vh'}}>
+      <body style={{height:'100vh'}}>
         <SessionProvider session={session}>
           <ThemeProvider enableSystem>
-            <ScaffoldEthAppWithProviders>
             <PrivyProvider
                 appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID || ""}
                 config={{
@@ -35,9 +34,10 @@ const ScaffoldEthApp = ({ session, children }: IScaffoldEthAppProps) => {
                   },
                 }}            
               >  
-              {children}
-              </PrivyProvider>
-            </ScaffoldEthAppWithProviders>
+              <ScaffoldEthAppWithProviders>
+                {children}
+              </ScaffoldEthAppWithProviders>
+            </PrivyProvider>
           </ThemeProvider>
         </SessionProvider>
       </body>

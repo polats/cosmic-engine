@@ -1,6 +1,6 @@
 {
-  "id": "ed5122c3-ed96-4cb7-a7cc-15951c7f2e91",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "00000000-0000-0000-0000-000000000000",
+  "prevId": "",
   "version": "6",
   "dialect": "postgresql",
   "tables": {
@@ -60,76 +60,61 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "nfts_name_unique": {
+          "columns": [
+            "name"
+          ],
+          "nullsNotDistinct": false,
+          "name": "nfts_name_unique"
         },
-        "attribute_left_hand": {
-          "name": "attribute_left_hand",
+        "nfts_description_unique": {
+          "columns": [
+            "description"
+          ],
+          "nullsNotDistinct": false,
+          "name": "nfts_description_unique"
+        },
+        "nfts_image_unique": {
+          "columns": [
+            "image"
+          ],
+          "nullsNotDistinct": false,
+          "name": "nfts_image_unique"
+        }
+      }
+    },
+    "public.nft_attributes": {
+      "name": "nft_attributes",
+      "schema": "",
+      "columns": {
+        "nft_id": {
+          "name": "nft_id",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
-        "attribute_right_hand": {
-          "name": "attribute_right_hand",
+        "attribute_id": {
+          "name": "attribute_id",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
-        },
-        "attribute_head": {
-          "name": "attribute_head",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "attribute_mouth": {
-          "name": "attribute_mouth",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "attribute_eyes": {
-          "name": "attribute_eyes",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "attribute_top": {
-          "name": "attribute_top",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "attribute_bottom": {
-          "name": "attribute_bottom",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "attribute_skin": {
-          "name": "attribute_skin",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "attribute_shadow": {
-          "name": "attribute_shadow",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "attribute_background": {
-          "name": "attribute_background",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
+          "notNull": true
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "nfts_attribute_left_hand_attributes_id_fk": {
-          "name": "nfts_attribute_left_hand_attributes_id_fk",
-          "tableFrom": "nfts",
-          "tableTo": "attributes",
+        "nft_attributes_nft_id_nfts_id_fk": {
+          "name": "nft_attributes_nft_id_nfts_id_fk",
+          "tableFrom": "nft_attributes",
+          "tableTo": "nfts",
+          "schemaTo": "public",
           "columnsFrom": [
-            "attribute_left_hand"
+            "nft_id"
           ],
           "columnsTo": [
             "id"
@@ -137,116 +122,13 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "nfts_attribute_right_hand_attributes_id_fk": {
-          "name": "nfts_attribute_right_hand_attributes_id_fk",
-          "tableFrom": "nfts",
+        "nft_attributes_attribute_id_attributes_id_fk": {
+          "name": "nft_attributes_attribute_id_attributes_id_fk",
+          "tableFrom": "nft_attributes",
           "tableTo": "attributes",
+          "schemaTo": "public",
           "columnsFrom": [
-            "attribute_right_hand"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "nfts_attribute_head_attributes_id_fk": {
-          "name": "nfts_attribute_head_attributes_id_fk",
-          "tableFrom": "nfts",
-          "tableTo": "attributes",
-          "columnsFrom": [
-            "attribute_head"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "nfts_attribute_mouth_attributes_id_fk": {
-          "name": "nfts_attribute_mouth_attributes_id_fk",
-          "tableFrom": "nfts",
-          "tableTo": "attributes",
-          "columnsFrom": [
-            "attribute_mouth"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "nfts_attribute_eyes_attributes_id_fk": {
-          "name": "nfts_attribute_eyes_attributes_id_fk",
-          "tableFrom": "nfts",
-          "tableTo": "attributes",
-          "columnsFrom": [
-            "attribute_eyes"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "nfts_attribute_top_attributes_id_fk": {
-          "name": "nfts_attribute_top_attributes_id_fk",
-          "tableFrom": "nfts",
-          "tableTo": "attributes",
-          "columnsFrom": [
-            "attribute_top"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "nfts_attribute_bottom_attributes_id_fk": {
-          "name": "nfts_attribute_bottom_attributes_id_fk",
-          "tableFrom": "nfts",
-          "tableTo": "attributes",
-          "columnsFrom": [
-            "attribute_bottom"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "nfts_attribute_skin_attributes_id_fk": {
-          "name": "nfts_attribute_skin_attributes_id_fk",
-          "tableFrom": "nfts",
-          "tableTo": "attributes",
-          "columnsFrom": [
-            "attribute_skin"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "nfts_attribute_shadow_attributes_id_fk": {
-          "name": "nfts_attribute_shadow_attributes_id_fk",
-          "tableFrom": "nfts",
-          "tableTo": "attributes",
-          "columnsFrom": [
-            "attribute_shadow"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "nfts_attribute_background_attributes_id_fk": {
-          "name": "nfts_attribute_background_attributes_id_fk",
-          "tableFrom": "nfts",
-          "tableTo": "attributes",
-          "columnsFrom": [
-            "attribute_background"
+            "attribute_id"
           ],
           "columnsTo": [
             "id"
@@ -255,36 +137,21 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "nfts_name_unique": {
-          "name": "nfts_name_unique",
-          "nullsNotDistinct": false,
+      "compositePrimaryKeys": {
+        "nft_attributes_nft_id_attribute_id_pk": {
+          "name": "nft_attributes_nft_id_attribute_id_pk",
           "columns": [
-            "name"
-          ]
-        },
-        "nfts_description_unique": {
-          "name": "nfts_description_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "description"
-          ]
-        },
-        "nfts_image_unique": {
-          "name": "nfts_image_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "image"
+            "nft_id",
+            "attribute_id"
           ]
         }
-      }
+      },
+      "uniqueConstraints": {}
     }
   },
   "enums": {
     "public.attributeTypes": {
       "name": "attributeTypes",
-      "schema": "public",
       "values": [
         "Left Hand",
         "Right Hand",
@@ -296,13 +163,17 @@
         "Skin",
         "Shadow",
         "Background"
-      ]
+      ],
+      "schema": "public"
     }
   },
   "schemas": {},
   "_meta": {
-    "columns": {},
     "schemas": {},
+    "tables": {},
+    "columns": {}
+  },
+  "internal": {
     "tables": {}
   }
 }

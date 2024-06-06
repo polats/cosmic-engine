@@ -1,37 +1,40 @@
-import { db, UsersTable } from '@/app/lib/drizzle'
+// import { db, UsersTable } from '@/app/lib/drizzle'
+{/*
+  Temporarily disabling to reconcile Next Dashboard changes with uri server
+*/}
 import { timeAgo } from '@/app/lib/utils'
 import Image from 'next/image'
 import RefreshButton from './refresh-button'
-import { seed } from '@/app/lib/seed'
+// import { seed } from '@/app/lib/seed'
 
 export default async function Table() {
-  let users
+  // let users = [];
   let startTime = Date.now()
-  try {
-    users = await db.select().from(UsersTable)
-  } catch (e: any) {
-    if (e.message === `relation "drizzleusers" does not exist`) {
-      console.log(
-        'Table does not exist, creating and seeding it with dummy data now...'
-      )
-      // Table is not created yet
-      await seed()
-      startTime = Date.now()
-      users = await db.select().from(UsersTable)
-    } else {
-      throw e
-    }
-  }
+  // try {
+  //   users = await db.select().from(UsersTable)
+  // } catch (e: any) {
+  //   if (e.message === `relation "drizzleusers" does not exist`) {
+  //     console.log(
+  //       'Table does not exist, creating and seeding it with dummy data now...'
+  //     )
+  //     // Table is not created yet
+  //     await seed()
+  //     startTime = Date.now()
+  //     users = await db.select().from(UsersTable)
+  //   } else {
+  //     throw e
+  //   }
+  // }
 
-  const duration = Date.now() - startTime
+  // const duration = Date.now() - startTime
 
   return (
     <div className="bg-white/30 p-12 shadow-xl ring-1 ring-gray-900/5 rounded-lg backdrop-blur-lg max-w-xl mx-auto w-full">
-      <div className="flex justify-between items-center mb-4">
+      {/* <div className="flex justify-between items-center mb-4">
         <div className="space-y-1">
           <h2 className="text-xl font-semibold">Recent Users</h2>
           <p className="text-sm text-gray-500">
-            Fetched {users.length} users in {duration}ms
+            Fetched {users?.length} users in {duration}ms
           </p>
         </div>
         <RefreshButton />
@@ -58,7 +61,7 @@ export default async function Table() {
             <p className="text-sm text-gray-500">{timeAgo(user.createdAt)}</p>
           </div>
         ))}
-      </div>
+      </div> */}
     </div>
   )
 }

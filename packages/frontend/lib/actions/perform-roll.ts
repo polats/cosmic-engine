@@ -1,27 +1,14 @@
 'use server';
-import { sql } from '@vercel/postgres';
+
 import { eq } from 'drizzle-orm';
 import { db, Users } from '@/db/schema'
 
-const INITIAL_AMOUNT = 10000;
 const ROLL_COST = 100;
-
-export async function createUser(
-    id: string,
-  ) {
-    try {
-        await db.insert(Users).values({ id: id, currency: INITIAL_AMOUNT });
-    } catch (error) {
-        console.error('Failed to create user:', error);
-        throw new Error('Failed to create user.');
-      }
-  }  
 
 export async function performRoll(
     id: string,
   ) {
     try {
-
         // get user's currency
         const user = await db.select()
             .from(Users)

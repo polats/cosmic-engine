@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "generate": "drizzle-kit generate",
-    "migrate": "drizzle-kit migrate"
+    "migrate": "drizzle-kit migrate",
+    "introspect": "drizzle-kit introspect"
   },
   "dependencies": {
     "@farcaster/auth-client": "^0.1.1",
