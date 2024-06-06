@@ -1,17 +1,21 @@
 "use client";
 
 import { useState } from "react";
-import { createWalletClient, http, parseEther } from "viem";
+import { Address, createWalletClient, http, parseEther, zeroAddress } from "viem";
 import { hardhat } from "viem/chains";
 import { useAccount } from "wagmi";
 import { BanknotesIcon } from "@heroicons/react/24/outline";
 import { useTransactor } from "~~/hooks/scaffold-eth";
 import { useWatchBalance } from "~~/hooks/scaffold-eth/useWatchBalance";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth";
+import { privateKeyToAccount } from 'viem/accounts'
 
 // Number of ETH faucet sends to an address
-const NUM_OF_ETH = "1";
-const FAUCET_ADDRESS = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
+const NUM_OF_ETH = "0.0001";
+const HARDHAT_FAUCET_ADDRESS="0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
+const NEXT_PUBLIC_FAUCET_ADDRESS=process.env.NEXT_PUBLIC_FAUCET_ADDRESS;
+const NEXT_PUBLIC_FAUCET_PK=process.env.NEXT_PUBLIC_FAUCET_PK;
+
 
 /**
  * FaucetButton button which lets you grab eth.
@@ -36,13 +40,34 @@ export const FaucetButton = () => {
   const sendETH = async () => {
     try {
       setLoading(true);
-      await faucetTxn({
-        chain: targetNetwork,
-        account: FAUCET_ADDRESS,
-        to: address,
-        value: parseEther(NUM_OF_ETH),
-      });
+
+      // do scaffold-eth faucet txn if connected to hardhat
+      if (ConnectedChain?.id === hardhat.id) {
+
+        await faucetTxn({
+          chain: hardhat,
+          account: HARDHAT_FAUCET_ADDRESS,
+          to: address,
+          value: parseEther(NUM_OF_ETH),
+        });
+      }
+
+      else {
+          const account = privateKeyToAccount(NEXT_PUBLIC_FAUCET_PK as Address);
+
+          if (address) {
+          // do custom faucet txn if connected to a different chain
+            await faucetTxn({
+              chain: targetNetwork,
+              account: account,
+              to: address,
+              value: parseEther(NUM_OF_ETH),
+            });
+        }
+      }
+
       setLoading(false);
+
     } catch (error) {
       console.error("⚡️ ~ file: FaucetButton.tsx:sendETH ~ error", error);
       setLoading(false);
