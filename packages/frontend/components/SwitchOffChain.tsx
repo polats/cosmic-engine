@@ -1,21 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useTheme } from "next-themes";
 import { LinkIcon, CircleStackIcon } from "@heroicons/react/24/outline";
+import { useLocalStoragePreferences } from "~~/hooks/cosmic-engine";
+import { useEffect, useState } from "react";
 
 export const SwitchOffChain = ({ className }: { className?: string }) => {
-  const { setTheme, resolvedTheme } = useTheme();
+  const { isOnchain, setIsOnchain } = useLocalStoragePreferences();
   const [mounted, setMounted] = useState(false);
 
-  const isDarkMode = resolvedTheme === "dark";
-
   const handleToggle = () => {
-    if (isDarkMode) {
-    //   setTheme("light");
-      return;
-    }
-    //setTheme("dark");
+    setIsOnchain(!isOnchain);
   };
 
   useEffect(() => {
@@ -30,11 +24,15 @@ export const SwitchOffChain = ({ className }: { className?: string }) => {
         id="theme-toggle"
         type="checkbox"
         className="toggle toggle-primary bg-primary hover:bg-primary border-primary"
+        onChange={handleToggle}
+        checked={isOnchain}        
       />
-      <label htmlFor="theme-toggle" className={`swap swap-rotate ${!isDarkMode ? "swap-active" : ""}`}>
-        <CircleStackIcon className="swap-on h-5 w-5" />
+      <label htmlFor="theme-toggle" className={`swap swap-rotate ${!isOnchain ? "swap-active" : ""}`}>
         <LinkIcon className="swap-off h-5 w-5" />
-        Toggle Theme
+        <CircleStackIcon className="swap-on h-5 w-5" />
+        {
+          isOnchain ? "Onchain" : "DB"
+        }
       </label>
     </div>
   );
