@@ -35,10 +35,11 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <div className="min-h-[100vh] w-full flex flex-col">
-        <Header />
+        <Header />        
       <div className="flex flex-col grow">
         {children}
       </div>
+        <Footer />
         <Toaster />
     </div>
   )
