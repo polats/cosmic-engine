@@ -20,9 +20,9 @@ export interface Prize {
 
 export interface PrizePool {
     prizes: Prize[];
-    jackpotPrize?: Prize;
-    lowestPrize?: Prize;
-    mediumPrize?: Prize;
+    jackpotPrize?: Prize | null;
+    lowestPrize?: Prize | null;
+    mediumPrize?: Prize | null;
 }
 
 export const JackpotJunction = () => {
@@ -33,7 +33,7 @@ export const JackpotJunction = () => {
     const userCurrency = useGlobalState(({ userCurrency }) => userCurrency);
     const setUserCurrency = useGlobalState(({ setUserCurrency }) => setUserCurrency);
     const [ isSpinning, setIsSpinning ] = useState(false);
-    const [ prizeWon, setPrizeWon ] = useState<Prize>(null);
+    const [ prizeWon, setPrizeWon ] = useState<Prize | null>(null);
     const [ prizePool, setPrizePool ] = useState<PrizePool>({
         prizes: [],
         jackpotPrize: null,

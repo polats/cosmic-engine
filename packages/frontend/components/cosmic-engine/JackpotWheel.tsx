@@ -6,7 +6,7 @@ import { Prize, PrizePool } from './JackpotJunction';
 
 interface JackpotWheelProps {
     prizePool: PrizePool;
-    prizeWon?: Prize;
+    prizeWon?: Prize | null;
     isSpinning: boolean;
 }
 
@@ -38,10 +38,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
         <animated.div
             className="flex bg-white justify-center items-center my-4 grow border border-[3px] border-black rounded-[50%] h-full w-full max-h-[400px] max-w-[400px]"
             style={{
-                ...rotateSpring,
-                transform: rotateSpring.rotate.to(r => {
-                    console.log('r is: ', r)
-                    if( r === 360) return `rotate(${0}deg)`}),
+                ...rotateSpring
             }}
         >
             {isSpinning ? 'around we go':'not spinning'}
