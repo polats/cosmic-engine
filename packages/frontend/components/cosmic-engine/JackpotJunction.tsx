@@ -6,19 +6,62 @@ import { SignInButton, StatusAPIResponse } from "@farcaster/auth-kit";
 import { usePrivy } from "@privy-io/react-auth";
 import { signIn, signOut, getCsrfToken } from "next-auth/react";
 import { GameAccountDisplay } from "~~/components/cosmic-engine";
-import { RollButton } from "~~/components/cosmic-engine/RollButton";
 import { JackpotWheel } from "~~/components/cosmic-engine/JackpotWheel";
 import { Profile } from "~~/components/cosmic-engine/Profile";
+import { performRoll } from "@/lib/actions"
+import { useAccount } from "wagmi"
+import { useGlobalState } from "~~/services/store/store"
+import { confetti } from "@tsparticles/confetti"
+
+// TODO: adjust types below when prizes are defined
+export interface Prize {
+    prize: string;
+}
+
+export interface PrizePool {
+    prizes: Prize[];
+    jackpotPrize?: Prize;
+    lowestPrize?: Prize;
+    mediumPrize?: Prize;
+}
 
 export const JackpotJunction = () => {
     const [error, setError] = useState(false);
-    const { ready, authenticated, user, login, logout } = usePrivy();
+    const { ready, authenticated, user, login, logout } = usePrivy();   
+    const { address } = useAccount();
+    const [ loading, setLoading ] = useState(false);
+    const userCurrency = useGlobalState(({ userCurrency }) => userCurrency);
+    const setUserCurrency = useGlobalState(({ setUserCurrency }) => setUserCurrency);
+    const [ isSpinning, setIsSpinning ] = useState(false);
+    const [ prizeWon, setPrizeWon ] = useState<Prize>(null);
+    const [ prizePool, setPrizePool ] = useState<PrizePool>({
+        prizes: [],
+        jackpotPrize: null,
+        lowestPrize: null,
+        mediumPrize: null
+    });
     
     const getNonce = useCallback(async () => {
         const nonce = await getCsrfToken();
         if (!nonce) throw new Error("Unable to generate nonce");
         return nonce;
     }, []);
+
+    async function handleRoll() {
+        if (!address) return;
+        setIsSpinning(true);
+        setLoading(true);
+        await performRoll(address);
+        setUserCurrency(userCurrency - 100);
+        setLoading(false);
+        await new Promise(resolve => setTimeout(resolve,2500));
+        setIsSpinning(false);
+        confetti({
+            particleCount: 200,
+            spread: 140,
+            origin: { y: 0.5},
+        });
+    }
 
     const handleSuccess = useCallback(
         (res: StatusAPIResponse) => {
@@ -63,9 +106,20 @@ export const JackpotJunction = () => {
             <div className="flex flex-col justify-center items-center grow text-center">
                 <GameAccountDisplay />
                 {/* TODO: Add array for prize pool to make wheel dynamic  */}
-                <JackpotWheel/>
-                    <div className="flex justify-center">
-                <RollButton/>   
+                <JackpotWheel 
+                    prizePool={prizePool} 
+                    prizeWon={prizeWon}
+                    isSpinning={isSpinning}
+                />
+
+                <div className="flex justify-center">
+                    <button
+                        disabled={(userCurrency <= 0) || loading}
+                        className="bg-red-600 hover:bg-red-700 py-3 px-6 text-white rounded-lg"
+                        onClick={handleRoll}
+                    >
+                        Roll
+                    </button>    
                 </div>
                 <Profile />
             </div>

@@ -18,6 +18,7 @@
     "@next/env": "^14.2.3",
     "@privy-io/react-auth": "^1.67.0",
     "@rainbow-me/rainbowkit": "^2.0.2",
+    "@react-spring/web": "^9.7.3",
     "@tailwindcss/forms": "^0.5.7",
     "@tanstack/react-query": "^5.28.6",
     "@tsparticles/confetti": "^3.4.0",
