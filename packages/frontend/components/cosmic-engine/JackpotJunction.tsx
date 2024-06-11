@@ -56,6 +56,7 @@ export const JackpotJunction = () => {
         setLoading(false);
         await new Promise(resolve => setTimeout(resolve,2500));
         setIsSpinning(false);
+        setPrizeWon({prize: 'This is the reward!'});
         confetti({
             particleCount: 200,
             spread: 140,
