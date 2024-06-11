@@ -9,9 +9,11 @@ import { useTransactor } from "~~/hooks/scaffold-eth";
 import { useWatchBalance } from "~~/hooks/scaffold-eth/useWatchBalance";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth";
 import { privateKeyToAccount } from 'viem/accounts'
+import { parse } from "path";
 
 // Number of ETH faucet sends to an address
 const NUM_OF_ETH = "0.0001";
+const HARDHAT_NUM_OF_ETH ="10";
 const HARDHAT_FAUCET_ADDRESS="0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
 const NEXT_PUBLIC_FAUCET_ADDRESS=process.env.NEXT_PUBLIC_FAUCET_ADDRESS;
 const NEXT_PUBLIC_FAUCET_PK=process.env.NEXT_PUBLIC_FAUCET_PK;
@@ -48,7 +50,7 @@ export const FaucetButton = () => {
           chain: hardhat,
           account: HARDHAT_FAUCET_ADDRESS,
           to: address,
-          value: parseEther(NUM_OF_ETH),
+          value: parseEther(HARDHAT_NUM_OF_ETH),
         });
       }
 
