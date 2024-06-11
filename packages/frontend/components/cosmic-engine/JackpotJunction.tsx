@@ -20,8 +20,6 @@ import {
 import deployedContracts from "@/contracts/deployedContracts";
 import { Abi, AbiFunction } from "abitype";
 
-import { RollButton } from "~~/components/cosmic-engine";
-
 import { JackpotWheel } from "~~/components/cosmic-engine/JackpotWheel";
 import { Profile } from "~~/components/cosmic-engine/Profile";
 import { performRoll } from "@/lib/actions"
@@ -156,6 +154,7 @@ export const JackpotJunction = () => {
                 />
 
                 <div className="flex justify-center">
+                {
                     (isOnchain) ? 
                     functionsToDisplay.map(({ fn, inheritedFrom }, idx) => (                    
                 <WriteOnlyFunctionForm
@@ -165,8 +164,7 @@ export const JackpotJunction = () => {
                 onChange={() => {}}
                 contractAddress={deployedContractData.address}
                 inheritedFrom={inheritedFrom}
-                />
-              ))
+                />))
               :                
                     <button
                         disabled={(userCurrency <= 0) || loading}
@@ -175,6 +173,7 @@ export const JackpotJunction = () => {
                     >
                         Roll
                     </button>                      
+                }
                 </div>
                 <Profile />
             </div>
