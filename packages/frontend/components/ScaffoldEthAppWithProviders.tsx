@@ -16,7 +16,7 @@ import { wagmiConfig } from "~~/services/web3/wagmiConfig";
 import { AuthKitProvider } from "@farcaster/auth-kit";
 import { SessionProvider } from "next-auth/react";
 import { PrivyProvider } from '@privy-io/react-auth';
-
+import type { Session } from "next-auth"; 
 const farcasterAuthKitConfig = {
   relay: "https://relay.farcaster.xyz",
   rpcUrl: "https://mainnet.optimism.io",
@@ -55,7 +55,7 @@ export const queryClient = new QueryClient({
   },
 });
 
-export const ScaffoldEthAppWithProviders = ({ session, children }: { children: React.ReactNode }) => {
+export const ScaffoldEthAppWithProviders = ({ session, children }: { session: Session | null, children: React.ReactNode }) => {
   const { resolvedTheme } = useTheme();
   const isDarkMode = resolvedTheme === "dark";
   const [mounted, setMounted] = useState(false);

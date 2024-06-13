@@ -10,12 +10,12 @@ interface IScaffoldEthAppProps {
   session: Session | null;
 }
 
-const ScaffoldEthApp = ({ children }: IScaffoldEthAppProps) => {
+const ScaffoldEthApp = ({ session, children }: IScaffoldEthAppProps) => {
   return (
     <html suppressHydrationWarning style={{height:'100vh'}}>
       <body style={{height:'100vh'}}>
         <ThemeProvider enableSystem>
-          <ScaffoldEthAppWithProviders>
+          <ScaffoldEthAppWithProviders session={session}>
             {children}
           </ScaffoldEthAppWithProviders>
         </ThemeProvider>
