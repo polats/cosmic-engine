@@ -21,7 +21,7 @@ export default function NavigationPage ({searchParams}: {searchParams: {tab: str
     return (
         <div className="flex w-full">
             <div className="absolute bottom-0 left-0 flex w-full justify-center p-4">
-                <div className="w-full z-10 bg-[#E292DD] bg-white shadow-lg rounded-lg p-4 flex justify-center items-center gap-x-4">
+                <div className="w-full z-10 bg-[#E292DD] shadow-lg rounded-lg p-4 flex justify-center items-center gap-x-4">
                     {tabs.map((currentTab, index) => (
                         <div key={currentTab.id} className={`px-4 ${index < tabs.length - 1 ? 'border-r':''}`}>
                             <button
