@@ -8,7 +8,7 @@ import WagonIcon from '~~/public/wagon-icon.png';
 import MarketIcon from '~~/public/market-icon.png';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-export default function NavigationPage ({searchParams}: {searchParams: {tab: string; }}) {
+export default function NavigationPage ({searchParams}: {searchParams: {tab: string | null; }}) {
     const router = useRouter();
     const { tab } = searchParams;
 
@@ -23,7 +23,7 @@ export default function NavigationPage ({searchParams}: {searchParams: {tab: str
             <div className="absolute bottom-0 left-0 flex w-full justify-center p-4">
                 <div className="w-full z-10 bg-[#E292DD] bg-white shadow-lg rounded-lg p-4 flex justify-center items-center gap-x-4">
                     {tabs.map((currentTab, index) => (
-                        <div className={`px-4 ${index < tabs.length - 1 ? 'border-r':''}`}>
+                        <div key={currentTab.id} className={`px-4 ${index < tabs.length - 1 ? 'border-r':''}`}>
                             <button
                                 key={currentTab.id}
                                 className={`flex justify-center items-center px-4 py-2 rounded ${

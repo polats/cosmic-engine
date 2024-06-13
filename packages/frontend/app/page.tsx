@@ -3,13 +3,12 @@ import NavigationBar from '~~/components/cosmic-engine/NavigationBar';
 import { Suspense } from 'react';
 import { JackpotJunction } from '~~/components/cosmic-engine'
 interface SearchPageProps {
-  children: React.ReactNode,
   searchParams: {
-    tab: string;
+    tab: string | null;
   }
 }
 
-export default function Home({children, searchParams}: SearchPageProps) {
+export default function Home({ searchParams}: SearchPageProps) {
   const { tab } = searchParams;
 
   return (
@@ -41,7 +40,7 @@ export default function Home({children, searchParams}: SearchPageProps) {
             </Suspense>
           }
         </div>
-        <NavigationBar searchParams={searchParams ? searchParams : null} />
+        <NavigationBar searchParams={searchParams ??{tab: null}} />
       </main>
     </>
   );
