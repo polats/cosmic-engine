@@ -17,6 +17,7 @@ import { AuthKitProvider } from "@farcaster/auth-kit";
 import { SessionProvider } from "next-auth/react";
 import { PrivyProvider } from '@privy-io/react-auth';
 import type { Session } from "next-auth"; 
+
 const farcasterAuthKitConfig = {
   relay: "https://relay.farcaster.xyz",
   rpcUrl: "https://mainnet.optimism.io",
@@ -37,12 +38,12 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <div className="min-h-[100vh] w-full flex flex-col">
-        <Header />        
-      <div className="flex flex-col grow">
+      <Header />        
+      <div className="relative flex flex-col grow">
         {children}
       </div>
-        <Footer />
-        <Toaster />
+      <Footer />
+      <Toaster />
     </div>
   )
 };

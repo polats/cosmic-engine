@@ -1,7 +1,17 @@
 import Head from "next/head";
-import { JackpotJunction } from "~~/components/cosmic-engine/JackpotJunction";
+import NavigationBar from '~~/components/cosmic-engine/NavigationBar';
+import { Suspense } from 'react';
+import { JackpotJunction } from '~~/components/cosmic-engine'
+interface SearchPageProps {
+  children: React.ReactNode,
+  searchParams: {
+    tab: string;
+  }
+}
 
-export default function Home() {
+export default function Home({children, searchParams}: SearchPageProps) {
+  const { tab } = searchParams;
+
   return (
     <>
       <Head>
@@ -22,8 +32,16 @@ export default function Home() {
           opacity: 0.1}}
         ></div>
         <div className="relative z-[10] flex flex-col grow ">
-          <JackpotJunction />
+          { tab === 'wagon' ?
+            <div>Wagon</div>
+          : tab === 'market' ?
+            <div>Market</div>
+          : <Suspense>
+              <JackpotJunction />
+            </Suspense>
+          }
         </div>
+        <NavigationBar searchParams={searchParams ? searchParams : null} />
       </main>
     </>
   );
