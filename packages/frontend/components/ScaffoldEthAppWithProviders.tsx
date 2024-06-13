@@ -14,6 +14,9 @@ import { useNativeCurrencyPrice } from "~~/hooks/scaffold-eth";
 import { useGlobalState } from "~~/services/store/store";
 import { wagmiConfig } from "~~/services/web3/wagmiConfig";
 import { AuthKitProvider } from "@farcaster/auth-kit";
+import { SessionProvider } from "next-auth/react";
+import { PrivyProvider } from '@privy-io/react-auth';
+import type { Session } from "next-auth"; 
 
 const farcasterAuthKitConfig = {
   relay: "https://relay.farcaster.xyz",
@@ -35,25 +38,14 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <div className="min-h-[100vh] w-full flex flex-col">
-        <Header />        
-      <div className="flex flex-col grow">
+      <Header />        
+      <div className="relative flex flex-col grow">
         {children}
       </div>
-        <Footer />
-        <Toaster />
+      <Footer />
+      <Toaster />
     </div>
   )
-
-  // return (
-  //   <>
-  //     <div className="flex flex-col min-h-screen">
-  //       <Header />
-  //       <main className="relative flex flex-col flex-1">{children}</main>
-  //       <Footer />
-  //     </div>
-  //     <Toaster />
-  //   </>
-  // );
 };
 
 export const queryClient = new QueryClient({
@@ -64,7 +56,7 @@ export const queryClient = new QueryClient({
   },
 });
 
-export const ScaffoldEthAppWithProviders = ({ children }: { children: React.ReactNode }) => {
+export const ScaffoldEthAppWithProviders = ({ session, children }: { session: Session | null, children: React.ReactNode }) => {
   const { resolvedTheme } = useTheme();
   const isDarkMode = resolvedTheme === "dark";
   const [mounted, setMounted] = useState(false);
@@ -75,21 +67,39 @@ export const ScaffoldEthAppWithProviders = ({ children }: { children: React.Reac
 
   return (
     <div className="h-full w-full">
-    <WagmiProvider config={wagmiConfig}>
-      <QueryClientProvider client={queryClient}>
-        <ProgressBar />
-        <AuthKitProvider config={farcasterAuthKitConfig}>
-        <RainbowKitProvider
-          avatar={BlockieAvatar}
-          theme={mounted ? (isDarkMode ? darkTheme() : lightTheme()) : lightTheme()}
-        >
-          <ScaffoldEthApp>
-            {children}
-          </ScaffoldEthApp>
-        </RainbowKitProvider>
-        </AuthKitProvider>
-      </QueryClientProvider>
-    </WagmiProvider>
+      <SessionProvider session={session}>
+        <PrivyProvider
+          appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID || ""}
+          config={{
+            // Customize Privy's appearance in your app
+            appearance: {
+              theme: 'light',
+              accentColor: '#676FFF',
+              // logo: 'https://your-logo-url',
+            },
+            // Create embedded wallets for users who don't have a wallet
+            embeddedWallets: {
+              createOnLogin: 'users-without-wallets',
+            },
+          }}            
+        >  
+          <WagmiProvider config={wagmiConfig}>
+            <QueryClientProvider client={queryClient}>
+              <ProgressBar />
+              <AuthKitProvider config={farcasterAuthKitConfig}>
+              <RainbowKitProvider
+                avatar={BlockieAvatar}
+                theme={mounted ? (isDarkMode ? darkTheme() : lightTheme()) : lightTheme()}
+              >
+                <ScaffoldEthApp>
+                  {children}
+                </ScaffoldEthApp>
+              </RainbowKitProvider>
+              </AuthKitProvider>
+            </QueryClientProvider>
+          </WagmiProvider>
+        </PrivyProvider>
+      </SessionProvider>
     </div>
   );
 };
