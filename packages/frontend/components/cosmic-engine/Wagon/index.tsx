@@ -27,6 +27,7 @@ export default function Market(){
                             <div className="flex">
                                 <div className="w-[145px] sm:w-[280px] h-[50px] sm:h-[100px]  relative">
                                     <Image src="/wagon-sample.png" alt="wagon-sample" fill/>
+                                    
                                 </div>
                             </div>
                             <div className="flex flex-col grow gap-y-1 sm:gap-y-3 max-w-[200px] sm:max-w-[300px] md:max-w-[400px] overflow-x-hidden xl:pl-[4rem]">
