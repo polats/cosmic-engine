@@ -19,23 +19,21 @@ export default function NavigationPage ({searchParams}: {searchParams: {tab: str
     ];
     
     return (
-        <div className="flex w-full">
-            <div className="absolute bottom-0 left-0 flex w-full justify-center p-4">
-                <div className="w-full z-10 bg-[#E292DD] shadow-lg rounded-lg p-4 flex justify-center items-center gap-x-4">
-                    {tabs.map((currentTab, index) => (
-                        <div key={currentTab.id} className={`px-4 ${index < tabs.length - 1 ? 'border-r':''}`}>
-                            <button
-                                key={currentTab.id}
-                                className={`flex justify-center items-center px-4 py-2 rounded ${
-                                tab === currentTab.title ? 'bg-gray-200' : (tab !== 'market' && tab !== 'wagon' && currentTab.id === 0) ? 'bg-gray-200': ''
-                                }`}
-                                onClick={() => router.push(`/?tab=${currentTab.title}`)}
-                            >
-                                <Image src={currentTab.icon} alt={`${currentTab.title} icon`} width={24} height={24} />
-                            </button>
-                        </div>
-                    ))}
-                </div>
+        <div className="flex w-full justify-center p-4">
+            <div className="w-full z-10 bg-[#E292DD] shadow-lg rounded-lg p-2 sm:p-4 flex justify-center items-center gap-x-2 sm:gap-x-4 lg:-gap-x-6">
+                {tabs.map((currentTab, index) => (
+                    <div key={currentTab.id} className={`px-4 ${index < tabs.length - 1 ? 'border-r':''}`}>
+                        <button
+                            key={currentTab.id}
+                            className={`flex justify-center items-center px-4 py-2 rounded ${
+                            tab === currentTab.title ? 'bg-gray-200' : (tab !== 'market' && tab !== 'wagon' && currentTab.id === 0) ? 'bg-gray-200': ''
+                            }`}
+                            onClick={() => router.push(`/?tab=${currentTab.title}`)}
+                        >
+                            <Image src={currentTab.icon} alt={`${currentTab.title} icon`} width={24} height={24} />
+                        </button>
+                    </div>
+                ))}
             </div>
         </div>
     )

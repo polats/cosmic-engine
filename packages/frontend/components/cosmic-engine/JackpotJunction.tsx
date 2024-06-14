@@ -115,7 +115,7 @@ export const JackpotJunction = () => {
       }
 
     return (
-        <div className="flex flex-col grow">
+        <div className="page-container">
             <div style={{ position: "fixed", top: "80px", right: "12px" }}>
                 <SignInButton
                     nonce={getNonce}
