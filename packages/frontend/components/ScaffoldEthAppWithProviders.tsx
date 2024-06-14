@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { RainbowKitProvider, darkTheme, lightTheme } from "@rainbow-me/rainbowkit";
+import { RainbowKitProvider, darkTheme, lightTheme, cssStringFromTheme } from "@rainbow-me/rainbowkit";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useTheme } from "next-themes";
-import { Toaster } from "react-hot-toast";
 import { WagmiProvider } from "wagmi";
+import { Toaster } from "react-hot-toast";
 import { Footer } from "~~/components/Footer";
 import { Header } from "~~/components/Header";
 import { BlockieAvatar } from "~~/components/scaffold-eth";
@@ -23,29 +23,6 @@ const farcasterAuthKitConfig = {
   rpcUrl: "https://mainnet.optimism.io",
   siweUri: "http://localhost:3000/login",
   domain: "localhost:3000",
-};
-
-
-const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
-  const price = useNativeCurrencyPrice();
-  const setNativeCurrencyPrice = useGlobalState(state => state.setNativeCurrencyPrice);
-
-  useEffect(() => {
-    if (price > 0) {
-      setNativeCurrencyPrice(price);
-    }
-  }, [setNativeCurrencyPrice, price]);
-
-  return (
-    <div className="min-h-[100vh] w-full flex flex-col">
-      <Header />        
-      <div className="relative flex flex-col grow">
-        {children}
-      </div>
-      <Footer />
-      <Toaster />
-    </div>
-  )
 };
 
 export const queryClient = new QueryClient({
@@ -66,40 +43,38 @@ export const ScaffoldEthAppWithProviders = ({ session, children }: { session: Se
   }, []);
 
   return (
-    <div className="h-full w-full">
+    <>
       <SessionProvider session={session}>
-        <PrivyProvider
-          appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID || ""}
-          config={{
-            // Customize Privy's appearance in your app
-            appearance: {
-              theme: 'light',
-              accentColor: '#676FFF',
-              // logo: 'https://your-logo-url',
-            },
-            // Create embedded wallets for users who don't have a wallet
-            embeddedWallets: {
-              createOnLogin: 'users-without-wallets',
-            },
-          }}            
-        >  
-          <WagmiProvider config={wagmiConfig}>
+        <WagmiProvider config={wagmiConfig}>
+          <PrivyProvider
+            appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID || ""}
+            config={{
+              // Customize Privy's appearance in your app
+              appearance: {
+                theme: 'light',
+                accentColor: '#676FFF',
+                // logo: 'https://your-logo-url',
+              },
+              // Create embedded wallets for users who don't have a wallet
+              embeddedWallets: {
+                createOnLogin: 'users-without-wallets',
+              },
+            }}            
+          >  
             <QueryClientProvider client={queryClient}>
               <ProgressBar />
               <AuthKitProvider config={farcasterAuthKitConfig}>
-              <RainbowKitProvider
-                avatar={BlockieAvatar}
-                theme={mounted ? (isDarkMode ? darkTheme() : lightTheme()) : lightTheme()}
-              >
-                <ScaffoldEthApp>
+                <RainbowKitProvider
+                  avatar={BlockieAvatar}
+                  theme={null}
+                >
                   {children}
-                </ScaffoldEthApp>
-              </RainbowKitProvider>
+                </RainbowKitProvider>
               </AuthKitProvider>
             </QueryClientProvider>
-          </WagmiProvider>
-        </PrivyProvider>
+          </PrivyProvider> 
+        </WagmiProvider>
       </SessionProvider>
-    </div>
+    </>
   );
 };
