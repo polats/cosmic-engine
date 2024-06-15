@@ -47,7 +47,7 @@ export const ScaffoldEthAppWithProviders = ({ session, children }: { session: Se
       <SessionProvider session={session}>
         <WagmiProvider config={wagmiConfig}>
           <PrivyProvider
-            appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID || ""}
+            appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID || "clwv0y8sw05x112o2ryv6pxjx"}
             config={{
               // Customize Privy's appearance in your app
               appearance: {
