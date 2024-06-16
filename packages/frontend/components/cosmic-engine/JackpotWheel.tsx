@@ -5,6 +5,7 @@ import { useSpring, useSpringRef, animated, config, easings } from '@react-sprin
 import { Prize, PrizePool } from './JackpotJunction';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
+import { confetti } from "@tsparticles/confetti"
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -16,6 +17,8 @@ interface JackpotWheelProps {
 
 export const JackpotWheel = (props:JackpotWheelProps) => {
     const wheelApiRef = useSpringRef();
+    const [ state, setState ] = useState('notMoving');
+    const [ initialLoop, setInitialLoop ] = useState(true);
     const { prizePool, prizeWon, isSpinning } = props;
     const [ prizeState, setPrizeState ] = useState(prizeWon); //used to update state, will not cause a re render if prizeWon is used
     const [ currentAngle, setCurrentAngle ] = useState(0);
@@ -24,15 +27,10 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
         easing: (t:number ) => t, // This controls the easing after each loop of rotation, if you do not make this consistent, it will slow down after each rotation. Change in next step.
     })
 
-    useEffect(() => {
-        setPrizeState(prizeWon);
-        if(!!prizeWon){
-            setSpringConfig({
-                duration: 1500, // This determines the distributed speed, the lower this is, the faster it spins
-                easing: easings.easeOutQuad,
-            });
-        }
-    }, [prizeWon]);
+    {/*
+        1) Land on winning slice
+        2) Reset to notMoving    
+    */}
 
     {/*
         Will involve different steps
@@ -42,22 +40,45 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
         Step 3: Stop. Stops at the designated slice and shows a modal to either accept or reroll
     */}
 
-    const rotateSpring = useSpring({
-        from: { rotate: 0 },
-        to: async (next, cancel) => { 
-            if(isSpinning || prizeWon){
-                console.log("prizeWon", prizeState)
-                await next({ rotate: 360 , loop: !prizeState});
-                if(!!prizeState){
-                    await next({rotate: 360, immediate: true});
-                    await next ({ rotate: 180+2160, immediate: true});
-                } //dummy value to where to stop
+    const { rotation } = useSpring({
+        from: { rotation: 0},
+        to: async(next, cancel) => {
+            if(state === 'accelerating'){
+                setInitialLoop(false)
+                await next({ rotation: 360 * 4, config: {duration: 2000, easing: easings.easeInQuad } })
+                await next({ rotation: 0, config: { duration: 0 } });
+            }
+            else if(state === 'spinning' && state !== ''){
+                while(isSpinning){
+                    await next({ rotation: 360, config: { duration: 180} }); 
+                    await next({ rotation: 0, config: { duration: 0 } });
+                }
+            } else if (state === 'decelerating') {
+                await next({ rotation: 360 * 10, config: { duration: 5000, easing: easings.easeOutCubic } }); //TODO: Change 360 to the actual point on where the wheel should land
+                confetti({
+                    particleCount: 200,
+                    spread: 140,
+                    origin: { y: 0.5},
+                });
+                setInitialLoop(true);
+              } else {
+                await next({ rotation: 0});
+              }
+        },
+        reset: state === 'notMoving',
+        onRest: () => {
+            if (isSpinning && initialLoop){
+                setState('accelerating')
+            }
+            else if ( isSpinning && !initialLoop) {
+                setState('spinning');
+            } else if ( !isSpinning && prizeWon ) {
+                setState('decelerating')
+            } else if ( state === 'decelerating') {
+                setState('notMoving')
             }
         },
-        immediate: !isSpinning,
-        config: springConfig
-    });
-    // Next step is when a prize is won, it should start easing into the slice that contains the slot it landed
+    })
 
     const Slices = () => {
         const data = {
@@ -82,17 +103,30 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
         };
         return (
             <>
-                <Pie data={data} options={options} />
+                <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="16" cy="16" r="16" fill='none'/>
+                    <path d="M16 16 L16 0 A16 16 0 0 1 28.78 7.22 Z" fill="#FF6347"/>
+                    <path d="M16 16 L28.78 7.22 A16 16 0 0 1 31.42 16 Z" fill="#FFD700"/>
+                    <path d="M16 16 L31.42 16 A16 16 0 0 1 28.78 24.78 Z" fill="#ADFF2F"/>
+                    <path d="M16 16 L28.78 24.78 A16 16 0 0 1 16 32 Z" fill="#1E90FF"/>
+                    <path d="M16 16 L16 32 A16 16 0 0 1 3.22 24.78 Z" fill="#FF69B4"/>
+                    <path d="M16 16 L3.22 24.78 A16 16 0 0 1 0.58 16 Z" fill="#8A2BE2"/>
+                    <path d="M16 16 L0.58 16 A16 16 0 0 1 3.22 7.22 Z" fill="#00CED1"/>
+                    <path d="M16 16 L3.22 7.22 A16 16 0 0 1 16 0 Z" fill="#FF4500"/>
+                </svg>
             </>
         )
     }
 
     return (
+        <>
         <animated.div
-            className="flex justify-center items-center my-4 grow rounded-[50%] h-full w-full max-h-[400px] max-w-[400px]"
-            style={{...rotateSpring}}
+            className="h-full w-full flex justify-center items-center my-4 grow rounded-[50%] h-full w-full max-h-[400px] max-w-[400px]"
+            style={{ transform: rotation.to((r) => `rotate(${r}deg)`),}}
         >
             <Slices />
         </animated.div>
+        Wheel Status: {state}
+        </>
     )    
 }
