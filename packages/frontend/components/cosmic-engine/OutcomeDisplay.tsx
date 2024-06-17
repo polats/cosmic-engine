@@ -7,7 +7,7 @@ export const OutcomeDisplay = ({
   refreshDisplayVariables,
   deployedContractData,
 }: {
-  address: string;
+  address: string | undefined;
   refreshDisplayVariables: boolean;
   deployedContractData: Contract<ContractName>;
 }) => {

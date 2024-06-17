@@ -2,7 +2,9 @@
 
 import { eq } from 'drizzle-orm';
 import { db, Users } from '@/db/schema'
-import { ROLL_COST } from '@/lib/constants'; 
+// import { ROLL_COST } from '@/lib/constants'; 
+
+const ROLL_COST = 100;
 
 export async function performRoll(
     id: string,
