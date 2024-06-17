@@ -8,18 +8,16 @@ export type ScaffoldConfig = {
   onlyLocalBurnerWallet: boolean;
 };
 
-console.log("process.env.VERCEL_URL", process.env.VERCEL_URL);
-
 const scaffoldConfig = {
   // The networks on which your DApp is live
   targetNetworks: 
   [
     // change default depending if it's deployed
-    process.env.VERCEL_URL == undefined ? 
+    process.env.NEXT_PUBLIC_VERCEL_URL == undefined ? 
       chains.hardhat :
       chains.baseSepolia,
 
-    process.env.VERCEL_URL == undefined ? 
+    process.env.NEXT_PUBLIC_VERCEL_URL == undefined ? 
     chains.baseSepolia :
     chains.hardhat    
   ], 
