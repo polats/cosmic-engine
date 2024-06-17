@@ -1,118 +1,153 @@
 "use client";
 
-// @refresh reset
-import { useReducer } from "react";
-import { ContractReadMethods } from "~~/app/debug/_components/contract/ContractReadMethods";
-import { ContractVariables } from "~~/app/debug/_components/contract/ContractVariables";
-import { ContractWriteMethods } from "~~/app/debug/_components/contract/ContractWriteMethods";
-import { Address, Balance } from "~~/components/scaffold-eth";
-import { useDeployedContractInfo, useNetworkColor } from "~~/hooks/scaffold-eth";
+import { useEffect, useState } from "react";
+import { Abi, AbiFunction } from "abitype";
+import { Address, TransactionReceipt } from "viem";
+import { useAccount, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
+import {
+  ContractInput,
+  TxReceipt,
+  getFunctionInputKey,
+  getInitialFormState,
+  getParsedContractFunctionArgs,
+  transformAbiFunction,
+} from "~~/app/debug/_components/contract";
+import { IntegerInput } from "~~/components/scaffold-eth";
+import { useTransactor } from "~~/hooks/scaffold-eth";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
+import { ContractName } from "~~/utils/scaffold-eth/contract";
 
-import { useLocalStoragePreferences } from "@/hooks/cosmic-engine";
-import {UniversalButtonParams} from "~~/lib/constants";
+type UniversalButtonProps = {
+  contractName: ContractName;
+  payableValue: string;
+  abi: Abi;
+  abiFunction: AbiFunction;
+  onChange: () => void;
+  contractAddress: Address;
+  showReceipt?: boolean;
+  showFunctionName?: boolean;
+};
 
-/**
- * Updated ContractUI from scaffold-eth, to allow both on-chain and offchain calls.
- **/
-export const UniversalButton = (
-    { 
-        contractName,
-        functionName,
-        args,
-        value,
-        offchainButton
-    } : UniversalButtonParams) => {       
-
-
-  const className = "";
-  const [refreshDisplayVariables, triggerRefreshDisplayVariables] = useReducer(value => !value, false);
+export const UniversalButton = ({
+  contractName,
+  payableValue,
+  abi,
+  abiFunction,
+  onChange,
+  contractAddress,
+  showReceipt,
+  showFunctionName
+}: UniversalButtonProps) => {
+  const [form, setForm] = useState<Record<string, any>>(() => getInitialFormState(abiFunction));
+  const [txValue, setTxValue] = useState<string | bigint>("");
+  const { chain } = useAccount();
+  const writeTxn = useTransactor();
   const { targetNetwork } = useTargetNetwork();
-  const { data: deployedContractData, isLoading: deployedContractLoading } = useDeployedContractInfo(contractName);
+  const writeDisabled = !chain || chain?.id !== targetNetwork.id;
 
-  const networkColor = useNetworkColor();
-  const { isOnchain } = useLocalStoragePreferences();
+  const { data: result, isPending, writeContractAsync } = useWriteContract();
 
-  if (deployedContractLoading) {
+  const handleWrite = async () => {
+    if (writeContractAsync) {
+      try {
+        const makeWriteWithParams = () =>
+          writeContractAsync({
+            address: contractAddress,
+            functionName: abiFunction.name,
+            abi: abi,
+            args: getParsedContractFunctionArgs(form),
+            value: payableValue ? BigInt(payableValue) : BigInt(txValue),
+          });
+        await writeTxn(makeWriteWithParams);
+        onChange();
+      } catch (e: any) {
+        console.error("⚡️ ~ file: WriteOnlyFunctionForm.tsx:handleWrite ~ error", e);
+      }
+    }
+  };
+
+  const [displayedTxResult, setDisplayedTxResult] = useState<TransactionReceipt>();
+  const { data: txResult } = useWaitForTransactionReceipt({
+    hash: result,
+  });
+  useEffect(() => {
+    setDisplayedTxResult(txResult);
+  }, [txResult]);
+
+  // TODO use `useMemo` to optimize also update in ReadOnlyFunctionForm
+  const transformedFunction = transformAbiFunction(abiFunction);
+  const inputs = transformedFunction.inputs.map((input, inputIndex) => {
+    const key = getFunctionInputKey(abiFunction.name, input, inputIndex);
     return (
-      <div className="mt-14">
-        <span className="loading loading-spinner loading-lg"></span>
-      </div>
+      <ContractInput
+        key={key}
+        setForm={updatedFormValue => {
+          setDisplayedTxResult(undefined);
+          setForm(updatedFormValue);
+        }}
+        form={form}
+        stateObjectKey={key}
+        paramType={input}
+      />
     );
-  }
+  });
+  const zeroInputs = inputs.length === 0 && abiFunction.stateMutability !== "payable";
 
-  if (!deployedContractData) {
-    return (
-      <p className="text-3xl mt-14">
-        {`No contract found by the name of "${contractName}" on chain "${targetNetwork.name}"!`}
-      </p>
-    );
-  }
-
-  if (!isOnchain) {
-    return offchainButton;
-  }
-
-  else 
   return (
-    <div className={`grid grid-cols-1 lg:grid-cols-6 px-6 lg:px-10 lg:gap-12 w-full max-w-7xl my-0 ${className}`}>
-      <div className="col-span-5 grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10">
-        <div className="col-span-1 flex flex-col">
-          <div className="bg-base-100 border-base-300 border shadow-md shadow-secondary rounded-3xl px-6 lg:px-8 mb-6 space-y-1 py-4">
-            <div className="flex">
-              <div className="flex flex-col gap-1">
-                <span className="font-bold">{contractName}</span>
-                <Address address={deployedContractData.address} />
-                <div className="flex gap-1 items-center">
-                  <span className="font-bold text-sm">Balance:</span>
-                  <Balance address={deployedContractData.address} className="px-0 h-1.5 min-h-[0.375rem]" />
-                </div>
-              </div>
+    <div className="py-5 space-y-3 first:pt-0 last:pb-1">
+      <div className={`flex gap-3 ${zeroInputs ? "flex-row justify-between items-center" : "flex-col"}`}>
+        {
+        showFunctionName &&
+        <p className="font-medium my-0 break-words">
+          {abiFunction.name}
+        </p>
+        }
+        {inputs}
+        {abiFunction.stateMutability === "payable" && 
+          payableValue == undefined ? (
+          <div className="flex flex-col gap-1.5 w-full">
+            <div className="flex items-center ml-2">
+              <span className="text-xs font-medium mr-2 leading-none">payable value</span>
+              <span className="block text-xs font-extralight leading-none">wei</span>
             </div>
-            {targetNetwork && (
-              <p className="my-0 text-sm">
-                <span className="font-bold">Network</span>:{" "}
-                <span style={{ color: networkColor }}>{targetNetwork.name}</span>
-              </p>
-            )}
-          </div>
-          <div className="bg-base-300 rounded-3xl px-6 lg:px-8 py-4 shadow-lg shadow-base-300">
-            <ContractVariables
-              refreshDisplayVariables={refreshDisplayVariables}
-              deployedContractData={deployedContractData}
+            <IntegerInput
+              value={txValue}
+              onChange={updatedTxValue => {
+                setDisplayedTxResult(undefined);
+                setTxValue(updatedTxValue);
+              }}
+              placeholder="value (wei)"
             />
           </div>
-        </div>
-        <div className="col-span-1 lg:col-span-2 flex flex-col gap-6">
-          <div className="z-10">
-            <div className="bg-base-100 rounded-3xl shadow-md shadow-secondary border border-base-300 flex flex-col mt-10 relative">
-              <div className="h-[5rem] w-[5.5rem] bg-base-300 absolute self-start rounded-[22px] -top-[38px] -left-[1px] -z-10 py-[0.65rem] shadow-lg shadow-base-300">
-                <div className="flex items-center justify-center space-x-2">
-                  <p className="my-0 text-sm">Read</p>
-                </div>
-              </div>
-              <div className="p-5 divide-y divide-base-300">
-                <ContractReadMethods deployedContractData={deployedContractData} />
-              </div>
+        ) : null}
+        <div className="flex justify-between gap-2">
+          {!zeroInputs && showReceipt && (
+            <div className="flex-grow basis-0">
+              {displayedTxResult ? <TxReceipt txResult={displayedTxResult} /> : null}
             </div>
-          </div>
-          <div className="z-10">
-            <div className="bg-base-100 rounded-3xl shadow-md shadow-secondary border border-base-300 flex flex-col mt-10 relative">
-              <div className="h-[5rem] w-[5.5rem] bg-base-300 absolute self-start rounded-[22px] -top-[38px] -left-[1px] -z-10 py-[0.65rem] shadow-lg shadow-base-300">
-                <div className="flex items-center justify-center space-x-2">
-                  <p className="my-0 text-sm">Write</p>
-                </div>
-              </div>
-              <div className="p-5 divide-y divide-base-300">
-                <ContractWriteMethods
-                  deployedContractData={deployedContractData}
-                  onChange={triggerRefreshDisplayVariables}
-                />
-              </div>
-            </div>
+          )}
+          <div
+            className={`flex ${
+              writeDisabled &&
+              "tooltip before:content-[attr(data-tip)] before:right-[-10px] before:left-auto before:transform-none"
+            }`}
+            data-tip={`${writeDisabled && "Wallet not connected or in the wrong network"}`}
+          >
+ 
+
+            <button className="bg-red-600 hover:bg-red-700 py-3 px-6 text-white rounded-lg" 
+              disabled={writeDisabled || isPending} onClick={handleWrite}>
+              {isPending && <span className="loading loading-spinner loading-xs"></span>}
+              Spin
+            </button>
           </div>
         </div>
       </div>
+      {zeroInputs && txResult && showReceipt ? (
+        <div className="flex-grow basis-0">
+          <TxReceipt txResult={txResult} />
+        </div>
+      ) : null}
     </div>
   );
 };

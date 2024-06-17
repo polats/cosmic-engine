@@ -13,11 +13,11 @@ const scaffoldConfig = {
   targetNetworks: 
   [
     // change default depending if it's deployed
-    process.env.VERCEL ? 
+    process.env.VERCEL == undefined ? 
       chains.hardhat :
       chains.baseSepolia,
 
-    process.env.VERCEL ? 
+    process.env.VERCEL == undefined ? 
     chains.baseSepolia :
     chains.hardhat    
   ], 
