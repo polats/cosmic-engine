@@ -115,7 +115,6 @@ export const JackpotJunction = () => {
                 abiFunction={fn}
                 onChange={() => {}}
                 contractAddress={deployedContractData.address}
-                inheritedFrom={inheritedFrom}
                 />))
               :                
                     <button
