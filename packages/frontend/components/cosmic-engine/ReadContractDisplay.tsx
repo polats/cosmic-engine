@@ -2,12 +2,12 @@ import { DisplayVariable } from "~~/app/debug/_components/contract";
 import { Abi, AbiFunction } from "abitype";
 import { Contract, ContractName, GenericContract, InheritedFunctions } from "~~/utils/scaffold-eth/contract";
 
-export const OutcomeDisplay = ({
-  address,
+export const ReadContractDisplay = ({
+  args,
   refreshDisplayVariables,
   deployedContractData,
 }: {
-  address: string | undefined;
+  args: any;
   refreshDisplayVariables: boolean;
   deployedContractData: Contract<ContractName>;
 }) => {
@@ -47,9 +47,8 @@ export const OutcomeDisplay = ({
           abiFunction={fn}
           contractAddress={deployedContractData.address}
           key={fn.name}
-          args={[address, false]}
+          args={args}
           refreshDisplayVariables={refreshDisplayVariables}
-          inheritedFrom={inheritedFrom}
         />
       ))}
     </>

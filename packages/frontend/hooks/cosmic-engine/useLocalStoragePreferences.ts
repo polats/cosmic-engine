@@ -7,8 +7,8 @@ import { useLocalStorage } from "usehooks-ts";
 export function useLocalStoragePreferences() {
 
     const preferencesStorageKey = "cosmicengine.preferences.sk";
-    const [isOnchain, setIsOnchain] = useLocalStorage<boolean>(preferencesStorageKey, false, {
-      initializeWithValue: false,
+    const [isOnchain, setIsOnchain] = useLocalStorage<boolean>(preferencesStorageKey, true, {
+      initializeWithValue: true,
     });
 
     const readLocalStorage = async () => {

@@ -12,15 +12,20 @@ const scaffoldConfig = {
   // The networks on which your DApp is live
   targetNetworks: 
   [
-    // change default depending if it's deployed
-    process.env.NEXT_PUBLIC_VERCEL_URL == undefined ? 
-      chains.hardhat :
-      chains.baseSepolia,
+    chains.baseSepolia,
+    chains.hardhat
+  ],
 
-    process.env.NEXT_PUBLIC_VERCEL_URL == undefined ? 
-    chains.baseSepolia :
-    chains.hardhat    
-  ], 
+  // [
+  //   // change default depending if it's deployed
+  //   process.env.NEXT_PUBLIC_VERCEL_URL == undefined ? 
+  //     chains.hardhat :
+  //     chains.baseSepolia,
+
+  //   process.env.NEXT_PUBLIC_VERCEL_URL == undefined ? 
+  //   chains.baseSepolia :
+  //   chains.hardhat    
+  // ], 
   
   // The interval at which your front-end polls the RPC servers for new data
   // it has no effect if you only target the local network (default is 4000)
