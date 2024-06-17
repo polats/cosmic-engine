@@ -1,12 +1,13 @@
 import { DisplayVariable } from "~~/app/debug/_components/contract";
 import { Abi, AbiFunction } from "abitype";
 import { Contract, ContractName, GenericContract, InheritedFunctions } from "~~/utils/scaffold-eth/contract";
-import { useAccount } from "wagmi"
 
 export const OutcomeDisplay = ({
+  address,
   refreshDisplayVariables,
   deployedContractData,
 }: {
+  address: string;
   refreshDisplayVariables: boolean;
   deployedContractData: Contract<ContractName>;
 }) => {
@@ -14,7 +15,6 @@ export const OutcomeDisplay = ({
     return null;
   }
 
-  const { address } = useAccount();
 
   const functionsToDisplay = (
     (deployedContractData.abi as Abi).filter(part => part.type === "function") as AbiFunction[]
