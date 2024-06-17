@@ -1,11 +1,20 @@
 'use client';
 
 import "@farcaster/auth-kit/styles.css";
-import { useState, useCallback } from 'react';
+import { useState, useReducer } from 'react';
 import { GameAccountDisplay } from "~~/components/cosmic-engine";
 
 import { UniversalButton } from "~~/components/cosmic-engine/UniversalButton";
-import { Contract, ContractName, GenericContract, InheritedFunctions } from "~~/utils/scaffold-eth/contract";
+import { OutcomeDisplay } from "~~/components/cosmic-engine/OutcomeDisplay";
+
+import { 
+    Contract, 
+    ContractName, 
+    GenericContract, 
+    InheritedFunctions 
+    } from "~~/utils/scaffold-eth/contract";
+
+import { ContractVariables } from "@/app/debug/_components/contract/ContractVariables";
 
 import { 
     JJ_CONTRACT_NAME, 
@@ -39,6 +48,7 @@ const deployedContractData = deployedContracts[31337].JackpotJunction;
 
 
 export const JackpotJunction = () => {
+    const [refreshDisplayVariables, triggerRefreshDisplayVariables] = useReducer(value => !value, false);
     const [error, setError] = useState(false);
     const { address } = useAccount();
     const [ loading, setLoading ] = useState(false);
@@ -71,7 +81,7 @@ export const JackpotJunction = () => {
 
 
 
-    const functionsToDisplay = (
+    const rollFunction = (
         (deployedContractData.abi as Abi).filter(part => part.type === "function") as AbiFunction[]
       )
         .filter(fn => {
@@ -86,7 +96,26 @@ export const JackpotJunction = () => {
           };
         })
     
-      if (!functionsToDisplay.length) {
+      if (!rollFunction.length) {
+        return <>No write methods</>;
+      }
+
+      const acceptFunction = (
+        (deployedContractData.abi as Abi).filter(part => part.type === "function") as AbiFunction[]
+      )
+        .filter(fn => {
+          const isWriteableFunction = fn.stateMutability !== "view" && fn.stateMutability !== "pure";
+          return isWriteableFunction;
+        })
+        .filter(fn => fn.name == "accept")
+        .map(fn => {
+          return {
+            fn,
+            inheritedFrom: ((deployedContractData as GenericContract)?.inheritedFunctions as InheritedFunctions)?.[fn.name],
+          };
+        })
+    
+      if (!rollFunction.length) {
         return <>No write methods</>;
       }
 
@@ -106,9 +135,10 @@ export const JackpotJunction = () => {
                 <div className="flex justify-center">
                 {
                     (isOnchain) ? 
-                    functionsToDisplay.map(({ fn, inheritedFrom }, idx) => (                    
+                    rollFunction.map(({ fn, inheritedFrom }, idx) => (                    
                 <UniversalButton
                 contractName={JJ_CONTRACT_NAME as ContractName}
+                buttonLabel="Spin"
                 payableValue={ROLL_COST} // TODO: get ROLL_COST from contract
                 abi={deployedContractData.abi as Abi}
                 key={`${fn.name}-${idx}}`}
@@ -126,6 +156,26 @@ export const JackpotJunction = () => {
                     </button>                      
                 }
                 </div>
+
+                {
+                acceptFunction.map(({ fn, inheritedFrom }, idx) => (                    
+                    <UniversalButton
+                    contractName={JJ_CONTRACT_NAME as ContractName}
+                    buttonLabel="Accept Prize"
+                    abi={deployedContractData.abi as Abi}
+                    key={`${fn.name}-${idx}}`}
+                    abiFunction={fn}
+                    onChange={() => {}}
+                    contractAddress={deployedContractData.address}
+                    />))    
+                }
+
+                <div className="bg-base-300 rounded-3xl px-6 lg:px-8 py-4 shadow-lg shadow-base-300">
+                    <OutcomeDisplay
+                    refreshDisplayVariables={refreshDisplayVariables}
+                    deployedContractData={deployedContractData}
+                    />
+                </div>             
             </div>
         </div>
     );

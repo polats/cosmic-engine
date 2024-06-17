@@ -17,6 +17,7 @@ type DisplayVariableProps = {
   refreshDisplayVariables: boolean;
   inheritedFrom?: string;
   abi: Abi;
+  args?: any;
 };
 
 export const DisplayVariable = ({
@@ -25,6 +26,7 @@ export const DisplayVariable = ({
   refreshDisplayVariables,
   abi,
   inheritedFrom,
+  args,
 }: DisplayVariableProps) => {
   const { targetNetwork } = useTargetNetwork();
 
@@ -38,6 +40,7 @@ export const DisplayVariable = ({
     functionName: abiFunction.name,
     abi: abi,
     chainId: targetNetwork.id,
+    args: args,
     query: {
       retry: false,
     },

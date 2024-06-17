@@ -19,7 +19,8 @@ import { ContractName } from "~~/utils/scaffold-eth/contract";
 
 type UniversalButtonProps = {
   contractName: ContractName;
-  payableValue: string;
+  buttonLabel: string;
+  payableValue?: string;
   abi: Abi;
   abiFunction: AbiFunction;
   onChange: () => void;
@@ -30,6 +31,7 @@ type UniversalButtonProps = {
 
 export const UniversalButton = ({
   contractName,
+  buttonLabel,
   payableValue,
   abi,
   abiFunction,
@@ -138,7 +140,7 @@ export const UniversalButton = ({
             <button className="bg-red-600 hover:bg-red-700 py-3 px-6 text-white rounded-lg" 
               disabled={writeDisabled || isPending} onClick={handleWrite}>
               {isPending && <span className="loading loading-spinner loading-xs"></span>}
-              Spin
+              {buttonLabel}
             </button>
           </div>
         </div>
