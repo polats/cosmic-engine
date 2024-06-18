@@ -40,29 +40,32 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
         Step 3: Stop. Stops at the designated slice and shows a modal to either accept or reroll
     */}
 
-    const { rotation } = useSpring({
+    const rotateSpring = useSpring({
         from: { rotation: 0},
         to: async(next, cancel) => {
-            if(state === 'accelerating'){
+            if (state === 'notMoving') {
+                await next({ rotation: 0});
+            }
+            else if(state === 'accelerating'){
                 setInitialLoop(false)
                 await next({ rotation: 360 * 4, config: {duration: 2000, easing: easings.easeInQuad } })
                 await next({ rotation: 0, config: { duration: 0 } });
             }
             else if(state === 'spinning'){
                 while(isSpinning){
-                    await next({ rotation: 360, config: { duration: 180} }); 
+                    await next({ rotation: 360, config: { duration: 200}, easing: (t) => t }); 
                     await next({ rotation: 0, config: { duration: 0 } });
                 }
-            } else if (state === 'decelerating') {
+            } else if (state === 'decelerating' && !initialLoop) {
                 await next({ rotation: 360 * 10, config: { duration: 5000, easing: easings.easeOutCubic } }); //TODO: Change 360 to the actual point on where the wheel should land
+                await setInitialLoop(true);
                 confetti({
                     particleCount: 200,
                     spread: 140,
                     origin: { y: 0.5},
                 });
-                setInitialLoop(true);
-              } else {
-                await next({ rotation: 0});
+              }  else {
+                console.log('Reached undocumented state')
               }
         },
         reset: state === 'notMoving',
@@ -72,7 +75,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
             }
             else if ( isSpinning && !initialLoop) {
                 setState('spinning');
-            } else if ( !isSpinning && prizeWon ) {
+            } else if ( !isSpinning && prizeWon && state === 'spinning' ) {
                 setState('decelerating')
             } else if ( state === 'decelerating') {
                 setState('notMoving')
@@ -81,26 +84,6 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
     })
 
     const Slices = () => {
-        const data = {
-            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Orange', 'Pink'], // Define the labels here
-            datasets: [
-                {
-                    data: [25, 25, 25, 25,25,25], // Define the data values here
-                    backgroundColor: ['red', 'blue', 'yellow', 'green', 'orange', 'pink'],
-                },
-            ],
-        };
-        const options = {
-            plugins: {
-                legend: {
-                    display: false, // Hide legend
-                },
-                tooltip: {
-                    enabled: false, // Disable tooltips
-                },
-            },
-            animation: false, // Disable animations
-        };
         return (
             <>
                 <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
@@ -122,7 +105,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
         <>
         <animated.div
             className="h-full w-full flex justify-center items-center my-4 grow rounded-[50%] h-full w-full max-h-[400px] max-w-[400px]"
-            style={{ transform: rotation.to((r) => `rotate(${r}deg)`),}}
+            style={{ transform: rotateSpring.rotation.to((r) => `rotate(${r}deg)`),}}
         >
             <Slices />
         </animated.div>

@@ -11,6 +11,8 @@ type UniversalButtonProps = {
   fnName: string;
   deployedContractData: Contract<ContractName>;
   buttonLabel: string;
+  setIsSpinning?: () => void;
+  setPrizeWon?: () => void;
   onChange: () => void;
   args?: any;
   payableValue?: string;
@@ -20,6 +22,8 @@ export const UniversalButton = ({
   fnName,
   deployedContractData,
   buttonLabel,
+  setIsSpinning,
+  setPrizeWon,
   onChange,
   args,
   payableValue,
@@ -36,6 +40,9 @@ export const UniversalButton = ({
   
     if (writeContractAsync) {
       try {
+        if(fnName === 'roll'){
+          setIsSpinning(true);
+        }
         const makeWriteWithParams = () =>
           writeContractAsync({
             address: deployedContractData.address,
@@ -46,10 +53,18 @@ export const UniversalButton = ({
             // @ts-ignore
             value: payableValue ? BigInt(payableValue) : BigInt("0"), 
           });
-        await writeTxn(makeWriteWithParams);
+        const res = await writeTxn(makeWriteWithParams);
+        if(fnName === 'roll'){
+          setIsSpinning(false);
+          setPrizeWon({prize: 'This is the reward!'});
+        }
         onChange();
       } catch (e: any) {
         console.error("⚡️ ~ file: WriteOnlyFunctionForm.tsx:handleWrite ~ error", e);
+        if(fnName === 'roll'){
+          setIsSpinning(false);
+          setPrizeWon(null);
+        }
       }
     }
   };
@@ -73,8 +88,6 @@ export const UniversalButton = ({
             }`}
             data-tip={`${writeDisabled && "Wallet not connected or in the wrong network"}`}
           >
- 
-
             <button className="bg-red-600 hover:bg-red-700 py-3 px-6 text-white rounded-lg" 
               disabled={writeDisabled || isPending} onClick={handleWrite}>
               {isPending && <span className="loading loading-spinner loading-xs"></span>}

@@ -130,6 +130,8 @@ export const JackpotJunction = () => {
                                 fnName="roll"
                                 deployedContractData={deployedContractData}                
                                 buttonLabel="SPIN"
+                                setIsSpinning={setIsSpinning}
+                                setPrizeWon={setPrizeWon}
                                 payableValue={ROLL_COST} // TODO: get ROLL_COST from contract
                                 onChange={() => {}}
                                 />
