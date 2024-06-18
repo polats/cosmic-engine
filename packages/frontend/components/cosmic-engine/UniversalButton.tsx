@@ -7,6 +7,7 @@ import { useTransactor } from "~~/hooks/scaffold-eth";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 import { Contract, ContractName } from "~~/utils/scaffold-eth/contract";
 import { Prize } from '~~/components/cosmic-engine/JackpotJunction';
+import "~~/styles/roll-button.scss";
 
 type UniversalButtonProps = {
   fnName: string;
@@ -89,7 +90,8 @@ export const UniversalButton = ({
             }`}
             data-tip={`${writeDisabled && "Wallet not connected or in the wrong network"}`}
           >
-            <button className="bg-red-600 hover:bg-red-700 py-3 px-6 text-white rounded-lg" 
+            <button 
+              className={`${fnName === 'roll' ? 'spin' : 'alt'} w-[150px] text-xl text-center`}
               disabled={writeDisabled || isPending} onClick={handleWrite}>
               {isPending && <span className="loading loading-spinner loading-xs"></span>}
               {buttonLabel}
