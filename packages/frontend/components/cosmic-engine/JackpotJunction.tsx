@@ -62,6 +62,14 @@ export const JackpotJunction = () => {
     });
 
     const { showAnimation } = useAnimationConfig(outcome);
+
+    const handleIsSpinning = (val : boolean) => {
+        setIsSpinning(val)
+    }
+
+    const handlePrizeWon = (prize: Prize | null) => {
+        setPrizeWon(prize);
+    }
     
     async function handleRoll() {
         if (!address) return;
@@ -130,6 +138,8 @@ export const JackpotJunction = () => {
                                 fnName="roll"
                                 deployedContractData={deployedContractData}                
                                 buttonLabel="SPIN"
+                                handleIsSpinning={handleIsSpinning}
+                                handlePrizeWon={handlePrizeWon}
                                 payableValue={ROLL_COST} // TODO: get ROLL_COST from contract
                                 onChange={() => {}}
                                 />

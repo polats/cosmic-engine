@@ -6,11 +6,14 @@ import { useAccount, useWaitForTransactionReceipt, useWriteContract } from "wagm
 import { useTransactor } from "~~/hooks/scaffold-eth";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 import { Contract, ContractName } from "~~/utils/scaffold-eth/contract";
+import { Prize } from '~~/components/cosmic-engine/JackpotJunction';
 
 type UniversalButtonProps = {
   fnName: string;
   deployedContractData: Contract<ContractName>;
   buttonLabel: string;
+  handleIsSpinning?: (val: boolean) => void;
+  handlePrizeWon?: (prize: Prize | null) => void;
   onChange: () => void;
   args?: any;
   payableValue?: string;
@@ -20,6 +23,8 @@ export const UniversalButton = ({
   fnName,
   deployedContractData,
   buttonLabel,
+  handleIsSpinning,
+  handlePrizeWon,
   onChange,
   args,
   payableValue,
@@ -36,6 +41,9 @@ export const UniversalButton = ({
   
     if (writeContractAsync) {
       try {
+        if(fnName === 'roll' && handleIsSpinning){
+          handleIsSpinning(true);
+        }
         const makeWriteWithParams = () =>
           writeContractAsync({
             address: deployedContractData.address,
@@ -46,10 +54,18 @@ export const UniversalButton = ({
             // @ts-ignore
             value: payableValue ? BigInt(payableValue) : BigInt("0"), 
           });
-        await writeTxn(makeWriteWithParams);
+        const res = await writeTxn(makeWriteWithParams);
+        if(fnName === 'roll' && handleIsSpinning && handlePrizeWon){
+          handleIsSpinning(false);
+          handlePrizeWon({prize: 'This is the reward!'});
+        }
         onChange();
       } catch (e: any) {
         console.error("⚡️ ~ file: WriteOnlyFunctionForm.tsx:handleWrite ~ error", e);
+        if(fnName === 'roll' && handleIsSpinning && handlePrizeWon){
+          handleIsSpinning(false);
+          handlePrizeWon(null);
+        }
       }
     }
   };
@@ -73,8 +89,6 @@ export const UniversalButton = ({
             }`}
             data-tip={`${writeDisabled && "Wallet not connected or in the wrong network"}`}
           >
- 
-
             <button className="bg-red-600 hover:bg-red-700 py-3 px-6 text-white rounded-lg" 
               disabled={writeDisabled || isPending} onClick={handleWrite}>
               {isPending && <span className="loading loading-spinner loading-xs"></span>}
