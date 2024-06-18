@@ -154,7 +154,7 @@ export const JackpotJunction = () => {
                                      />
                                 }
                                 <div
-                                    className={`break-all block transition bg-transparent ${
+                                    className={`mt-[1rem] break-all block transition bg-transparent ${
                                     showAnimation ? "bg-warning rounded-sm animate-pulse-fast" : ""
                                     }`}
                                 >
