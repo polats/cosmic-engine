@@ -6,13 +6,14 @@ import { useAccount, useWaitForTransactionReceipt, useWriteContract } from "wagm
 import { useTransactor } from "~~/hooks/scaffold-eth";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 import { Contract, ContractName } from "~~/utils/scaffold-eth/contract";
+import { Prize } from '~~/components/cosmic-engine/JackpotJunction';
 
 type UniversalButtonProps = {
   fnName: string;
   deployedContractData: Contract<ContractName>;
   buttonLabel: string;
-  setIsSpinning?: () => void;
-  setPrizeWon?: () => void;
+  handleIsSpinning?: (val: boolean) => void;
+  handlePrizeWon?: (prize: Prize | null) => void;
   onChange: () => void;
   args?: any;
   payableValue?: string;
@@ -22,8 +23,8 @@ export const UniversalButton = ({
   fnName,
   deployedContractData,
   buttonLabel,
-  setIsSpinning,
-  setPrizeWon,
+  handleIsSpinning,
+  handlePrizeWon,
   onChange,
   args,
   payableValue,
@@ -40,8 +41,8 @@ export const UniversalButton = ({
   
     if (writeContractAsync) {
       try {
-        if(fnName === 'roll'){
-          setIsSpinning(true);
+        if(fnName === 'roll' && handleIsSpinning){
+          handleIsSpinning(true);
         }
         const makeWriteWithParams = () =>
           writeContractAsync({
@@ -54,16 +55,16 @@ export const UniversalButton = ({
             value: payableValue ? BigInt(payableValue) : BigInt("0"), 
           });
         const res = await writeTxn(makeWriteWithParams);
-        if(fnName === 'roll'){
-          setIsSpinning(false);
-          setPrizeWon({prize: 'This is the reward!'});
+        if(fnName === 'roll' && handleIsSpinning && handlePrizeWon){
+          handleIsSpinning(false);
+          handlePrizeWon({prize: 'This is the reward!'});
         }
         onChange();
       } catch (e: any) {
         console.error("⚡️ ~ file: WriteOnlyFunctionForm.tsx:handleWrite ~ error", e);
-        if(fnName === 'roll'){
-          setIsSpinning(false);
-          setPrizeWon(null);
+        if(fnName === 'roll' && handleIsSpinning && handlePrizeWon){
+          handleIsSpinning(false);
+          handlePrizeWon(null);
         }
       }
     }

@@ -53,10 +53,11 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
             }
             else if(state === 'spinning'){
                 while(isSpinning){
-                    await next({ rotation: 360, config: { duration: 200}, easing: (t) => t }); 
-                    await next({ rotation: 0, config: { duration: 0 } });
+                    await next({ rotation: 360, delay:0, config: { duration: 200, easing: t => t}}); 
+                    await next({ rotation: 0, config: { duration: 0 }});
                 }
-            } else if (state === 'decelerating' && !initialLoop) {
+            } 
+            else if (state === 'decelerating' && !initialLoop) {
                 await next({ rotation: 360 * 10, config: { duration: 5000, easing: easings.easeOutCubic } }); //TODO: Change 360 to the actual point on where the wheel should land
                 await setInitialLoop(true);
                 confetti({
