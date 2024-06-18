@@ -55,7 +55,10 @@ export const useScaffoldReadContract = <
 
   const queryClient = useQueryClient();
   const { data: blockNumber } = useBlockNumber({
-    watch: defaultWatch,
+    watch: {
+      enabled: defaultWatch,
+      pollingInterval: 2000,      
+    },
     chainId: targetNetwork.id,
     query: {
       enabled: defaultWatch,

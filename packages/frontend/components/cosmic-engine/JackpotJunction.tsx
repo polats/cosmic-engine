@@ -8,28 +8,18 @@ import { UniversalButton } from "~~/components/cosmic-engine/UniversalButton";
 import { ReadContractDisplay } from "~~/components/cosmic-engine/ReadContractDisplay";
 
 import { 
-    Contract, 
-    ContractName, 
-    GenericContract, 
-    InheritedFunctions 
-    } from "~~/utils/scaffold-eth/contract";
-
-
-import { 
     JJ_CONTRACT_NAME, 
     ROLL_COST
     } from "@/lib/constants";
-
-import { Abi, AbiFunction } from "abitype";
 
 import { JackpotWheel } from "~~/components/cosmic-engine/JackpotWheel";
 import { performRoll } from "@/lib/actions"
 import { useAccount } from "wagmi"
 import { useGlobalState } from "~~/services/store/store"
-import { confetti } from "@tsparticles/confetti"
 import { useDeployedContractInfo } from "~~/hooks/scaffold-eth";
 
-import { ContractUI } from "~~/app/debug/_components/contract";
+import { useScaffoldReadContract } from "~~/hooks/scaffold-eth";
+import { useAnimationConfig } from "~~/hooks/scaffold-eth";
 
 // TODO: adjust types below when prizes are defined
 export interface Prize {
@@ -45,12 +35,9 @@ export interface PrizePool {
 
 import { useLocalStoragePreferences } from "@/hooks/cosmic-engine";
 
-import deployedContracts from "@/contracts/deployedContracts";
-
 export const JackpotJunction = () => {
     const [refreshDisplayVariables, triggerRefreshDisplayVariables] = useReducer(value => !value, false);
     const { data: deployedContractData, isLoading: deployedContractLoading } = useDeployedContractInfo(JJ_CONTRACT_NAME);
-    const deployedContractData2 = deployedContracts[31337].JackpotJunction;
 
     const [error, setError] = useState(false);
     const { address } = useAccount();
@@ -66,9 +53,16 @@ export const JackpotJunction = () => {
         mediumPrize: null
     });
     const { isOnchain } = useLocalStoragePreferences();
+
+    const [ bonus, setBonus ] = useState(false);
+    const { data: outcome } = useScaffoldReadContract({
+        contractName: JJ_CONTRACT_NAME,
+        functionName: "outcome",
+        args: [address, bonus]
+    });
+
+    const { showAnimation } = useAnimationConfig(outcome);
     
-
-
     async function handleRoll() {
         if (!address) return;
         setIsSpinning(true);
@@ -79,6 +73,36 @@ export const JackpotJunction = () => {
         await new Promise(resolve => setTimeout(resolve,2500));
         setIsSpinning(false);
         setPrizeWon({prize: 'This is the reward!'});
+        
+    }
+
+    const outcomeResult = () => {
+        if (!outcome) return null;
+
+        const outcomeIndex = outcome[1].toString();
+        const outcomeValue = outcome[2].toString();
+        let outcomeString;
+        switch (outcomeIndex) {
+            case "0":
+                outcomeString = "No prize, try again!";
+                break;
+            case "1":
+                outcomeString = `You got Item # ${outcomeValue} ! Press ACCEPT to claim your prize!`;
+                break;
+            case "2":
+                outcomeString = `Consolation Prize: ${outcomeValue} wei ! Press ACCEPT to claim your prize!`;
+                break;
+            case "3":
+                outcomeString = `Moderate Prize: ${outcomeValue} wei ! Press ACCEPT to claim your prize!`;
+                break;
+            case "4":
+                outcomeString = `JACKPOT: ${outcomeValue} wei ! Press ACCEPT to claim your prize!`;
+                break;
+            
+        }
+
+
+        return <div>{outcomeString}</div>
         
     }
 
@@ -98,37 +122,50 @@ export const JackpotJunction = () => {
                     deployedContractData &&
 
                     <div>
-                        <div className="flex justify-center">
+                        <div className="flex flex-col justify-center items-center grow text-center">
                         {
                             (isOnchain) ? 
+                                <>  
                                 <UniversalButton
                                 fnName="roll"
                                 deployedContractData={deployedContractData}                
-                                buttonLabel="Spin"
+                                buttonLabel="SPIN"
                                 payableValue={ROLL_COST} // TODO: get ROLL_COST from contract
                                 onChange={() => {}}
                                 />
+                                {
+                                    outcome && outcome[1].toString() !== "0" &&
+                                    <UniversalButton // TODO: implement DB version
+                                    fnName="accept"
+                                    deployedContractData={deployedContractData}                    
+                                    buttonLabel="ACCEPT"
+                                    args={[]}
+                                    onChange={() => {}}
+                                     />
+                                }
+                                <div
+                                    className={`break-all block transition bg-transparent ${
+                                    showAnimation ? "bg-warning rounded-sm animate-pulse-fast" : ""
+                                    }`}
+                                >
+                                {                                 
+                                    outcomeResult()
+                                }            
+                                </div>                                
+            
+
+                                </>
                             :                
                                 <button
                                     disabled={(userCurrency <= 0) || loading}
                                     className="bg-blue-600 hover:bg-blue-700 py-3 px-6 text-white rounded-lg"
                                     onClick={handleRoll}
                                 >
-                                    Spin
+                                    SPIN
                                 </button>                      
                         }
                         </div>
 
-                            { 
-                            // TODO: implement DB version
-                            }
-                            <UniversalButton
-                            fnName="accept"
-                            deployedContractData={deployedContractData}                    
-                            buttonLabel="Accept Prize"
-                            args={[]}
-                            onChange={() => {}}
-                            />
 
                         <div className="bg-base-300 rounded-3xl px-6 lg:px-8 py-4 shadow-lg shadow-base-300">
                             {
@@ -140,7 +177,7 @@ export const JackpotJunction = () => {
                                 />
                             }
                         </div>        
-                    </div>     
+                    </div>                         
                 }
             </div>
         </div>
