@@ -47,7 +47,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                 await next({ rotation: 0, config: { duration: 0 } });
             }
             else if(state === 'spinning'){
-                while(isSpinning){
+                while(isSpinning || !prizeWon){
                     await next({ rotation: 360, delay:0, config: { duration: 200, easing: t => t}}); 
                     await next({ rotation: 0, config: { duration: 0 }});
                 }

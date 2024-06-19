@@ -3,8 +3,7 @@
 import "@farcaster/auth-kit/styles.css";
 import { useState, useEffect, useReducer } from 'react';
 import { GameAccountDisplay } from "~~/components/cosmic-engine";
-
-import UniversalButton from "~~/components/cosmic-engine/UniversalButton";
+import AcceptButton from "~~/components/cosmic-engine/AcceptButton";
 import RollButton from "~~/components/cosmic-engine/RollButton";
 import { ReadContractDisplay } from "~~/components/cosmic-engine/ReadContractDisplay";
 
@@ -173,12 +172,8 @@ export const JackpotJunction = () => {
                                     />
                                     {
                                         outcome && outcome[1].toString() !== "0" &&
-                                        <UniversalButton // TODO: implement DB version
-                                            fnName="accept"
-                                            deployedContractData={deployedContractData}                    
-                                            buttonLabel="ACCEPT"
-                                            args={[]}
-                                            onChange={() => {}}
+                                        <AcceptButton // TODO: implement DB version
+                                            deployedContractData={deployedContractData}
                                         />
                                     }
                                     <div
