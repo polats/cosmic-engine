@@ -24,7 +24,8 @@ import { useAnimationConfig } from "~~/hooks/scaffold-eth";
 
 // TODO: adjust types below when prizes are defined
 export interface Prize {
-    prize: string;
+    prizeType: string;
+    prizeValue: string;
 }
 
 export interface PrizePool {
@@ -63,6 +64,20 @@ export const JackpotJunction = () => {
         args: [address, bonus]
     });
 
+    useEffect(() => {
+        if(!outcome){
+            handlePrizeWon(null);
+          } else {
+            const outcomeIndex = outcome[1].toString()
+            const outcomeValue = outcome[2].toString()
+            handlePrizeWon({
+                prizeType: outcomeIndex,
+                prizeValue: outcomeValue
+            });
+          }
+        // setPrizeWon
+    }, [outcome]);
+
     const { showAnimation } = useAnimationConfig(outcome);
 
     const handleIsSpinning = (val : boolean) => {
@@ -80,7 +95,7 @@ export const JackpotJunction = () => {
     const handleLoading = (val: boolean) => {
         setLoading(val);
     }
-    
+
     async function handleRoll() {
         if (!address) return;
         setIsSpinning(true);
@@ -89,8 +104,6 @@ export const JackpotJunction = () => {
         setUserCurrency(userCurrency - 100);
         await new Promise(resolve => setTimeout(resolve,2500));
         setIsSpinning(false);
-        setPrizeWon({prize: 'This is the reward!'});
-        
     }
 
     const outcomeResult = () => {
@@ -99,6 +112,7 @@ export const JackpotJunction = () => {
         const outcomeIndex = outcome[1].toString();
         const outcomeValue = outcome[2].toString();
         let outcomeString;
+
         switch (outcomeIndex) {
             case "0":
                 outcomeString = "No prize, try again!";
@@ -152,8 +166,8 @@ export const JackpotJunction = () => {
                                         handleLoading={handleLoading}        
                                         buttonLabel="SPIN"
                                         handleIsSpinning={handleIsSpinning}
+                                        outcome={outcome}
                                         loading={loading}
-                                        handlePrizeWon={handlePrizeWon}
                                         payableValue={ROLL_COST} // TODO: get ROLL_COST from contract
                                         onChange={() => {}}
                                     />
@@ -180,10 +194,10 @@ export const JackpotJunction = () => {
                             :                
                                 <button
                                     disabled={(userCurrency <= 0) || loading}
-                                    className="spin w-[150px] text-xl text-center mb-[2.25rem]"
+                                    className="spin w-[150px] h-[64px] text-xl text-center mb-[2.25rem]"
                                     onClick={handleRoll}
                                 >
-                                    SPIN
+                                    {loading ? <span className="loading loading-spinner loading-xs"></span> : isReroll ? 'REROLL' : 'SPIN'}
                                 </button>                      
                         }
                         </div>

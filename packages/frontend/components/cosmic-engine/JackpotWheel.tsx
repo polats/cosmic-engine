@@ -27,12 +27,6 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
         duration: 300, // This determines the distributed speed, the lower this is, the faster it spins
         easing: (t:number ) => t, // This controls the easing after each loop of rotation, if you do not make this consistent, it will slow down after each rotation. Change in next step.
     })
-
-    {/*
-        1) Land on winning slice
-        2) Reset to notMoving    
-    */}
-
     {/*
         Will involve different steps
         Step 1: Loading. While fetching data, wheel rotates consistently
@@ -61,11 +55,13 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
             else if (state === 'decelerating' && !initialLoop) {
                 await next({ rotation: 360 * 10, config: { duration: 5000, easing: easings.easeOutCubic } }); //TODO: Change 360 to the actual point on where the wheel should land
                 await setInitialLoop(true);
-                confetti({
-                    particleCount: 200,
-                    spread: 140,
-                    origin: { y: 0.5},
-                });
+                if(prizeWon && prizeWon.prizeType !== '0'){
+                    confetti({
+                        particleCount: 200,
+                        spread: 140,
+                        origin: { y: 0.5},
+                    });
+                }
                 handleLoading(false)
               }  else {
                 console.log('Reached undocumented state')

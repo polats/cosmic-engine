@@ -15,12 +15,12 @@ type RollButtonProps = {
   deployedContractData: Contract<ContractName>;
   buttonLabel: string;
   handleIsSpinning: (val: boolean) => void;
-  handlePrizeWon: (prize: Prize | null) => void;
   handleLoading: (val: boolean)=> void;
   onChange: () => void;
   args?: any;
   payableValue?: string;
   loading: boolean;
+  outcome: any,
 };
 
 export const RollButton = ({
@@ -30,11 +30,11 @@ export const RollButton = ({
   buttonLabel,
   handleIsSpinning,
   handleLoading,
-  handlePrizeWon,
   onChange,
   args,
   payableValue,
   loading,
+  outcome
 }: RollButtonProps) => {
 
   const { chain } = useAccount();
@@ -61,14 +61,12 @@ export const RollButton = ({
           });
         const res = await writeTxn(makeWriteWithParams);
         handleIsSpinning(false);
-        handlePrizeWon({prize: 'This is the reward!'});
         handleReroll(true);
         onChange();
       } catch (e: any) {
         console.error("⚡️ ~ file: WriteOnlyFunctionForm.tsx:handleWrite ~ error", e);
         handleIsSpinning(false);
         handleLoading(false)
-        handlePrizeWon(null);
       }
     }
   };
