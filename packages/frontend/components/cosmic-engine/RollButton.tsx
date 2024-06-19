@@ -14,8 +14,8 @@ type RollButtonProps = {
   handleReroll: (val: boolean) => void;
   deployedContractData: Contract<ContractName>;
   buttonLabel: string;
-  handleIsSpinning?: (val: boolean) => void;
-  handlePrizeWon?: (prize: Prize | null) => void;
+  handleIsSpinning: (val: boolean) => void;
+  handlePrizeWon: (prize: Prize | null) => void;
   handleLoading: (val: boolean)=> void;
   onChange: () => void;
   args?: any;
@@ -35,7 +35,7 @@ export const RollButton = ({
   args,
   payableValue,
   loading,
-}: UniversalButtonProps) => {
+}: RollButtonProps) => {
 
   const { chain } = useAccount();
   const writeTxn = useTransactor();

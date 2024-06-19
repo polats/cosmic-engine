@@ -13,7 +13,7 @@ interface JackpotWheelProps {
     prizePool: PrizePool;
     prizeWon?: Prize | null;
     isSpinning: boolean;
-    handleLoading:() => void;
+    handleLoading: (val:boolean) => void;
 }
 
 export const JackpotWheel = (props:JackpotWheelProps) => {
