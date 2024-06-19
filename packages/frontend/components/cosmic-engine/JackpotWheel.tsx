@@ -13,13 +13,14 @@ interface JackpotWheelProps {
     prizePool: PrizePool;
     prizeWon?: Prize | null;
     isSpinning: boolean;
+    handleLoading:() => void;
 }
 
 export const JackpotWheel = (props:JackpotWheelProps) => {
     const wheelApiRef = useSpringRef();
     const [ state, setState ] = useState('notMoving');
     const [ initialLoop, setInitialLoop ] = useState(true);
-    const { prizePool, prizeWon, isSpinning } = props;
+    const { prizePool, prizeWon, isSpinning, handleLoading } = props;
     const [ prizeState, setPrizeState ] = useState(prizeWon); //used to update state, will not cause a re render if prizeWon is used
     const [ currentAngle, setCurrentAngle ] = useState(0);
     const [ springConfig, setSpringConfig ] = useState({
@@ -65,6 +66,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                     spread: 140,
                     origin: { y: 0.5},
                 });
+                handleLoading(false)
               }  else {
                 console.log('Reached undocumented state')
               }
@@ -103,14 +105,11 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
     }
 
     return (
-        <>
         <animated.div
             className="h-full w-full flex justify-center items-center my-4 grow rounded-[50%] h-full w-full max-h-[400px] max-w-[400px]"
             style={{ transform: rotateSpring.rotation.to((r) => `rotate(${r}deg)`),}}
         >
             <Slices />
         </animated.div>
-        Wheel Status: {state}
-        </>
     )    
 }

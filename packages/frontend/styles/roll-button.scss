@@ -26,7 +26,9 @@ $alt-button-shadow: #e6b93e94;
 
 button {
     position: relative;
-    display: inline-block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     cursor: pointer;
     outline: none;
     border: 0;

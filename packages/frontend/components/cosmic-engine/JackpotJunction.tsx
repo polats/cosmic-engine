@@ -1,10 +1,11 @@
 'use client';
 
 import "@farcaster/auth-kit/styles.css";
-import { useState, useReducer } from 'react';
+import { useState, useEffect, useReducer } from 'react';
 import { GameAccountDisplay } from "~~/components/cosmic-engine";
 
-import { UniversalButton } from "~~/components/cosmic-engine/UniversalButton";
+import UniversalButton from "~~/components/cosmic-engine/UniversalButton";
+import RollButton from "~~/components/cosmic-engine/RollButton";
 import { ReadContractDisplay } from "~~/components/cosmic-engine/ReadContractDisplay";
 
 import { 
@@ -42,6 +43,8 @@ export const JackpotJunction = () => {
     const [error, setError] = useState(false);
     const { address } = useAccount();
     const [ loading, setLoading ] = useState(false);
+    const { isOnchain } = useLocalStoragePreferences();
+    const [ isReroll, setIsReroll ] = useState(false);
     const userCurrency = useGlobalState(({ userCurrency }) => userCurrency);
     const setUserCurrency = useGlobalState(({ setUserCurrency }) => setUserCurrency);
     const [ isSpinning, setIsSpinning ] = useState(false);
@@ -52,7 +55,6 @@ export const JackpotJunction = () => {
         lowestPrize: null,
         mediumPrize: null
     });
-    const { isOnchain } = useLocalStoragePreferences();
 
     const [ bonus, setBonus ] = useState(false);
     const { data: outcome } = useScaffoldReadContract({
@@ -64,11 +66,19 @@ export const JackpotJunction = () => {
     const { showAnimation } = useAnimationConfig(outcome);
 
     const handleIsSpinning = (val : boolean) => {
-        setIsSpinning(val)
+        setIsSpinning(val);
     }
 
     const handlePrizeWon = (prize: Prize | null) => {
         setPrizeWon(prize);
+    }
+
+    const handleReroll = (val: boolean) => {
+        setIsReroll(val);
+    }
+
+    const handleLoading = (val: boolean) => {
+        setLoading(val);
     }
     
     async function handleRoll() {
@@ -77,7 +87,6 @@ export const JackpotJunction = () => {
         setLoading(true);
         await performRoll(address);
         setUserCurrency(userCurrency - 100);
-        setLoading(false);
         await new Promise(resolve => setTimeout(resolve,2500));
         setIsSpinning(false);
         setPrizeWon({prize: 'This is the reward!'});
@@ -120,12 +129,14 @@ export const JackpotJunction = () => {
             <div className="flex flex-col justify-center items-center grow text-center">
                 <GameAccountDisplay />
                 {/* TODO: Add array for prize pool to make wheel dynamic  */}
-
-                <JackpotWheel 
-                    prizePool={prizePool} 
-                    prizeWon={prizeWon}
-                    isSpinning={isSpinning}
-                />
+                <div className="h-full w-full overflow-hidden flex justify-center items-center my-2">
+                    <JackpotWheel 
+                        prizePool={prizePool} 
+                        prizeWon={prizeWon}
+                        isSpinning={isSpinning}
+                        handleLoading={handleLoading}
+                    />
+                </div>
                 { 
                     deployedContractData &&
 
@@ -134,41 +145,42 @@ export const JackpotJunction = () => {
                         {
                             (isOnchain) ? 
                                 <>  
-                                <UniversalButton
-                                fnName="roll"
-                                deployedContractData={deployedContractData}                
-                                buttonLabel="SPIN"
-                                handleIsSpinning={handleIsSpinning}
-                                handlePrizeWon={handlePrizeWon}
-                                payableValue={ROLL_COST} // TODO: get ROLL_COST from contract
-                                onChange={() => {}}
-                                />
-                                {
-                                    outcome && outcome[1].toString() !== "0" &&
-                                    <UniversalButton // TODO: implement DB version
-                                    fnName="accept"
-                                    deployedContractData={deployedContractData}                    
-                                    buttonLabel="ACCEPT"
-                                    args={[]}
-                                    onChange={() => {}}
-                                     />
-                                }
-                                <div
-                                    className={`mt-[1rem] break-all block transition bg-transparent ${
-                                    showAnimation ? "bg-warning rounded-sm animate-pulse-fast" : ""
-                                    }`}
-                                >
-                                {                                 
-                                    outcomeResult()
-                                }            
-                                </div>                                
-            
-
+                                    <RollButton
+                                        isReroll={isReroll}
+                                        handleReroll={handleReroll}
+                                        deployedContractData={deployedContractData}        
+                                        handleLoading={handleLoading}        
+                                        buttonLabel="SPIN"
+                                        handleIsSpinning={handleIsSpinning}
+                                        loading={loading}
+                                        handlePrizeWon={handlePrizeWon}
+                                        payableValue={ROLL_COST} // TODO: get ROLL_COST from contract
+                                        onChange={() => {}}
+                                    />
+                                    {
+                                        outcome && outcome[1].toString() !== "0" &&
+                                        <UniversalButton // TODO: implement DB version
+                                            fnName="accept"
+                                            deployedContractData={deployedContractData}                    
+                                            buttonLabel="ACCEPT"
+                                            args={[]}
+                                            onChange={() => {}}
+                                        />
+                                    }
+                                    <div
+                                        className={`mt-[1rem] break-all block transition bg-transparent ${
+                                        showAnimation ? "bg-warning rounded-sm animate-pulse-fast" : ""
+                                        }`}
+                                    >
+                                    {                                 
+                                        outcomeResult()
+                                    }            
+                                    </div>
                                 </>
                             :                
                                 <button
                                     disabled={(userCurrency <= 0) || loading}
-                                    className="bg-blue-600 hover:bg-blue-700 py-3 px-6 text-white rounded-lg"
+                                    className="spin w-[150px] text-xl text-center mb-[2.25rem]"
                                     onClick={handleRoll}
                                 >
                                     SPIN
