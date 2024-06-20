@@ -140,7 +140,6 @@ export const JackpotJunction = () => {
         <div className="page-container">
  
             <div className="flex flex-col justify-center items-center min-h-[100%] text-center">
-                <GameAccountDisplay />
                 {/* TODO: Add array for prize pool to make wheel dynamic  */}
                 <div className="h-full w-full grow overflow-hidden flex justify-center items-center pt-[5rem] mb-2" >
                     <JackpotWheel 

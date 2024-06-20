@@ -1012,7 +1012,7 @@ const deployedContracts = {
   },
   84532: {
     JackpotJunction: {
-      address: "0x7Bc3583717E32529D9f34Df652882e7C1e450D3d",
+      address: "0xC450C1b5B01fc580b924755a369190484f0f706E",
       abi: [
         {
           inputs: [
