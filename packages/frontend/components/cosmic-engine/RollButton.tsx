@@ -12,7 +12,7 @@ import "~~/styles/roll-button.scss";
 type RollButtonProps = {
   isReroll: boolean;
   handleReroll: (val: boolean) => void;
-  deployedContractData: Contract<ContractName>;
+  deployedContractData?: Contract<ContractName>;
   buttonLabel: string;
   handleIsSpinning: (val: boolean) => void;
   handleLoading: (val: boolean)=> void;
@@ -45,7 +45,7 @@ export const RollButton = ({
   const { data: result, isPending, writeContractAsync } = useWriteContract();
 
   const handleWrite = async () => {
-    if (writeContractAsync) {
+    if (writeContractAsync && deployedContractData) {
       try {
         handleLoading(true);
         handleIsSpinning(true);

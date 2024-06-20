@@ -139,22 +139,25 @@ export const JackpotJunction = () => {
     return (
         <div className="page-container">
  
-            <div className="flex flex-col justify-center items-center grow text-center">
+            <div className="flex flex-col justify-center items-center min-h-[100%] text-center">
                 <GameAccountDisplay />
                 {/* TODO: Add array for prize pool to make wheel dynamic  */}
-                <div className="h-full w-full overflow-hidden flex justify-center items-center my-2">
+                <div className="h-full w-full grow overflow-hidden flex justify-center items-center pt-[5rem] mb-2" >
                     <JackpotWheel 
                         prizePool={prizePool} 
                         prizeWon={prizeWon}
                         isSpinning={isSpinning}
                         handleLoading={handleLoading}
+                        deployedContractData={deployedContractData ?? null}
+                        handlePrizeWon={handlePrizeWon}
+                        handleReroll={handleReroll}
                     />
                 </div>
                 { 
                     deployedContractData &&
 
                     <div>
-                        <div className="flex flex-col justify-center items-center grow text-center">
+                        <div className="flex flex-col justify-center items-center grow-0 text-center">
                         {
                             (isOnchain) ? 
                                 <>  
@@ -170,12 +173,12 @@ export const JackpotJunction = () => {
                                         payableValue={ROLL_COST} // TODO: get ROLL_COST from contract
                                         onChange={() => {}}
                                     />
-                                    {
+                                    {/* {
                                         outcome && outcome[1].toString() !== "0" &&
                                         <AcceptButton // TODO: implement DB version
                                             deployedContractData={deployedContractData}
                                         />
-                                    }
+                                    } */}
                                     <div
                                         className={`mt-[1rem] break-all block transition bg-transparent ${
                                         showAnimation ? "bg-warning rounded-sm animate-pulse-fast" : ""
@@ -192,7 +195,7 @@ export const JackpotJunction = () => {
                                     className="spin w-[150px] h-[64px] text-xl text-center mb-[2.25rem]"
                                     onClick={handleRoll}
                                 >
-                                    {loading ? <span className="loading loading-spinner loading-xs"></span> : isReroll ? 'REROLL' : 'SPIN'}
+                                    {loading ? <span className="loading loading-spinner loading-xs"></span> : isReroll && prizeWon ? 'REROLL' : 'SPIN'}
                                 </button>                      
                         }
                         </div>

@@ -16,6 +16,7 @@
     "@farcaster/auth-kit": "^0.3.0",
     "@heroicons/react": "^2.0.18",
     "@next/env": "^14.2.3",
+    "@next/font": "^14.2.4",
     "@privy-io/react-auth": "^1.67.0",
     "@rainbow-me/rainbowkit": "^2.0.2",
     "@react-spring/web": "^9.7.3",
