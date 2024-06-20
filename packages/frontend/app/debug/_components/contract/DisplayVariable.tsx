@@ -56,7 +56,7 @@ export const DisplayVariable = ({
     if (error) {
       const parsedError = getParsedError(error);
     
-      notification.error(parsedError);
+      // notification.error(parsedError);
     }
   }, [error]);
 
