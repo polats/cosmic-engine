@@ -52,7 +52,8 @@ export const useTransactor = (_walletClient?: WalletClient): TransactionFunc => 
       // Get full transaction from public client
       const publicClient = getPublicClient(wagmiConfig);
 
-      notificationId = notification.loading(<TxnNotification message="Awaiting for user confirmation" />);
+      // notificationId = notification.loading(<TxnNotification message="Awaiting for user confirmation" />);
+
       if (typeof tx === "function") {
         // Tx is already prepared by the caller
         const result = await tx();
@@ -62,19 +63,21 @@ export const useTransactor = (_walletClient?: WalletClient): TransactionFunc => 
       } else {
         throw new Error("Incorrect transaction passed to transactor");
       }
-      notification.remove(notificationId);
+      
+      // notification.remove(notificationId);
 
       const blockExplorerTxURL = network ? getBlockExplorerTxLink(network, transactionHash) : "";
 
-      notificationId = notification.loading(
-        <TxnNotification message="Waiting for transaction to complete." blockExplorerLink={blockExplorerTxURL} />,
-      );
+      // notificationId = notification.loading(
+      //   <TxnNotification message="Waiting for transaction to complete." blockExplorerLink={blockExplorerTxURL} />,
+      // );
 
       const transactionReceipt = await publicClient.waitForTransactionReceipt({
         hash: transactionHash,
         confirmations: options?.blockConfirmations,
       });
-      notification.remove(notificationId);
+
+      // notification.remove(notificationId);
 
       // notification.success(
       //   <TxnNotification message="Transaction completed successfully!" blockExplorerLink={blockExplorerTxURL} />,
@@ -90,7 +93,7 @@ export const useTransactor = (_walletClient?: WalletClient): TransactionFunc => 
       }
       console.error("⚡️ ~ file: useTransactor.ts ~ error", error);
       const message = getParsedError(error);
-      notification.error(message);
+      // notification.error(message);
       throw error;
     }
 
