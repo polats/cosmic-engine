@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { TransactionReceipt } from "viem";
+import { TransactionReceipt, parseEther } from "viem";
+import { hardhat } from "viem/chains";
 import { useAccount, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { useTransactor } from "~~/hooks/scaffold-eth";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
+
 import { Contract, ContractName } from "~~/utils/scaffold-eth/contract";
 import { Prize } from '~~/components/cosmic-engine/JackpotJunction';
 import "~~/styles/roll-button.scss";
@@ -37,11 +39,10 @@ export const RollButton = ({
   outcome
 }: RollButtonProps) => {
 
-  const { chain } = useAccount();
+  const { address: userAddress, chain } = useAccount();
   const writeTxn = useTransactor();
   const { targetNetwork } = useTargetNetwork();
   const writeDisabled = !chain || chain?.id !== targetNetwork.id;
-
   const { data: result, isPending, writeContractAsync } = useWriteContract();
 
   const handleWrite = async () => {
@@ -60,6 +61,18 @@ export const RollButton = ({
             value: payableValue ? BigInt(payableValue) : BigInt("0"), 
           });
         const res = await writeTxn(makeWriteWithParams);
+
+      // perform another transaction on localhost to make block tick
+      if (chain?.id === hardhat.id) {
+
+        await writeTxn({
+          chain: hardhat,
+          account: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+          to: userAddress,
+          value: parseEther("0.0001"),
+        });        
+      }
+
         handleIsSpinning(false);
         handleReroll(true);
         onChange();
