@@ -10,7 +10,7 @@ module.exports = async ({ deployments, getNamedAccounts }) => {
     {
         blocksToAct: 40,
         costToRoll: 100, // ethers.parseEther("1"),
-        costToReroll: 40, // ethers.parseEther("0.5")
+        costToReroll: 25, // ethers.parseEther("0.5")
     }
 
     const JackpotJunction = await deploy("JackpotJunction", {
