@@ -9,23 +9,33 @@ import { Contract, ContractName } from "~~/utils/scaffold-eth/contract";
 import { Prize } from '~~/components/cosmic-engine/JackpotJunction';
 import "~~/styles/roll-button.scss";
 
-type UniversalButtonProps = {
-  fnName: string;
-  deployedContractData: Contract<ContractName>;
+type RollButtonProps = {
+  isReroll: boolean;
+  handleReroll: (val: boolean) => void;
+  deployedContractData?: Contract<ContractName>;
   buttonLabel: string;
+  handleIsSpinning: (val: boolean) => void;
+  handleLoading: (val: boolean)=> void;
   onChange: () => void;
   args?: any;
   payableValue?: string;
+  loading: boolean;
+  outcome: any,
 };
 
-export const UniversalButton = ({
-  fnName,
+export const RollButton = ({
+  isReroll,
+  handleReroll,
   deployedContractData,
   buttonLabel,
+  handleIsSpinning,
+  handleLoading,
   onChange,
   args,
   payableValue,
-}: UniversalButtonProps) => {
+  loading,
+  outcome
+}: RollButtonProps) => {
 
   const { chain } = useAccount();
   const writeTxn = useTransactor();
@@ -35,23 +45,28 @@ export const UniversalButton = ({
   const { data: result, isPending, writeContractAsync } = useWriteContract();
 
   const handleWrite = async () => {
-  
-    if (writeContractAsync) {
+    if (writeContractAsync && deployedContractData) {
       try {
+        handleLoading(true);
+        handleIsSpinning(true);
         const makeWriteWithParams = () =>
           writeContractAsync({
             address: deployedContractData.address,
             // @ts-ignore
-            functionName: fnName,
+            functionName: "roll",
             abi: deployedContractData.abi,
             args: args,
             // @ts-ignore
             value: payableValue ? BigInt(payableValue) : BigInt("0"), 
           });
         const res = await writeTxn(makeWriteWithParams);
+        handleIsSpinning(false);
+        handleReroll(true);
         onChange();
       } catch (e: any) {
         console.error("⚡️ ~ file: WriteOnlyFunctionForm.tsx:handleWrite ~ error", e);
+        handleIsSpinning(false);
+        handleLoading(false)
       }
     }
   };
@@ -60,6 +75,7 @@ export const UniversalButton = ({
   const { data: txResult } = useWaitForTransactionReceipt({
     hash: result,
   });
+
   useEffect(() => {
     setDisplayedTxResult(txResult);
   }, [txResult]);
@@ -76,10 +92,10 @@ export const UniversalButton = ({
             data-tip={`${writeDisabled && "Wallet not connected or in the wrong network"}`}
           >
             <button 
-              className={`alt w-[150px] h-[64px] text-xl text-center `}
+              className={`spin w-[150px] h-[64px] text-xl text-center`}
               disabled={writeDisabled || isPending} onClick={handleWrite}
             >
-              {isPending ? <span className="loading loading-spinner loading-xs"></span> : buttonLabel}
+              {isPending || loading? <span className="loading loading-spinner loading-xs"></span> : isReroll ? 'Reroll' : buttonLabel}
             </button>
           </div>
         </div>
@@ -88,4 +104,4 @@ export const UniversalButton = ({
   );
 };
 
-export default UniversalButton;
+export default RollButton;

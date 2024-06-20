@@ -202,6 +202,9 @@ importers:
       '@next/env':
         specifier: ^14.2.3
         version: 14.2.3
+      '@next/font':
+        specifier: ^14.2.4
+        version: 14.2.4(next@14.0.4)
       '@privy-io/react-auth':
         specifier: ^1.67.0
         version: 1.67.0(@babel/core@7.24.5)(@types/react@18.2.21)(react-dom@18.2.0)(react-is@18.3.1)(react@18.2.0)(typescript@5.2.2)
@@ -3683,6 +3686,14 @@ packages:
     dependencies:
       glob: 10.3.10
     dev: true
+
+  /@next/font@14.2.4(next@14.0.4):
+    resolution: {integrity: sha512-RPB5kQk8jo8ZeiuryobDuV58FxB3VAiN+ckZ0zPKRl/4YLTSSekMUCwpoqav6y/bL2+hJCWjN8RMgjrBHT6r/g==}
+    peerDependencies:
+      next: '*'
+    dependencies:
+      next: 14.0.4(@babel/core@7.24.5)(react-dom@18.2.0)(react@18.2.0)(sass@1.77.6)
+    dev: false
 
   /@next/swc-darwin-arm64@14.0.4:
     resolution: {integrity: sha512-mF05E/5uPthWzyYDyptcwHptucf/jj09i2SXBPwNzbgBNc+XnwzrL0U6BmPjQeOL+FiB+iG1gwBeq7mlDjSRPg==}

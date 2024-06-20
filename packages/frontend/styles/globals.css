@@ -183,3 +183,12 @@ p {
 .btn.btn-ghost {
   @apply shadow-none;
 }
+
+.prize-div {
+  animation: fadeInAnimation 1.2s;
+}
+
+@keyframes fadeInAnimation {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}

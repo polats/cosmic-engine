@@ -9,24 +9,13 @@ import { Contract, ContractName } from "~~/utils/scaffold-eth/contract";
 import { Prize } from '~~/components/cosmic-engine/JackpotJunction';
 import "~~/styles/roll-button.scss";
 
-type UniversalButtonProps = {
-  fnName: string;
+type AcceptButtonProps = {
   deployedContractData: Contract<ContractName>;
-  buttonLabel: string;
-  onChange: () => void;
-  args?: any;
-  payableValue?: string;
 };
 
-export const UniversalButton = ({
-  fnName,
+export const AcceptButton = ({
   deployedContractData,
-  buttonLabel,
-  onChange,
-  args,
-  payableValue,
-}: UniversalButtonProps) => {
-
+}: AcceptButtonProps) => {
   const { chain } = useAccount();
   const writeTxn = useTransactor();
   const { targetNetwork } = useTargetNetwork();
@@ -35,21 +24,18 @@ export const UniversalButton = ({
   const { data: result, isPending, writeContractAsync } = useWriteContract();
 
   const handleWrite = async () => {
-  
     if (writeContractAsync) {
       try {
         const makeWriteWithParams = () =>
           writeContractAsync({
             address: deployedContractData.address,
             // @ts-ignore
-            functionName: fnName,
+            functionName: "accept",
             abi: deployedContractData.abi,
-            args: args,
             // @ts-ignore
-            value: payableValue ? BigInt(payableValue) : BigInt("0"), 
+            value: BigInt("0"), 
           });
         const res = await writeTxn(makeWriteWithParams);
-        onChange();
       } catch (e: any) {
         console.error("⚡️ ~ file: WriteOnlyFunctionForm.tsx:handleWrite ~ error", e);
       }
@@ -60,27 +46,75 @@ export const UniversalButton = ({
   const { data: txResult } = useWaitForTransactionReceipt({
     hash: result,
   });
+
   useEffect(() => {
     setDisplayedTxResult(txResult);
   }, [txResult]);
+
+  const [count, setCount] = useState(10);
+  const totalCount = 10
+
+  // Artificial function to emulate a countdown
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCount(prevCount => {
+        if (prevCount > 0) {
+          return prevCount - 1;
+        } else {
+          return 10;
+        }
+      });
+    }, 3000);
+
+    // Cleanup function to clear the interval on component unmount
+    return () => clearInterval(intervalId);
+  }, []);
+
+
+  const Segment = ({index}: {index: number}) => {
+    return (
+      <div key={index} className={`grow-1 w-full
+        ${index === 0 ? 'rounded-l-3xl': index === totalCount-1 ? 'rounded-r-3xl' : ''}
+        ${index < count ?
+          'bg-white opacity-80 border-r-2'
+        : index === count ?
+          'loader-pulse bg-red-800'
+        :
+          'bg-none opacity-100'
+        }
+      `}>
+      </div>
+    )
+  }
+
+  const Loader = () => {
+    return (
+        <div className="mt-[-5px] w-[95%] flex justify-center border rounded-3xl h-[30px]">
+          {Array(totalCount).fill(null).map((value, index) => <Segment key={index} index={index}/>)}
+        </div>
+    )
+  }
 
   return (
     <div className="py-5 space-y-3 first:pt-0 last:pb-1">
       <div className={`flex gap-3 flex-row justify-between items-center`}>
         <div className="flex justify-between gap-2">
           <div
-            className={`flex ${
+            className={`flex${
               writeDisabled &&
               "tooltip before:content-[attr(data-tip)] before:right-[-10px] before:left-auto before:transform-none"
             }`}
             data-tip={`${writeDisabled && "Wallet not connected or in the wrong network"}`}
           >
-            <button 
-              className={`alt w-[150px] h-[64px] text-xl text-center `}
-              disabled={writeDisabled || isPending} onClick={handleWrite}
-            >
-              {isPending ? <span className="loading loading-spinner loading-xs"></span> : buttonLabel}
-            </button>
+            <div className="flex flex-col items-center">
+                <button 
+                    className={`alt w-[150px] h-[64px] z-[10] text-xl text-center `}
+                    disabled={writeDisabled || isPending} onClick={handleWrite}
+                >
+                    {isPending ? <span className="loading loading-spinner loading-xs"></span> : 'ACCEPT'}
+                </button>
+                <Loader />
+            </div>
           </div>
         </div>
       </div>
@@ -88,4 +122,4 @@ export const UniversalButton = ({
   );
 };
 
-export default UniversalButton;
+export default AcceptButton;
