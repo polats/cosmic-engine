@@ -9,9 +9,9 @@ export class ImageToVideoHelperService {
   private comfyServerUrl: string;
 
   constructor(
-    private readonly comfyuiServerUrl: String,
+    private readonly comfyuiServerUrl: string,
   ) {
-    this.comfyServerUrl = String(comfyuiServerUrl);
+    this.comfyServerUrl = comfyuiServerUrl;
   }
 
   private getImageTo3DVideoWorkflow() {
@@ -385,9 +385,9 @@ export class ImageToVideoHelperService {
         responseType: 'stream',
       });
 
-      const chunks = [];
+      const chunks: any = [];
 
-      response.data.on('data', (chunk) => {
+      response.data.on('data', (chunk: any) => {
         chunks.push(chunk);
       });
 
@@ -398,7 +398,7 @@ export class ImageToVideoHelperService {
           resolve(blob);
         });
 
-        response.data.on('error', (error) => {
+        response.data.on('error', (error: any) => {
           reject(error);
         });
       });

@@ -2,8 +2,8 @@ import { NeynarFrameCreationRequest } from "@neynar/nodejs-sdk/build/neynar-api/
 import neynarClient from "../../../../utils/neynarClient";
 import { ImageToVideoHelperService } from "../../../../utils/comfyuiHelper";
 
-const comfyuiClient = new ImageToVideoHelperService(process.env.SVD_SERVER_ENDPOINT);
-let intervalId: number;
+const comfyuiClient = new ImageToVideoHelperService(process.env.SVD_SERVER_ENDPOINT ?? '');
+let intervalId: any;
 
 export async function POST(req: Request) {
   console.log("Receiving webhook....")
@@ -21,7 +21,7 @@ export async function POST(req: Request) {
       hookData.data.embeds[0].url,
       'GIF',
       1,
-      'GIF',
+      "3D",
     );
 
     console.log("PROMPT FINISHED: " + gifPromptId);
@@ -67,7 +67,7 @@ async function checkGenerationResult(promptId: string, hookData: any) {
     };
     const frame = await neynarClient.publishNeynarFrame(creationRequest);
     const reply = await neynarClient.publishCast(
-      process.env.SIGNER_UUID,
+      process.env.SIGNER_UUID ?? '',
       "Here's your spinning image",
       {
         replyTo: hookData.data.hash,

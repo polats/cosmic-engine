@@ -14,8 +14,8 @@ export async function POST(req: Request) {
     }
 
     // gradio client
-    const gradioClient = await Client.connect(process.env.TTS_SERVER_ENDPOINT);
-    const llmResult = await gradioClient.predict("/chat", [
+    const gradioClient = await Client.connect(process.env.TTS_SERVER_ENDPOINT ?? '');
+    const llmResult: any = await gradioClient.predict("/chat", [
             hookData.data.text.replace("hellothere", ""),
             ""
       ]);
