@@ -163,7 +163,7 @@ const attributes = [
   { trait_type: "cover", value: "swamp_cover" }
 ]
 
-export async function GET(request, { params }) {
+export async function GET(request: Request) {
 
   const zipPath = path.join(process.cwd(), 'assets', 'wagons.ora');
 
