@@ -13,6 +13,7 @@ import { Pie } from 'react-chartjs-2';
 import { confetti } from "@tsparticles/confetti";
 import Image from 'next/image';
 import "~~/styles/roll-button.scss";
+import ItemImage from "./ItemImage";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -168,7 +169,14 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                 <div className="prize-div z-10">
                     <div className="absolute z-10 top-[-2rem] sm:top-[-1rem] left-0 w-full h-full flex justify-center items-start">
                         <div className="h-[75%] w-[63%] max-h-[300px] max-w-[252px] bg-white relative">
-                            <Image src={'/card-sample.png'} alt={`card`} fill />
+                            {
+                                prizeWon.prizeType === '1' ?
+                                <ItemImage itemId={prizeWon.prizeValue}/>
+                                :
+                                <p className={`text-4xl font-bold bg-[#B053AA]`}>
+                                    {prizeWon.prizeValue} WEI
+                                </p>
+                            }
                         </div>
                     </div>
                     <div className="absolute top-0 left-0 h-full w-full flex justify-center items-center">

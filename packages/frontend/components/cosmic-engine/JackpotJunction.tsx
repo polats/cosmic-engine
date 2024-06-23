@@ -9,7 +9,8 @@ import { ReadContractDisplay } from "~~/components/cosmic-engine/ReadContractDis
 
 import { 
     JJ_CONTRACT_NAME, 
-    ROLL_COST
+    ROLL_COST,
+    ITEM_ID_IMAGE_LAYER_NAMES
     } from "@/lib/constants";
 
 import { JackpotWheel } from "~~/components/cosmic-engine/JackpotWheel";
@@ -117,7 +118,7 @@ export const JackpotJunction = () => {
                 outcomeString = "No prize, try again!";
                 break;
             case "1":
-                outcomeString = `You got Item # ${outcomeValue} ! Press ACCEPT to claim your prize!`;
+                outcomeString = `You got ${ITEM_ID_IMAGE_LAYER_NAMES[parseInt(outcomeValue)][1]} ! Press ACCEPT to claim your prize!`;
                 break;
             case "2":
                 outcomeString = `Consolation Prize: ${outcomeValue} wei ! Press ACCEPT to claim your prize!`;
