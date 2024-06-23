@@ -20,6 +20,8 @@ const nextConfig = {
     experimental: {
     outputFileTracingIncludes: {
         '/reggie/*': ['./svgs/**/*'],
+        '/ora/*': ['./assets/**/*'],
+
     },
     },      
 }
