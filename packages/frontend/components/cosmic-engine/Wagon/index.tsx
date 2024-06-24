@@ -2,12 +2,17 @@
  
 import Image from 'next/image';
 import WagonCard from '~~/components/cosmic-engine/Wagon/WagonCard';
+import { getAllLayerImages } from "@/lib/actions/ora"
+
 export default function Market(){
     const sampleData = {
         name: "Sample Card",
         imageUrl: "https://robohash.org/Any robot you dont click on, they dismantle.",
         tier: 3,
     }
+
+    // const itemImages = getAllItemImages
+
     return (
         <div className="flex justify-center h-full">
             <div className="overflow-x-hidden text-[black] h-full justify-center items-center px-[1rem] pt-3 max-w-[720px]">

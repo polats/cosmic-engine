@@ -14,7 +14,7 @@ export default function Home({searchParams}: SearchPageProps) {
   return (
     <>
       <Head>
-        <title>Farcaster AuthKit + NextAuth Demo</title>
+        <title>Degen Trail</title>
       </Head>
       <main 
         className="h-full" 
