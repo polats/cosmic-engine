@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TransactionReceipt } from "viem";
 import { useAccount, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { useTransactor } from "~~/hooks/scaffold-eth";
@@ -37,15 +37,33 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
         handlePrizeWon,
         handleReroll 
     } = props;
+    const prizes = [
+        { color: '#6F4E94', type: 0 },
+        { color: '#E74C3C', type: 1 },
+        { color: '#2ECC71', type: 2 },
+        { color: '#9B59B6', type: 3 },
+        { color: '#F39C12', type: 4 },
+        { color: '#3498DB', type: 0 },
+        { color: '#E91E63', type: 1 },
+        { color: '#9C27B0', type: 2 },
+        { color: '#4CAF50', type: 3 }
+    ];
+    const slices = prizes.length;
+    const angle = 360 / slices;
     const wheelApiRef = useSpringRef();
     const [ state, setState ] = useState('notMoving');
     const [ initialLoop, setInitialLoop ] = useState(true);
+    const [ loops, setLoops ] = useState(0);
     const [ prizeState, setPrizeState ] = useState(prizeWon); //used to update state, will not cause a re render if prizeWon is used
     const [ currentAngle, setCurrentAngle ] = useState(0);
     const [ springConfig, setSpringConfig ] = useState({
         duration: 300, // This determines the distributed speed, the lower this is, the faster it spins
         easing: (t:number ) => t, // This controls the easing after each loop of rotation, if you do not make this consistent, it will slow down after each rotation. Change in next step.
     })
+
+    // useEffect(() => {
+        
+    // }, [prizeWon]);
 
     {/*
         Will involve different steps
@@ -116,7 +134,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                 }
             } 
             else if (state === 'decelerating' && !initialLoop) {
-                await next({ rotation: 360 * 10, config: { duration: 1500, easing: easings.easeOutCubic } }); //TODO: Change 360 to the actual point on where the wheel should land
+                await next({ rotation: (360 * 9) + getAngle() + 180, config: { duration: 1500, easing: easings.easeOutCubic } }); //TODO: Change 360 to the actual point on where the wheel should land
                 await setInitialLoop(true);
                 if(prizeWon && prizeWon.prizeType !== '0'){
                     confetti({
@@ -145,24 +163,122 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
         },
     })
 
-    const Slices = () => {
-        return (
-            <>
-                <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="16" cy="16" r="16" fill='none'/>
-                    <path d="M16 16 L16 0 A16 16 0 0 1 28.78 7.22 Z" fill="#FF6347"/>
-                    <path d="M16 16 L28.78 7.22 A16 16 0 0 1 31.42 16 Z" fill="#FFD700"/>
-                    <path d="M16 16 L31.42 16 A16 16 0 0 1 28.78 24.78 Z" fill="#ADFF2F"/>
-                    <path d="M16 16 L28.78 24.78 A16 16 0 0 1 16 32 Z" fill="#1E90FF"/>
-                    <path d="M16 16 L16 32 A16 16 0 0 1 3.22 24.78 Z" fill="#FF69B4"/>
-                    <path d="M16 16 L3.22 24.78 A16 16 0 0 1 0.58 16 Z" fill="#8A2BE2"/>
-                    <path d="M16 16 L0.58 16 A16 16 0 0 1 3.22 7.22 Z" fill="#00CED1"/>
-                    <path d="M16 16 L3.22 7.22 A16 16 0 0 1 16 0 Z" fill="#FF4500"/>
-                </svg>
-            </>
-        )
+    const getAngle = () => {
+        // if(type === 1) {
+            const startAngle = (4 * angle);
+            const endAngle = startAngle + angle;
+            const midAngle = (startAngle + endAngle) / 2;
+            return (midAngle) ;
+        // }
     }
 
+
+    const CircleWithSlices = () => {
+        // Function to create a single slice path
+        const createSlicePath = (startAngle, endAngle) => {
+            const x1 = 50 + 50 * Math.cos((Math.PI / 180) * startAngle);
+            const y1 = 50 + 50 * Math.sin((Math.PI / 180) * startAngle);
+            const x2 = 50 + 50 * Math.cos((Math.PI / 180) * endAngle);
+            const y2 = 50 + 50 * Math.sin((Math.PI / 180) * endAngle);
+            const largeArcFlag = angle > 180 ? 1 : 0;
+            return `M 50,50 L ${x1},${y1} A 50,50 0 ${largeArcFlag} 1 ${x2},${y2}Z`;
+        };
+    
+        // Function to calculate text transformation
+        const calculateTextTransform = (startAngle, endAngle) => {
+            const midAngle = (startAngle + endAngle) / 2;
+            const x = 50 + 50 * Math.cos((Math.PI / 180) * midAngle); // Adjust 35 to place text inside the circle
+            const y = 50 + 50 * Math.sin((Math.PI / 180) * midAngle); // Adjust 35 to place text inside the circle
+            return `rotate(${midAngle}, ${x}, ${y})`;
+        };
+    
+        const renderPaths = () => {
+            return prizes.map((prize, index) => {
+                const startAngle = index * angle;
+                const endAngle = startAngle + angle;
+                return (
+                    <path
+                        key={index}
+                        d={createSlicePath(startAngle, endAngle)}
+                        fill={prize.color}
+                    />
+                )
+            })
+        };
+    
+        const renderTexts = () => {
+            return prizes.map((prize, index) => {
+                const startAngle = index * angle;
+                const endAngle = startAngle + angle;
+    
+                return (
+                    <text
+                        key={index}
+                        x="10"
+                        y="25" // Adjust this to center vertically inside the slice
+                        textAnchor="middle"
+                        fill="white"
+                        fontSize="6" // Adjust font size as needed
+                        transform={`translate(50,50) rotate(${(startAngle - (angle/2))}) rotate(${185+angle}) translate(-40,-20)`}
+                    >
+                        {prize.type === 0 ? 'Bankrupt'
+                            : prize.type === 1 ? 'Item'
+                            : prize.type === 2 ? '100 WEI'
+                            : prize.type === 3 ? '1000 WEI'
+                            : prize.type === 4 ? 'JACKPOT'
+                            : "something"}
+                        {/* {prize.color} */}
+                    </text>
+                );
+            });
+        };
+    
+        return (
+            <svg viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="50" fill='none' />
+                <React.Fragment>
+                    <defs>
+                        {prizes.map((prize, index) => (
+                            <clipPath key={`clipPath${index}`} id={`sliceClip${index}`}>
+                                <path d={createSlicePath(index * angle, (index + 1) * angle)} />
+                            </clipPath>
+                        ))}
+                    </defs>
+                    {renderPaths()}
+                    {renderTexts()}
+                </React.Fragment>
+            </svg>
+        );
+    };
+    const numberOfSlices = 10;
+    const sliceAngle = 360 / numberOfSlices;
+
+    const sliceStyle = {
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        clipPath: 'polygon(80% 100%, 15% 0%, 50% 0%)',
+        transformOrigin: '50% 50%',
+        
+    };
+
+  const slicesDiv = Array.from({ length: numberOfSlices }).map((_, index) => {
+    const rotation = index * sliceAngle;
+    return (
+      <div
+        key={index}
+        className="bg-[red]"
+        style={{
+          ...sliceStyle,
+          transform: `rotate(${rotation}deg)`,
+        }}
+      >
+        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+          Slice {index + 1}
+        </div>
+      </div>
+    );
+  });
     return (
         <div className="relative flex justify-center items-center h-full w-full">
             { prizeWon && prizeWon.prizeType !== '0' && state === 'notMoving' ?
@@ -197,10 +313,11 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
             : null
             }
             <animated.div
-                className="h-full w-full flex justify-center items-center my-4 rounded-[50%] max-h-[400px] max-w-[400px]"
+                className="h-full border relative w-full flex justify-center items-center my-4 rounded-[50%] max-h-[400px] max-w-[400px]"
                 style={{ transform: rotateSpring.rotation.to((r) => `rotate(${r}deg)`),}}
             >
-                <Slices />
+                <CircleWithSlices />
+                {/* {slicesDiv} */}
             </animated.div>
         </div>
     )    
