@@ -17,6 +17,12 @@ export type ImageBufferWithOffset = {
   x: number;
   y: number;
   };
+
+  // load the ora file and read the stack.xml file
+  const zipPath = path.join(process.cwd(), 'assets', 'wagons.ora');
+  const zip = new AdmZip(zipPath);
+  const stackXmlEntry = zip.getEntry('stack.xml');
+  const stackXmlBuffer = stackXmlEntry?.getData();  
   
   const getStackNamesFromRootNode = (rootNode: any) => {
     const stackChildren = rootNode.stack
@@ -133,8 +139,7 @@ export type ImageBufferWithOffset = {
     return compositeImage.toBuffer();
   };
   
-  const selectImagesFromZip = async (zipPath: string, partsArray: Array<LayerInfo>, attributesArray:  any) => {
-    const zip = new AdmZip(zipPath);
+  const selectImagesFromZip = async (partsArray: Array<LayerInfo>, attributesArray:  any) => {
     const imageBuffersWithOffsets  = Array<ImageBufferWithOffset>();
   
   // Extract the values from the attributesArray
@@ -144,20 +149,49 @@ export type ImageBufferWithOffset = {
     for (const part of partsArray) {
       const entry = zip.getEntry(part.src);
       if (!entry?.isDirectory && attributeValues.includes(part.name)) {
-        var layer : ImageBufferWithOffset = {buffer: entry?.getData() as Buffer, x: parseInt(part.x), y: parseInt(part.y)};
-  
-        imageBuffersWithOffsets .push({
+        imageBuffersWithOffsets.push({
             buffer: entry?.getData() as Buffer, x: parseInt(part.x), y: parseInt(part.y)
         });
       }
     }
   
-    return imageBuffersWithOffsets ;
+    return imageBuffersWithOffsets;
   };  
   
-  const zipPath = path.join(process.cwd(), 'assets', 'wagons.ora');
+  const getAllImagesFromZip = async (partsArray: Array<LayerInfo>) => {
+    const imageBuffersWithOffsets  = Array<ImageBufferWithOffset>();     
+  
+    for (const part of partsArray) {
+      const entry = zip.getEntry(part.src);
+      if (!entry?.isDirectory) {
+        imageBuffersWithOffsets.push({
+            buffer: entry?.getData() as Buffer, x: parseInt(part.x), y: parseInt(part.y)
+        });
+      }
+    }
+  
+    return imageBuffersWithOffsets;
+  };  
+  
 
-  export async function getAllImagesAsImageBuffers() {
+  
+
+
+  export async function getAllOraLayerData() {
+
+    try {  
+      const partsArray = (await getLayersFromXml(stackXmlBuffer as Buffer)).reverse();    
+      const imageBuffers = await getAllImagesFromZip(partsArray);
+
+      return JSON.stringify(imageBuffers);        
+      
+  
+    } catch (error) {
+      console.error('Error :', error);
+    }    
+  }
+
+  export async function getOraLayerData(id: string) {
     const itemName = ITEM_ID_IMAGE_LAYER_NAMES[parseInt(id)][0];
     const itemLayer = itemName.split('_')[1];
 
@@ -166,49 +200,23 @@ export type ImageBufferWithOffset = {
     ]
 
     try {
-      const zip = new AdmZip(zipPath);
-      const stackXmlEntry = zip.getEntry('stack.xml');
-      const stackXmlBuffer = stackXmlEntry?.getData();
   
       const partsArray = (await getLayersFromXml(stackXmlBuffer as Buffer)).reverse();    
-      // const { width, height } = await getImageSizeFromXml(stackXmlBuffer as Buffer);
-      const imageBuffers = await selectImagesFromZip(zipPath, partsArray, attributes);  
-      // const combinedImageBuffer = await combineImages(imageBuffers, width, height);
+      const imageBuffers = await selectImagesFromZip(partsArray, attributes);  
 
       return JSON.stringify(imageBuffers);        
+
+      // const { width, height } = await getImageSizeFromXml(stackXmlBuffer as Buffer);
+      // const combinedImageBuffer = await combineImages(imageBuffers, width, height);
       // return JSON.stringify(combinedImageBuffer);
       
   
     } catch (error) {
-      console.error('Error getting images from ZIP and combining them:', error);
-    }    
-  }
-
-  export async function getImageBufferFromLayerName(id: string) {
-    const itemName = ITEM_ID_IMAGE_LAYER_NAMES[parseInt(id)][0];
-    const itemLayer = itemName.split('_')[1];
-
-    const attributes = [
-      { trait_type: itemLayer, value: itemName }
-    ]
-
-    try {
-      const zip = new AdmZip(zipPath);
-      const stackXmlEntry = zip.getEntry('stack.xml');
-      const stackXmlBuffer = stackXmlEntry?.getData();
-  
-      const partsArray = (await getLayersFromXml(stackXmlBuffer as Buffer)).reverse();    
-      // const { width, height } = await getImageSizeFromXml(stackXmlBuffer as Buffer);
-      const imageBuffers = await selectImagesFromZip(zipPath, partsArray, attributes);  
-      // const combinedImageBuffer = await combineImages(imageBuffers, width, height);
-
-      return JSON.stringify(imageBuffers);        
-      // return JSON.stringify(combinedImageBuffer);
-      
-  
-    } catch (error) {
-      console.error('Error getting images from ZIP and combining them:', error);
+      console.error('Error :', error);
     }    
 
 
   }
+
+
+  

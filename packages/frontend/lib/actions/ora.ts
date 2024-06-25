@@ -1,19 +1,19 @@
 'use server';
 
 import { 
-  getImageBufferFromLayerName, 
-  getAllImagesAsImageBuffers
+  getOraLayerData, 
+  getAllOraLayerData,
 } from "~~/utils/cosmic-engine/ora";
 
-export async function getItemImage(
+export async function getItemLayerData(
     id: string,
   ) {
 
-    const imageBuffer = await getImageBufferFromLayerName(id);
-    return imageBuffer;
+    const layerData = await getOraLayerData(id);
+    return layerData;
 }  
 
-export async function getAllLayerImages() {
-  const imageBuffers = await getAllImagesAsImageBuffers();
-  return imageBuffers;
+export async function getAllItemLayerData() {
+  const layerData = await getAllOraLayerData();
+  return layerData;
 }

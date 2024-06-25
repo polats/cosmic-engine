@@ -2,23 +2,58 @@
  
 import Image from 'next/image';
 import WagonCard from '~~/components/cosmic-engine/Wagon/WagonCard';
-import { getAllLayerImages } from "@/lib/actions/ora"
+import Inventory from '~~/components/cosmic-engine/Wagon/Inventory';
+import { getItemLayerData } from "@/lib/actions/ora"
+import { getBase64Image } from '@/utils/cosmic-engine/ora-client';
+import { ITEM_ID_IMAGE_LAYER_NAMES } from '@/lib/constants';
+import { useEffect, useState } from "react";
+import { get } from 'http';
 
-export default function Market(){
+export default function WagonScreen(){
+
+    type Item = {
+        name: string;
+        base64image: string;
+        tier: number;
+    }
+    
     const sampleData = {
         name: "Sample Card",
         imageUrl: "https://robohash.org/Any robot you dont click on, they dismantle.",
         tier: 3,
     }
 
-    // const itemImages = getAllItemImages
+    const [inventoryData, setInventoryData] = useState<Item[]>();
+    
+    async function loadInventory() {
+        let inventoryData: Item[] = [];
+
+        for (let i=0; i < ITEM_ID_IMAGE_LAYER_NAMES.length; i++) {
+            const layerData = await getItemLayerData(i.toString());
+
+            if (layerData) {
+                inventoryData.push({
+                    name: ITEM_ID_IMAGE_LAYER_NAMES[i][1],
+                    base64image: getBase64Image(layerData), 
+                    tier: 2
+                });
+            }
+        }
+
+        setInventoryData(inventoryData);
+    }
+    
+    useEffect(() => {
+        loadInventory();
+        }, []);  
+              
 
     return (
         <div className="flex justify-center h-full">
             <div className="overflow-x-hidden text-[black] h-full justify-center items-center px-[1rem] pt-3 max-w-[720px]">
                 <div className="bg-gray-300 w-full flex flex-col grow h-full gap-y-4 px-4 rounded-b-2xl">
                     {/* Wagon Section */}
-                    <div className="flex flex-col h-full max-h-[45%] gap-x-4 gap-y-4">
+                    <div className="flex flex-col h-full max-h-[20%] gap-x-4 gap-y-4">
                         <div className="flex justify-between py-2">
                             <div className="flex px-4 py-1 rounded border-[1px] border-[black]  text-sm">
                                 Money
@@ -53,19 +88,26 @@ export default function Market(){
                                 
                             </div> */}
                         </div>
+                        {/*
                         <div className="flex grow w-full justify-center items-end gap-x-4">
                             <WagonCard cardData={sampleData}/>
                             <WagonCard cardData={sampleData}/>
                             <WagonCard cardData={sampleData}/>
                             <WagonCard cardData={sampleData}/>
                         </div>
+                        */}
                     </div>
 
-                    <div className="w-full border border-[1px] border-[black]" /> {/* divider */}
+                    <div className="w-full border border-[1px] border-[black]" /> {/* divider */}                    
                     {/* Market/Inventory Section */}
-                    <div className="grow bg-gray-400">
-
-                    </div>
+                    {
+                        inventoryData?.length ?
+                        <Inventory data={inventoryData} />
+                        :
+                        <div className="flex justify-center items-center h-full">
+                            <p className="text-lg">Loading items...</p>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
