@@ -5,16 +5,22 @@ import WagonCard from '~~/components/cosmic-engine/Wagon/WagonCard';
 import Inventory from '~~/components/cosmic-engine/Wagon/Inventory';
 import { getItemLayerData } from "@/lib/actions/ora"
 import { getBase64Image } from '@/utils/cosmic-engine/ora-client';
-import { ITEM_ID_IMAGE_LAYER_NAMES } from '@/lib/constants';
+import { 
+    JJ_CONTRACT_NAME,
+    ITEM_ID_IMAGE_LAYER_NAMES 
+} from '@/lib/constants';
 import { useEffect, useState } from "react";
 import { get } from 'http';
+import { useScaffoldReadContract } from "~~/hooks/scaffold-eth";
+import { useAccount } from "wagmi"
+import { Address } from 'viem';
 
 export default function WagonScreen(){
 
     type Item = {
         name: string;
         base64image: string;
-        tier: number;
+        amount: string;
     }
     
     const sampleData = {
@@ -23,29 +29,71 @@ export default function WagonScreen(){
         tier: 3,
     }
 
+    const { address } = useAccount();
     const [inventoryData, setInventoryData] = useState<Item[]>();
-    
+    const { data: hasBonus } = useScaffoldReadContract({
+        contractName: JJ_CONTRACT_NAME,
+        functionName: "hasBonus",
+        args: [address],
+        interval: 5000
+    });
+    const { data: balanceOfBatch } = useScaffoldReadContract({
+        contractName: JJ_CONTRACT_NAME,
+        functionName: "balanceOfBatch",
+        args: [accountsArray(), idsArray()],
+        interval: 5000
+    });
+
+    function accountsArray() {
+
+        let accounts : Address[] = [];
+
+        for (let i=0; i < ITEM_ID_IMAGE_LAYER_NAMES.length; i++) {
+            if (address) {
+                accounts.push(address);
+                }
+            }
+
+        return accounts;
+    }
+
+    function idsArray() {
+
+        let ids : bigint[] = [];
+
+        for (let i=0; i < ITEM_ID_IMAGE_LAYER_NAMES.length; i++) {
+            ids.push(BigInt(i));
+        }
+
+        return ids;
+    }
+
+
     async function loadInventory() {
+        
+        // example inventoryData
         let inventoryData: Item[] = [];
 
         for (let i=0; i < ITEM_ID_IMAGE_LAYER_NAMES.length; i++) {
             const layerData = await getItemLayerData(i.toString());
 
             if (layerData) {
+                const amount = balanceOfBatch ? balanceOfBatch[i].toString() : "0";
+
                 inventoryData.push({
                     name: ITEM_ID_IMAGE_LAYER_NAMES[i][1],
                     base64image: getBase64Image(layerData), 
-                    tier: 2
+                    amount: amount,
                 });
             }
         }
 
         setInventoryData(inventoryData);
-    }
-    
+    }    
+
     useEffect(() => {
         loadInventory();
-        }, []);  
+        }, [balanceOfBatch]);  
               
 
     return (

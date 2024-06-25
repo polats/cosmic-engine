@@ -205,6 +205,7 @@ export const JackpotJunction = () => {
                             {
                                 deployedContractData &&
                                 <ReadContractDisplay
+                                fnName={"outcome"}
                                 args={[address, false]}
                                 refreshDisplayVariables={refreshDisplayVariables}
                                 deployedContractData={deployedContractData}

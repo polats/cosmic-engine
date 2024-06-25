@@ -2,7 +2,7 @@
 type Item = {
     name: string;
     base64image: string;
-    tier: number;
+    amount: string;
 }
 
 interface InventoryProps {
@@ -22,6 +22,7 @@ export default function Inventory (inventory: InventoryProps) {
                 width={80}
                 height={80}
                 />                    
+                <div className="text-center">{item.amount}</div>
                 </div>
             ))}
         </div>

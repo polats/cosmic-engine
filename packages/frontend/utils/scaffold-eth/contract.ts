@@ -171,6 +171,7 @@ export type UseScaffoldReadConfig<
 > = {
   contractName: TContractName;
   watch?: boolean;
+  interval?: number;
 } & IsContractDeclarationMissing<
   Partial<UseReadContractParameters>,
   {
