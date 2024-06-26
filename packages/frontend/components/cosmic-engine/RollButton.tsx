@@ -82,7 +82,7 @@ export const RollButton = ({
               chain: hardhat,
               account: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
               to: userAddress,
-              value: parseEther("0.0001"),
+              value: parseEther("0"),
             });        
           }
         } catch (error) {

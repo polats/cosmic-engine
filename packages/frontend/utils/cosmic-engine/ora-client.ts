@@ -10,7 +10,7 @@ function arrayBufferToBase64(buffer: Buffer) {
     return btoa(binary);
   }
 
-  function uint8ArrayToSrc(uint8Array: Buffer, mimeType = 'image/png') {
+  export function uint8ArrayToSrc(uint8Array: Buffer, mimeType = 'image/png') {
     const base64String = arrayBufferToBase64(uint8Array);
     return `data:${mimeType};base64,${base64String}`;
   }

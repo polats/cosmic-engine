@@ -1,5 +1,26 @@
 export const JJ_CONTRACT_NAME = "JackpotJunction";
 export const ROLL_COST = "100";
+
+export const TIER_COLORS = [
+    "#7F7F7F", // Common - Grey
+    "#D9D9D9", // Uncommon - White
+    "#66CC66", // Rare - Green
+    "#3366CC", // Epic - Blue
+    "#9933CC", // Legendary - Purple
+    "#CC6600", // Artifact - Orange
+    "#CCB266"  // Heirloom - Gold
+];
+
+export const TIER_TEXT_COLORS = [
+    "#4F4F4F", // Darker Grey
+    "#999999", // Darker White
+    "#339933", // Darker Green
+    "#0044CC", // Darker Blue
+    "#6600CC", // Darker Purple
+    "#CC2200", // Darker Orange
+    "#CC8800"  // Darker Gold
+];
+
 export const ITEM_ID_IMAGE_LAYER_NAMES = [
     // 0
     ["plains_cover", "Shady Adventurer (Plains Cover)"],

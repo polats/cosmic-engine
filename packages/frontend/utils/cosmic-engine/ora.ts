@@ -180,12 +180,25 @@ export type ImageBufferWithOffset = {
   export async function getAllOraLayerData() {
 
     try {  
-      const partsArray = (await getLayersFromXml(stackXmlBuffer as Buffer)).reverse();    
-      const imageBuffers = await getAllImagesFromZip(partsArray);
+        const partsArray = (await getLayersFromXml(stackXmlBuffer as Buffer)).reverse();    
+        const imageBuffers = [];
+ 
+     for (let i = 0; i < ITEM_ID_IMAGE_LAYER_NAMES.length; i++) {
+        const itemName = ITEM_ID_IMAGE_LAYER_NAMES[i][0];
+        const itemLayer = itemName.split('_')[1];
+    
+        const attributes = [
+            { trait_type: itemLayer, value: itemName }
+          ]
 
-      return JSON.stringify(imageBuffers);        
+        const imageBuffer = await selectImagesFromZip(partsArray, attributes);  
+        imageBuffers.push(imageBuffer[0]);
+
       
-  
+     }
+
+      return JSON.stringify(imageBuffers);              
+
     } catch (error) {
       console.error('Error :', error);
     }    

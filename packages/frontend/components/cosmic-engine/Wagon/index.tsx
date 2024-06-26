@@ -4,16 +4,19 @@ import Image from 'next/image';
 import WagonCard from '~~/components/cosmic-engine/Wagon/WagonCard';
 import Inventory from '~~/components/cosmic-engine/Wagon/Inventory';
 import { getItemLayerData } from "@/lib/actions/ora"
-import { getBase64Image } from '@/utils/cosmic-engine/ora-client';
+import { uint8ArrayToSrc } from '@/utils/cosmic-engine/ora-client';
 import { 
     JJ_CONTRACT_NAME,
-    ITEM_ID_IMAGE_LAYER_NAMES 
+    ITEM_ID_IMAGE_LAYER_NAMES,
+    TIER_COLORS,
+    TIER_TEXT_COLORS
 } from '@/lib/constants';
 import { useEffect, useState } from "react";
 import { get } from 'http';
 import { useScaffoldReadContract } from "~~/hooks/scaffold-eth";
 import { useAccount } from "wagmi"
 import { Address } from 'viem';
+import { useGlobalState } from "~~/services/store/store";
 
 export default function WagonScreen(){
 
@@ -31,17 +34,21 @@ export default function WagonScreen(){
 
     const { address } = useAccount();
     const [inventoryData, setInventoryData] = useState<Item[]>();
-    const { data: hasBonus } = useScaffoldReadContract({
-        contractName: JJ_CONTRACT_NAME,
-        functionName: "hasBonus",
-        args: [address],
-        interval: 5000
-    });
+    const [tier, setTier] = useState(1);
+    const itemImages = useGlobalState(state => state.itemImages);
+
+    // const { data: hasBonus } = useScaffoldReadContract({
+    //     contractName: JJ_CONTRACT_NAME,
+    //     functionName: "hasBonus",
+    //     args: [address],
+    //     interval: 5000
+    // });
+
     const { data: balanceOfBatch } = useScaffoldReadContract({
         contractName: JJ_CONTRACT_NAME,
         functionName: "balanceOfBatch",
         args: [accountsArray(), idsArray()],
-        interval: 5000
+        watch: false
     });
 
     function accountsArray() {
@@ -62,12 +69,19 @@ export default function WagonScreen(){
         let ids : bigint[] = [];
 
         for (let i=0; i < ITEM_ID_IMAGE_LAYER_NAMES.length; i++) {
-            ids.push(BigInt(i));
+            ids.push(BigInt(((tier - 1) * ITEM_ID_IMAGE_LAYER_NAMES.length) + i));
         }
 
         return ids;
     }
 
+    const incrementTier = () => {
+        setTier(prevTier => prevTier + 1);
+    }
+    
+    const decrementTier = () => {
+        setTier(prevTier => prevTier > 1 ? prevTier - 1 : 1);
+    }
 
     async function loadInventory() {
         
@@ -75,17 +89,14 @@ export default function WagonScreen(){
         let inventoryData: Item[] = [];
 
         for (let i=0; i < ITEM_ID_IMAGE_LAYER_NAMES.length; i++) {
-            const layerData = await getItemLayerData(i.toString());
+            const amount = balanceOfBatch ? balanceOfBatch[i].toString() : "0";
 
-            if (layerData) {
-                const amount = balanceOfBatch ? balanceOfBatch[i].toString() : "0";
+            inventoryData.push({
+                name: ITEM_ID_IMAGE_LAYER_NAMES[i][1],
+                base64image: uint8ArrayToSrc(itemImages[i]), 
+                amount: amount,
+            });
 
-                inventoryData.push({
-                    name: ITEM_ID_IMAGE_LAYER_NAMES[i][1],
-                    base64image: getBase64Image(layerData), 
-                    amount: amount,
-                });
-            }
         }
 
         setInventoryData(inventoryData);
@@ -93,7 +104,7 @@ export default function WagonScreen(){
 
     useEffect(() => {
         loadInventory();
-        }, [balanceOfBatch]);  
+        }, [balanceOfBatch, tier]);  
               
 
     return (
@@ -147,10 +158,18 @@ export default function WagonScreen(){
                     </div>
 
                     <div className="w-full border border-[1px] border-[black]" /> {/* divider */}                    
+                    <div className="flex justify-between items-center">
+                        <button onClick={decrementTier} style={{ fontSize: '2rem' }}>⬅️</button>
+                        <div className="text-center">
+                            <p className="font-bold" style={{ lineHeight: '0.5rem', color: TIER_TEXT_COLORS[tier] }}>Tier {tier} </p>
+                            <p style={{ fontSize: '0.75rem', lineHeight: '0.5rem'}}>(Need {Math.pow(2, tier)} to craft next tier) </p>
+                        </div>
+                        <button onClick={incrementTier} style={{ fontSize: '2rem' }}>➡️</button>
+                    </div>                    
                     {/* Market/Inventory Section */}
                     {
                         inventoryData?.length ?
-                        <Inventory data={inventoryData} />
+                        <Inventory data={inventoryData} tier={tier} />
                         :
                         <div className="flex justify-center items-center h-full">
                             <p className="text-lg">Loading items...</p>
