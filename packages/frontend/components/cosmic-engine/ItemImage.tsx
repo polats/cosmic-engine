@@ -49,6 +49,7 @@ type ItemImageProps = {
           <div className="relative rounded h-[70%] p-2">
             <Image
               src={'/card-mask.png'}
+              alt={'card background'}
               fill
             />
             {

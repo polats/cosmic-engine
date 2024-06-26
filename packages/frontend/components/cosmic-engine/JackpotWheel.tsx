@@ -172,7 +172,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
 
     const CircleWithSlices = () => {
         // Function to create a single slice path
-        const createSlicePath = (startAngle, endAngle) => {
+        const createSlicePath = (startAngle: number, endAngle: number) => {
             const x1 = 50 + 50 * Math.cos((Math.PI / 180) * startAngle);
             const y1 = 50 + 50 * Math.sin((Math.PI / 180) * startAngle);
             const x2 = 50 + 50 * Math.cos((Math.PI / 180) * endAngle);
@@ -182,7 +182,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
         };
     
         // Function to calculate text transformation
-        const calculateTextTransform = (startAngle, endAngle) => {
+        const calculateTextTransform = (startAngle: number, endAngle: number) => {
             const midAngle = (startAngle + endAngle) / 2;
             const x = 50 + 50 * Math.cos((Math.PI / 180) * midAngle); // Adjust 35 to place text inside the circle
             const y = 50 + 50 * Math.sin((Math.PI / 180) * midAngle); // Adjust 35 to place text inside the circle

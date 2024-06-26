@@ -49,7 +49,6 @@ export const RollButton = ({
 
   const handleWrite = async () => {
     if (writeContractAsync && deployedContractData) {
-      
       try {
           const makeWriteWithParams = async() =>
             await writeContractAsync({
