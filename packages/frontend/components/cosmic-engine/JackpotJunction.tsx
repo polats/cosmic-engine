@@ -38,18 +38,20 @@ export interface PrizePool {
 import { useLocalStoragePreferences } from "@/hooks/cosmic-engine";
 
 export const JackpotJunction = () => {
+    const [ wheelState, setWheelState ] = useState('notMoving');
+    const [ isWheelActive, setIsWheelActive ] = useState(false);
+    const [ prizeWon, setPrizeWon ] = useState<Prize | null>(null);
+    const [ isReroll, setIsReroll ] = useState(false);
+
     const [refreshDisplayVariables, triggerRefreshDisplayVariables] = useReducer(value => !value, false);
     const { data: deployedContractData, isLoading: deployedContractLoading } = useDeployedContractInfo(JJ_CONTRACT_NAME);
-
     const [error, setError] = useState(false);
     const { address } = useAccount();
     const [ loading, setLoading ] = useState(false);
     const { isOnchain } = useLocalStoragePreferences();
-    const [ isReroll, setIsReroll ] = useState(false);
     const userCurrency = useGlobalState(({ userCurrency }) => userCurrency);
     const setUserCurrency = useGlobalState(({ setUserCurrency }) => setUserCurrency);
     const [ isSpinning, setIsSpinning ] = useState(false);
-    const [ prizeWon, setPrizeWon ] = useState<Prize | null>(null);
     const [ prizePool, setPrizePool ] = useState<PrizePool>({
         prizes: [],
         jackpotPrize: null,
@@ -68,7 +70,7 @@ export const JackpotJunction = () => {
         if(!outcome){
             setPrizeWon(null);
         } else {
-            if(isSpinning){
+            if(isWheelActive){
                 const outcomeIndex = outcome[1].toString();
                 const outcomeValue = outcome[2].toString();
                 setPrizeWon({
@@ -81,6 +83,14 @@ export const JackpotJunction = () => {
     }, [outcome]);
 
     const { showAnimation } = useAnimationConfig(outcome);
+
+    const handleWheelActivity = (val: boolean) => {
+        setIsWheelActive(val);
+    }
+
+    const handleWheelState = (val: string) => {
+        setWheelState(val);
+    }
 
     const handleIsSpinning = (val : boolean) => {
         setIsSpinning(val);
@@ -146,32 +156,35 @@ export const JackpotJunction = () => {
                 {/* TODO: Add array for prize pool to make wheel dynamic  */}
                 <div className="h-full w-full grow overflow-hidden flex justify-center items-center pt-[5rem] mb-2" >
                     <JackpotWheel 
-                        prizePool={prizePool} 
+                        wheelState={wheelState}
+                        isWheelActive={isWheelActive}
                         prizeWon={prizeWon}
-                        isSpinning={isSpinning}
-                        handleLoading={handleLoading}
-                        deployedContractData={deployedContractData ?? null}
+                        isReroll={isReroll}
+                        handleWheelActivity={handleWheelActivity}
+                        handleWheelState={handleWheelState}
                         handlePrizeWon={handlePrizeWon}
                         handleReroll={handleReroll}
-                        handleIsSpinning={handleIsSpinning}
+                        handleLoading={handleLoading}
+                        deployedContractData={deployedContractData ?? null}
                     />
                 </div>
                 { 
                     deployedContractData &&
-
                     <div>
                         <div className="flex flex-col justify-center items-center grow-0 text-center">
                         {
                             (isOnchain) ? 
                                 <>  
                                     <RollButton
+                                        isWheelActive={isWheelActive}
                                         isReroll={isReroll}
                                         handleReroll={handleReroll}
                                         deployedContractData={deployedContractData}
                                         handlePrizeWon={handlePrizeWon}  
-                                        handleLoading={handleLoading}        
+                                        handleLoading={handleLoading}
                                         buttonLabel="SPIN"
                                         handleIsSpinning={handleIsSpinning}
+                                        handleWheelActivity={handleWheelActivity}
                                         outcome={outcome}
                                         loading={loading}
                                         payableValue={ROLL_COST} // TODO: get ROLL_COST from contract
