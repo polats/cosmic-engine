@@ -66,16 +66,18 @@ export const JackpotJunction = () => {
 
     useEffect(() => {
         if(!outcome){
-            handlePrizeWon(null);
-          } else {
-            const outcomeIndex = outcome[1].toString()
-            const outcomeValue = outcome[2].toString()
-            handlePrizeWon({
-                prizeType: outcomeIndex,
-                prizeValue: outcomeValue
-            });
-          }
-        // setPrizeWon
+            setPrizeWon(null);
+        } else {
+            if(isSpinning){
+                const outcomeIndex = outcome[1].toString();
+                const outcomeValue = outcome[2].toString();
+                setPrizeWon({
+                    prizeType: outcomeIndex,
+                    prizeValue: outcomeValue
+                });
+                handleReroll(true);
+            }
+        }
     }, [outcome]);
 
     const { showAnimation } = useAnimationConfig(outcome);
@@ -151,6 +153,7 @@ export const JackpotJunction = () => {
                         deployedContractData={deployedContractData ?? null}
                         handlePrizeWon={handlePrizeWon}
                         handleReroll={handleReroll}
+                        handleIsSpinning={handleIsSpinning}
                     />
                 </div>
                 { 
@@ -164,7 +167,8 @@ export const JackpotJunction = () => {
                                     <RollButton
                                         isReroll={isReroll}
                                         handleReroll={handleReroll}
-                                        deployedContractData={deployedContractData}        
+                                        deployedContractData={deployedContractData}
+                                        handlePrizeWon={handlePrizeWon}  
                                         handleLoading={handleLoading}        
                                         buttonLabel="SPIN"
                                         handleIsSpinning={handleIsSpinning}
