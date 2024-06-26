@@ -31,7 +31,7 @@
     "@uniswap/sdk-core": "^4.0.1",
     "@uniswap/v2-sdk": "^3.0.1",
     "@vercel/postgres": "^0.8.0",
-    "adm-zip": "^0.5.10",    
+    "adm-zip": "^0.5.10",
     "autoprefixer": "10.4.15",
     "bcrypt": "^5.1.1",
     "blo": "^1.0.1",
@@ -56,6 +56,7 @@
     "react-copy-to-clipboard": "^5.1.0",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.0",
+    "react-lottie": "^1.2.4",
     "sass": "^1.77.6",
     "sharp": "0.32.6",
     "tailwindcss": "3.3.3",
@@ -64,18 +65,19 @@
     "usehooks-ts": "^2.13.0",
     "viem": "^2.0.3",
     "wagmi": "2.5.12",
-    "xml2js": "^0.5.0",    
+    "xml2js": "^0.5.0",
     "zod": "^3.22.2",
     "zustand": "^4.1.2"
   },
   "devDependencies": {
-    "@types/adm-zip": "^0.5.0",    
+    "@types/adm-zip": "^0.5.0",
     "@types/bcrypt": "^5.0.1",
     "@types/node": "^20",
     "@types/nprogress": "^0",
     "@types/react": "^18",
     "@types/react-copy-to-clipboard": "^5.0.4",
     "@types/react-dom": "^18",
+    "@types/react-lottie": "^1.2.10",
     "@types/sharp": "^0.31.1",
     "@types/xml2js": "^0.4.11",
     "abitype": "^1.0.2",
@@ -90,5 +92,5 @@
   },
   "browser": {
     "sharp": false
-}
+  }
 }

@@ -7,7 +7,7 @@ import { useTransactor } from "~~/hooks/scaffold-eth";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 import { Contract, ContractName } from "~~/utils/scaffold-eth/contract";
 import { useSpring, useSpringRef, animated, config, easings } from '@react-spring/web';
-import { Prize, PrizePool } from './JackpotJunction';
+import { Prize } from './JackpotJunction';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 import { confetti } from "@tsparticles/confetti";
@@ -15,50 +15,55 @@ import Image from 'next/image';
 import "~~/styles/roll-button.scss";
 import ItemImage from "./ItemImage";
 import DegenCard from "./DegenCard";
+import Lottie from 'react-lottie';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 interface JackpotWheelProps {
-    prizePool: PrizePool;
+    wheelState: string,
     prizeWon?: Prize | null;
-    isSpinning: boolean;
+    isReroll: boolean;
     handleReroll: (val: boolean) => void;
     handleLoading: (val:boolean) => void;
-    handleIsSpinning: (val: boolean) => void;
+    handleWheelState: (val: string) => void;
     handlePrizeWon: (prize:Prize | null) => void;
     deployedContractData: Contract<ContractName> | null;
+    isWheelActive: boolean;
+    handleWheelActivity: (val: boolean) => void;
 }  
 
 export const JackpotWheel = (props:JackpotWheelProps) => {
-    const { 
-        prizePool, 
+    const {
+        isWheelActive,
+        wheelState,
         prizeWon, 
-        isSpinning, 
-        handleLoading, 
-        handleIsSpinning,
-        deployedContractData, 
+        isReroll,
+        handleWheelActivity,
+        handleWheelState,
         handlePrizeWon,
         handleReroll,
+        handleLoading, 
+        deployedContractData, 
     } = props;
     const prizes = [
-        { color: 'black', type: 0 },
-        { color: '#1b8372', type: 1 },
-        { color: '#cc5f3b', type: 2 },
-        { color: '#d38c42', type: 3 },
-        { color: '#d1bd29', type: 4 },
-        { color: 'black', type: 0 },
-        { color: '#1b8372', type: 1 },
-        { color: '#cc5f3b', type: 2 },
-        { color: '#d38c42', type: 3 }
+        { color: '#f25449', type: 0 },
+        { color: '#2896f8', type: 1 },
+        { color: '#9B59B6', type: 2 },
+        { color: '#b1ff37', type: 3 },
+        { color: '#fae10a', type: 4 },
+        { color: '#ef3705', type: 0 },
+        { color: '#8415dd', type: 1 },
+        { color: '#9C27B0', type: 2 },
+        { color: '#10e4ce', type: 3 }
     ];
     const slices = prizes.length;
     const angle = 360 / slices;
-    const wheelApiRef = useSpringRef();
-    const [ state, setState ] = useState('notMoving');
     const [ initialLoop, setInitialLoop ] = useState(true);
     const [ loopCount, setLoopCount ] = useState(0);
     const [ prizeAngle, setPrizeAngle ] = useState(0);
     const [ isPrizeVisible, setIsPrizeVisible ] = useState(false)
+
+    // contract
     const { chain } = useAccount();
     const writeTxn = useTransactor();
     const { targetNetwork } = useTargetNetwork();
@@ -109,22 +114,20 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
     const rotateSpring = useSpring({
         from: { rotation: 0},
         to: async(next, cancel) => {
-            if (state === 'notMoving') {
+            if (wheelState === 'notMoving') {
                 await next({ rotation: isNaN(prizeAngle) ? 70 : prizeAngle });
             }
-            else if(state === 'accelerating'){
+            else if(wheelState === 'accelerating'){
                 await next({ rotation: 360 * 4, config: {duration: 1500, easing: easings.easeInQuad } })
                 await next({ rotation: 0, config: { duration: 0 } });
                 setIsPrizeVisible(false);
             }
-            else if(state === 'spinning'){
-                //  while((isSpinning || prizeWon === null) && !initialLoop){
-                    await next({ rotation: 360, delay:0, config: { duration: 200, easing: t => t}}); 
-                    await next({ rotation: 0, config: { duration: 0 }});
-                // }
+            else if(wheelState === 'spinning'){
+                await next({ rotation: 360, delay:0, config: { duration: 200, easing: t => t}}); 
+                await next({ rotation: 0, config: { duration: 0 }});
             } 
-            else if (state === 'decelerating') {
-                await next({ rotation: (360 * 9)+ prizeAngle, config: { duration: 5000, easing: easings.easeOutSine } }); //TODO: Change 360 to the actual point on where the wheel should land
+            else if (wheelState === 'decelerating') {
+                await next({ rotation: (360 * 9)+ prizeAngle, config: { duration: 1500, easing: easings.easeOutSine } }); //TODO: Change 360 to the actual point on where the wheel should land
                 if(prizeWon && prizeWon.prizeType !== '0'){
                     confetti({
                         particleCount: 200,
@@ -142,20 +145,22 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                 console.log('Reached unexpected state')
               }
         },
-        // reset: state === 'notMoving',
+        reset: wheelState === 'notMoving',
         onRest: () => {
-            if (isSpinning && initialLoop && prizeWon === null){
-                setState('accelerating')
+            if (isWheelActive && initialLoop){
+                handleWheelState('accelerating')
                 setInitialLoop(false)
             }
-            else if ( (isSpinning && (prizeWon === null || loopCount <= 10))) {
+            else if ( (isWheelActive && (prizeWon === null || loopCount <= 10))) { //loop for minimum turns
                 setLoopCount(prev => prev+1);
-                setState('spinning');
-            } else if ( isSpinning && prizeWon) {
-                setState('decelerating')
+                handleWheelState('spinning');
+            } else if ( isWheelActive && prizeWon) {
+                handleWheelState('decelerating')
                 setInitialLoop(true);
-                handleIsSpinning(false)
+                handleWheelActivity(false)
                 setLoopCount(0);
+            } else if ( !isWheelActive && wheelState === 'spinning' ) {
+                handleWheelState('decelerating')
             }
         },
     })
@@ -168,6 +173,15 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
         }
         return 0; 
     }
+
+    const animationData = require('~~/assets/falling-confetti.json');
+
+    const defaultOptions = {
+        loop: true,
+        autoplay: true,
+        animationData,
+        speed: 0.1
+    };
 
 
     const CircleWithSlices = () => {
@@ -214,12 +228,12 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                         x="10"
                         y="25" // Adjust this to center vertically inside the slice
                         textAnchor="middle"
-                        fill={index === 0 || index === 5 ? "white" : "black"}
+                        fill="white"
                         fontSize="5" // Adjust font size as needed
                         transform={`translate(50,50) rotate(${(startAngle - (angle/2))}) rotate(${185+angle}) translate(-40,-20)`}
                         style={{ fontFamily: 'Playwrite NZ, cursive', fontWeight: '700' }}
                     >
-                        {prize.type === 0 ? 'Bankrupt'
+                        {prize.type === 0 ? 'Bust'
                             : prize.type === 1 ? 'Item'
                             : prize.type === 2 ? '100 WEI'
                             : prize.type === 3 ? '1000 WEI'
@@ -253,8 +267,8 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
         <div className="relative flex flex-col justify-end items-center h-full w-full">
             { isPrizeVisible && prizeWon && prizeWon?.prizeType !== '0'? 
                 <div className="prize-div z-10">
-                    <div className="absolute z-10 top-[-2rem] sm:top-[-2rem] left-0 w-full h-full flex justify-center items-start">
-                        <div className="h-[75%] w-[63%] max-h-[320px] max-w-[252px] border rounded-xl bg-white relative">
+                    <div className="absolute z-10 top-[-2rem] sm:top-[0rem] left-0 w-full h-full flex justify-center items-start">
+                        <div className="h-[75%] w-[63%] max-h-[340px] max-w-[258px] border rounded-xl bg-white relative">
                             {
                                 prizeWon?.prizeType === '1' ?
                                     <ItemImage itemId={prizeWon?.prizeValue}/>
@@ -265,9 +279,9 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                         </div>
                     </div>
                     <div className="absolute top-0 left-0 h-full w-full flex justify-center items-center">
-                        <div className={`overflow-hidden flex-col flex border ease-in border-[5px] bg-[#B053AA] rounded-[50%] h-full w-full max-h-[400px] max-w-[400px]`}>
-                            <div className="h-[70%]"> 
-                            
+                        <div className={`overflow-hidden flex-col flex border ease-in border-[5px] bg-[#B053AA] rounded-[50%] h-full w-full max-h-[500px] max-w-[500px]`}>
+                            <div className="h-[70%] overflow-hidden "> 
+                                <Lottie options={defaultOptions} height="150%" width="100%" />
                             </div>
                             <button className="grow z-20 accept-ring cursor-pointer flex justify-center hover:animate-none" onClick={handleAccept}>
                                 <p className={` text-4xl font-bold`}>
@@ -281,7 +295,11 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
             } 
             <animated.div
                 className="h-full border border-[black] border-[5px] relative w-full flex justify-center items-center my-4 rounded-[50%] max-h-[500px] max-w-[500px]"
-                style={{ transform: rotateSpring.rotation.to((r) => `rotate(${r}deg)`),}}
+                style={{ 
+                    transform: rotateSpring.rotation.to((r) => {
+                        return `rotate(${r}deg)`
+                    })
+                }}
             >
                 <CircleWithSlices />
             </animated.div>

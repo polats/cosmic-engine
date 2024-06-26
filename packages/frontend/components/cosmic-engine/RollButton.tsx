@@ -16,9 +16,11 @@ type RollButtonProps = {
   handleReroll: (val: boolean) => void;
   deployedContractData?: Contract<ContractName>;
   buttonLabel: string;
+  isWheelActive: boolean;
   handleIsSpinning: (val: boolean) => void;
   handleLoading: (val: boolean)=> void;
   handlePrizeWon: (prize: Prize | null) => void;
+  handleWheelActivity: (val: boolean) => void;
   onChange: () => void;
   args?: any;
   payableValue?: string;
@@ -32,6 +34,8 @@ export const RollButton = ({
   deployedContractData,
   buttonLabel,
   handleIsSpinning,
+  isWheelActive,
+  handleWheelActivity,
   handlePrizeWon,
   handleLoading,
   onChange,
@@ -49,7 +53,10 @@ export const RollButton = ({
 
   const handleWrite = async () => {
     if (writeContractAsync && deployedContractData) {
+      
       try {
+          handleWheelActivity(true);
+          handleLoading(true);
           const makeWriteWithParams = async() =>
             await writeContractAsync({
               address: deployedContractData.address,
@@ -61,12 +68,12 @@ export const RollButton = ({
               value: payableValue ? BigInt(payableValue) : BigInt("0"), 
           });
           const res = await writeTxn(makeWriteWithParams);
-          handleLoading(true);
-          handleIsSpinning(true);
           handlePrizeWon(null);
         } catch (error) {
           toast.error("Failed to do transaction, are you sure you have enough funds?");
-          handleLoading(false)
+          handleLoading(false);
+          handleWheelActivity(false);
+          handlePrizeWon(null);
         }
         // perform another transaction on localhost to make block tick
         try {
@@ -81,6 +88,7 @@ export const RollButton = ({
         } catch (error) {
           // toast.error(error);
           handleLoading(false)
+          handleWheelActivity(false);
         }
         onChange();
     }
