@@ -28,7 +28,10 @@ const ScaffoldEthApp = ({ session, children }: IScaffoldEthAppProps) => {
               {children}
             </div>
             <Footer />
-            <Toaster />
+            <Toaster 
+              position="top-right"
+              reverseOrder={false}
+            />
             </div>
           </ScaffoldEthAppWithProviders>
         </ThemeProvider>

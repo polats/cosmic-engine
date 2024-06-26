@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">
+  <defs>
+    <pattern id="feltTexture" width="100" height="100" patternUnits="userSpaceOnUse">
+      <filter id="feltNoise">
+        <feTurbulence numOctaves="2" seed="10" result="noise" />
+        <feColorMatrix type="matrix" values="1 0 0 0 0.3  0 1 0 0 0.3  0 0 1 0 0.3  0 0 0 1 0" />
+      </filter>
+      <use xlink:href="#feltNoise" fill="white" />
+    </pattern>
+  </defs>
+</svg>
