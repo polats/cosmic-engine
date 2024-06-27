@@ -76,7 +76,7 @@ export const RollButton = ({
           const parsedError = getParsedError(error);
           if (parsedError.includes("Sender doesn't have enough funds"))
           {
-            toast.error("Not enougn funds, please grab funds from faucet");
+            toast.error("Not enough funds, please grab funds from faucet");
           }
           else {
             toast.error(parsedError);

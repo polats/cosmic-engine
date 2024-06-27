@@ -23,6 +23,8 @@ import {
     useAnimationConfig
  } from "~~/hooks/scaffold-eth";
 
+import { JackpotBalance } from "./JackpotBalance";
+import { MediumJackpotBalance } from "./MediumJackpotBalance";
 
  
 // TODO: adjust types below when prizes are defined
@@ -155,7 +157,20 @@ export const JackpotJunction = () => {
 
     return (
         <div className="page-container">
- 
+        
+        {
+            // cosmicConsole && 
+            deployedContractData && 
+                <div className="flex flex-row justify-center items-center grow-0 text-center">
+                    <span className="font-bold text-sm ">Small Prize:</span>
+                    <div className="px-5">{Number(ROLL_COST)*1.5}</div>
+                    <span className="font-bold text-sm">Jackpot:</span>
+                    <JackpotBalance address={deployedContractData.address} className="px-5 h-5 min-h-[0.375rem]" />
+                    <span className="font-bold text-sm">Medium Prize:</span>
+                    <MediumJackpotBalance address={deployedContractData.address} className="px-0 h-5 min-h-[0.375rem]" />                    
+                </div>                
+        }
+
             <div className="flex flex-col justify-center items-center min-h-[100%] text-center">
                 {/* TODO: Add array for prize pool to make wheel dynamic  */}
                 <div className="h-full w-full grow overflow-hidden flex justify-center items-center pt-[5rem] mb-2" >
@@ -217,7 +232,7 @@ export const JackpotJunction = () => {
                                     className="spin w-[150px] h-[64px] text-xl text-center mb-[2.25rem]"
                                     onClick={handleRoll}
                                 >
-                                    {loading ? <span className="loading loading-spinner loading-xs"></span> : isReroll && prizeWon ? 'REROLL' : 'SPIN'}
+                                    {loading ? <span className="loading loading-spinner loading-xs"></span> : isReroll && prizeWon ? 'RESPIN' : 'SPIN'}
                                 </button>                      
                         }
                         </div>
