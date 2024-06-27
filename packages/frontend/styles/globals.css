@@ -193,3 +193,12 @@ p {
   from { opacity: 0; }
   to   { opacity: 1; }
 }
+
+.lightbulb {
+  animation: flash 1s infinite;
+}
+
+@keyframes flash {
+  0%, 100% { background-color: yellow; }
+  50% { background-color: black; }
+}

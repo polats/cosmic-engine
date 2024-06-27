@@ -16,7 +16,6 @@ import "~~/styles/roll-button.scss";
 import ItemImage from "./ItemImage";
 import DegenCard from "./DegenCard";
 import Lottie from 'react-lottie';
-import "~~/styles/roll-button.scss";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -47,15 +46,16 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
         deployedContractData, 
     } = props;
     const prizes = [
-        { color: '#f25449', type: 0 },
-        { color: '#2896f8', type: 1 },
-        { color: '#9B59B6', type: 2 },
-        { color: '#b1ff37', type: 3 },
-        { color: '#fae10a', type: 4 },
-        { color: '#ef3705', type: 0 },
-        { color: '#8415dd', type: 1 },
-        { color: '#9C27B0', type: 2 },
-        { color: '#10e4ce', type: 3 }
+        { color: '#242424', type: 0 },
+        { color: '#7a4f9b', type: 1 },
+        { color: '#242424', type: 2 },
+        { color: '#7a4f9b', type: 3 },
+        { color: '#242424', type: 4 },
+        { color: '#7a4f9b', type: 0 },
+        { color: '#242424', type: 1 },
+        { color: '#7a4f9b', type: 2 },
+        { color: '#242424', type: 3 },
+        { color: '#7a4f9b', type: 4 },
     ];
     const slices = prizes.length;
     const angle = 360 / slices;
@@ -306,8 +306,47 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
               {Array(totalCount).fill(null).map((value, index) => <Segment key={index} index={index}/>)}
             </div>
         )
-      }
+    }
+
+    const lightbulbCount = 20; // Number of lightbulbs
+
+    // useEffect(() => {
+    //     const interval = setInterval(() => {
+    //         setRotateSpring((prev) => ({ rotation: prev.rotation + 10 }));
+    //     }, 100); // Adjust the interval for desired speed
+    //     return () => clearInterval(interval);
+    // }, []);
+
+    const Lightbulbs = ({ count, radius }: {count:number, radius:number}) => {
+        const bulbs = [];
+        const bulbSize = 15; // Adjust as needed
+        const offsetRadius = radius + bulbSize / 2; // Add an offset to the radius
     
+        for (let i = 0; i < count; i++) {
+            const angle = (i / count) * 2 * Math.PI;
+            const x = (offsetRadius + offsetRadius * Math.cos(angle) - bulbSize / 2) +18;
+            const y = (offsetRadius + offsetRadius * Math.sin(angle) - bulbSize / 2) +18;
+    
+            bulbs.push(
+                <div
+                    key={i}
+                    className={`${isWheelActive ? 'lightbulb' : ''}`}
+                    style={{
+                        position: 'absolute',
+                        width: `${bulbSize}px`,
+                        height: `${bulbSize}px`,
+                        borderRadius: '50%',
+                        backgroundColor: 'black',
+                        top: `${y}px`,
+                        left: `${x}px`,
+                    }}
+                />
+            );
+        }
+    
+        return <>{bulbs}</>;
+    };
+
     return (
         <div className="relative flex flex-col justify-end items-center h-full w-full">
             { isPrizeVisible && prizeWon && prizeWon?.prizeType !== '0'? 
@@ -344,7 +383,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
             */}
             <div className="absolute flex justify-center h-full w-full max-h-[500px] my-4 ">
                 <div className="absolute top-[-20%] h-[40%] w-[150%] flex justify-center items-center  ">
-                    <div className="relative sm:top-[70px] lg:top-[80px]  sm:w-[120px] sm:h-[179px] sm:left-[-15px]">
+                    <div className="relative sm:top-[70px] lg:top-[60px]  sm:w-[120px] sm:h-[179px] sm:left-[-55px]">
                     {/* top-[100px]  w-[80px] h-[119px]  left-[0] */}
                         <Image
                             src={'/jackpotWheel/banner-small.png'}
@@ -352,7 +391,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                             fill
                         />
                     </div>
-                    <div className="relative z-10 sm:top-[-10%] px-[-5px] sm:w-[257px] sm:h-[98px]">
+                    <div className="relative z-10 sm:top-[-20%] px-[-5px] sm:w-[257px] sm:h-[98px]">
                         {/*  top-[45px] w-[160px] h-[60px]  */}
                         <Image
                             src={'/jackpotWheel/banner-jackpot.png'}
@@ -360,7 +399,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                             fill
                         />
                     </div>
-                    <div className="relative sm:top-[70px] lg:top-[80px] sm:w-[120px] sm:h-[179px] sm:left-[15px]">
+                    <div className="relative sm:top-[70px] lg:top-[60px] sm:w-[120px] sm:h-[179px] sm:left-[55px]">
                         {/*  top-[100px]  w-[80px] h-[119px] left-[0]*/}
                         <Image
                             src={'/jackpotWheel/banner-medium.png'}
@@ -371,16 +410,26 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                 </div>
 
             </div>
-            <animated.div
-                className="h-full sm:border sm:border-[black] sm:border-[5px] relative w-full flex justify-center items-center my-4 rounded-[50%] max-h-[500px] max-w-[500px]"
-                style={{ 
-                    transform: rotateSpring.rotation.to((r) => {
-                        return `rotate(${r}deg)`
-                    })
-                }}
-            >
-                <CircleWithSlices />
-            </animated.div>
+            <div className="relative h-full w-full flex justify-center items-center">
+                <animated.div
+                    className="h-full z-[10] sm:border sm:border-[black] sm:border-[5px] relative w-full flex justify-center items-center my-4 rounded-[50%] max-h-[500px] max-w-[500px]"
+                    style={{ 
+                        transform: rotateSpring.rotation.to((r) => {
+                            return `rotate(${r}deg)`
+                        })
+                    }}
+                >
+                    <CircleWithSlices />
+                </animated.div>
+                <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center">
+                    <div 
+                        className="relative z-[0] bg-[#493313] w-full h-full rounded-full border-black border-[5px]" 
+                        style={{ width: `${290 * 2}px`, height: `${290 * 2 }px` }}
+                    >
+                        <Lightbulbs count={lightbulbCount} radius={260} />
+                    </div>
+                </div>
+            </div>
             <div className="absolute left-[50%] bottom-[5px] sm:bottom-[0] transform -translate-x-1/2 translate-y-0 h-[50px]">
                 <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                     {/* <polygon points="20,4 35,40 5,40" fill="white"/> */}
