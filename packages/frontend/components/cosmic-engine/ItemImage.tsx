@@ -35,19 +35,20 @@ type ItemImageProps = {
 
   const types = [ "Cover", "Body", "Wheel", "Beast"];
 
-
   export const ItemImage = ({
     itemId,
   }: ItemImageProps) => {
     
     // image is base64 string
     const [image, setImage] = useState<string>();
+
     const itemIdBase = (parseInt(itemId) % 28);
     const itemTerrain =  Math.floor(itemIdBase/4);
     const itemType = itemIdBase%4;
     const itemTier = Math.floor(parseInt(itemId)/28);
 
     async function loadImage(itemId: string) {
+
         const layerData = await getItemLayerData(itemId);
 
         if (layerData) {
