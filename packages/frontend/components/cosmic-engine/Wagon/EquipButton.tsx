@@ -17,7 +17,7 @@ interface CraftButtonProps {
     index: number;
 }
 
-const CraftButton = ({ item, tier, index }: CraftButtonProps) => {
+const EquipButton = ({ item, tier, index }: CraftButtonProps) => {
     const { data: deployedContractData, isLoading: deployedContractLoading } = useDeployedContractInfo(JJ_CONTRACT_NAME);
     const { data: result, isPending, writeContractAsync } = useWriteContract();
     const writeTxn = useTransactor();
@@ -38,7 +38,6 @@ const CraftButton = ({ item, tier, index }: CraftButtonProps) => {
                       args: [BigInt(indexWithTier.toString()), BigInt("1")],
                   });
 
-                notification.success("Item crafted successfully")
                   const res = await writeTxn(makeWriteWithParams);
 
                 } catch (error) {
@@ -56,12 +55,12 @@ const CraftButton = ({ item, tier, index }: CraftButtonProps) => {
     };
 
     return (
-        <button className="disabled absolute bottom-0 left-1/2 transform -translate-x-1/2 m-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        <button className="absolute bottom-0 left-1/2 transform -translate-x-1/2 m-1 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
         onClick={handleClick}
         >
-            { isPending ? "..." : "Upgrade"}
+            Equip
         </button>
     );
 }
 
-export default CraftButton;
+export default EquipButton;

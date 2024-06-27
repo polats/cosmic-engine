@@ -5,6 +5,7 @@ import {
     CRAFT_COST,
     Item } from '@/lib/constants';
 import CraftButton from './CraftButton';
+import EquipButton from './EquipButton';
 
 interface InventoryProps {
     data: Item[];
@@ -45,8 +46,21 @@ export default function Inventory (inventory: InventoryProps) {
                     <div className={`${parseInt(item.amount) >= CRAFT_COST ? 'bg-blue-500' : 'bg-gray-500'}
                     absolute -top-4 -right-2 m-1 rounded-full text-white text-center w-6 h-6 flex items-center justify-center`}>{item.amount}</div>
                     {
-                        item === selectedItem && parseInt(item.amount) >= CRAFT_COST && 
-                            <CraftButton item={item} tier={inventory.tier} index={index}/>
+                        item === selectedItem && (
+                            parseInt(item.amount) >= 1 && 
+                            <div className="absolute px-10 text-center">
+                            <EquipButton item={item} tier={inventory.tier} index={index} />                            
+                            </div>
+                        )
+                    }                    
+
+                    {
+                        item === selectedItem && (
+                            parseInt(item.amount) >= CRAFT_COST && 
+                            <div className="absolute -bottom-6 right-1/2">
+                            <CraftButton item={item} tier={inventory.tier} index={index}/>                            
+                            </div>
+                        )
                     }                    
                 </div>
             ))}
