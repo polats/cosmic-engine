@@ -235,8 +235,8 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                     >
                         {prize.type === 0 ? 'Bust'
                             : prize.type === 1 ? 'Item'
-                            : prize.type === 2 ? '100 WEI'
-                            : prize.type === 3 ? '1000 WEI'
+                            : prize.type === 2 ? 'Tiny WEI'
+                            : prize.type === 3 ? 'NICE WEI'
                             : prize.type === 4 ? 'JACKPOT'
                             : null}
                         {/* {prize.color} */}
