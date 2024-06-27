@@ -41,7 +41,7 @@ type ItemImageProps = {
     const itemIdBase = (parseInt(itemId) % 28);
     const itemTerrain =  Math.floor(itemIdBase/4);
     const itemType = itemIdBase%4;
-    const itemTier = Math.floor(itemId/28);
+    const itemTier = Math.floor(parseInt(itemId)/28);
 
     async function loadImage(itemId: string) {
         const fetchedImage = await getItemImage(itemId);

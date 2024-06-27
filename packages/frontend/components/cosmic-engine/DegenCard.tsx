@@ -8,13 +8,13 @@ interface DegenCardProps {
 const DegenCard = ({type, degen}: DegenCardProps) => {
     const typeParsed = parseInt(type);
     const typeImage = () => {
-        if(typeParsed === 2) { //small
-            return '/small-coins.png'
-        } else if (typeParsed === 3) { //medium
+        if (typeParsed === 3) { //medium
             return '/medium-coins.png'
         } else if (typeParsed === 4) { //large
             return '/jackpot-coins.png'
-        }
+        } else { //small
+            return '/small-coins.png'
+        } 
     }
     const darkenColor = (hexColor: string) => {
         const percentage = 30;
