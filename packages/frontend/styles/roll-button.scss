@@ -56,6 +56,17 @@ $accept-hover: #ffe77b;
   }
 }
 
+
+@keyframes pulsate {
+  0% { border-color: yellow; }
+  50% { border-color: orange; }
+  100% { border-color: yellow; }
+}
+
+.pulsate-border {
+  animation: pulsate 0.5s infinite;
+}
+
 button {
     position: relative;
     display: flex;

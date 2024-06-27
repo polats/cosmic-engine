@@ -20,6 +20,13 @@ import { getAllItemLayerData } from "@/lib/actions/ora";
 import { getBase64Image } from "@/utils/cosmic-engine";
 import type { Session } from "next-auth"; 
 
+  // enums/KeyboardKey.ts
+  export enum KeyboardKey {
+    tilde= '`',
+    escape = 'Escape',
+    enter = 'Enter',
+  }
+
 const farcasterAuthKitConfig = {
   relay: "https://relay.farcaster.xyz",
   rpcUrl: "https://mainnet.optimism.io",
@@ -40,6 +47,9 @@ export const ScaffoldEthAppWithProviders = ({ session, children }: { session: Se
   const isDarkMode = resolvedTheme === "dark";
   const [mounted, setMounted] = useState(false);
   const setItemImages = useGlobalState(({setItemImages}) => setItemImages);
+  const cosmicConsole = useGlobalState(({ cosmicConsole }) => cosmicConsole);
+  const setCosmicConsole = useGlobalState(({ setCosmicConsole }) => setCosmicConsole);
+
 
   async function initializeOraImages() {
     const itemImageBuffers = await getAllItemLayerData();
@@ -55,10 +65,32 @@ export const ScaffoldEthAppWithProviders = ({ session, children }: { session: Se
     }
   }
 
-  useEffect(() => {
-    initializeOraImages();
-    setMounted(true);
-  }, []);
+  const useKeyPress = (callback: (T?: any) => void, keys: KeyboardKey[]) => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      const wasAnyKeyPressed = keys.some((key) => event.key === key);
+  
+      if (wasAnyKeyPressed) {
+        event.preventDefault();
+        callback();
+      }
+    };
+  
+    useEffect(() => {
+      document.addEventListener('keydown', onKeyDown);  
+      return () => {
+        document.removeEventListener('keydown', onKeyDown);
+      };
+    }, [onKeyDown]);
+  };
+    
+    useEffect(() => {
+      initializeOraImages();
+      setMounted(true);
+    }, []);
+
+  useKeyPress(() => {
+    setCosmicConsole(!cosmicConsole);
+  }, [KeyboardKey.tilde]);
 
   return (
     <>

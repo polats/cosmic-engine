@@ -34,7 +34,7 @@ export const useScaffoldReadContract = <
   const { query: queryOptions, watch, interval, ...readContractConfig } = readConfig;
   // set watch to true by default
   const defaultWatch = watch ?? true;
-  const defaultPollingInterval = interval ?? 2000;
+  const defaultPollingInterval = interval ?? 1000;
 
   const readContractHookRes = useReadContract({
     chainId: targetNetwork.id,

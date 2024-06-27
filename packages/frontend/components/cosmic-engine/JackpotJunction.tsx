@@ -23,6 +23,8 @@ import {
     useAnimationConfig
  } from "~~/hooks/scaffold-eth";
 
+
+ 
 // TODO: adjust types below when prizes are defined
 export interface Prize {
     prizeType: string;
@@ -39,6 +41,7 @@ export interface PrizePool {
 import { useLocalStoragePreferences } from "@/hooks/cosmic-engine";
 
 export const JackpotJunction = () => {
+    const cosmicConsole = useGlobalState(state => state.cosmicConsole);
     const [ wheelState, setWheelState ] = useState('notMoving');
     const [ isWheelActive, setIsWheelActive ] = useState(false);
     const [ prizeWon, setPrizeWon ] = useState<Prize | null>(null);
@@ -184,6 +187,7 @@ export const JackpotJunction = () => {
                                         handlePrizeWon={handlePrizeWon}  
                                         handleLoading={handleLoading}
                                         buttonLabel="SPIN"
+                                        triggerRefreshDisplayVariables={triggerRefreshDisplayVariables}
                                         handleIsSpinning={handleIsSpinning}
                                         handleWheelActivity={handleWheelActivity}
                                         outcome={outcome}
@@ -203,7 +207,7 @@ export const JackpotJunction = () => {
                                         }`}
                                     >
                                     {                                 
-                                        outcomeResult()
+                                        cosmicConsole && outcomeResult()
                                     }            
                                     </div>
                                 </>
@@ -218,18 +222,24 @@ export const JackpotJunction = () => {
                         }
                         </div>
 
+                        {
+                            cosmicConsole && 
+                            <>
+                                {wheelState}
 
-                        <div className="bg-base-300 rounded-3xl px-6 lg:px-8 py-4 shadow-lg shadow-base-300">
-                            {
-                                deployedContractData &&
-                                <ReadContractDisplay
-                                fnName={"outcome"}
-                                args={[address, false]}
-                                refreshDisplayVariables={refreshDisplayVariables}
-                                deployedContractData={deployedContractData}
-                                />
-                            }
-                        </div>        
+                                <div className="bg-base-300 rounded-3xl px-6 lg:px-8 py-4 shadow-lg shadow-base-300">
+                                    {
+                                        deployedContractData &&
+                                        <ReadContractDisplay
+                                        fnName={"outcome"}
+                                        args={[address, false]}
+                                        refreshDisplayVariables={refreshDisplayVariables}
+                                        deployedContractData={deployedContractData}
+                                        />
+                                    }
+                                </div>        
+                            </>
+                        }
                     </div>                         
                 }
             </div>

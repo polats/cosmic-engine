@@ -1,6 +1,7 @@
 
 import { getItemLayerData } from "@/lib/actions"
 import { getBase64Image } from "@/utils/cosmic-engine/ora-client"
+import { ITEM_ID_IMAGE_LAYER_NAMES } from "@/lib/constants";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 
@@ -114,9 +115,11 @@ type ItemImageProps = {
               }}
             >
               <h3 className="text-lg font-jost font-semibold p-0 m-0">
-                {`${types[itemType].toUpperCase()} - ${terrain[itemTerrain].terrain.toUpperCase()}`}
+                {ITEM_ID_IMAGE_LAYER_NAMES[parseInt(itemId)][1]}                
               </h3>
-              <span className="text-sm">lorem ipsum dolor sit amet</span>
+              <span className="text-sm">
+                {`${types[itemType].toUpperCase()} - ${terrain[itemTerrain].terrain.toUpperCase()}`}
+              </span>
             </div>
           </div>
         </div>
