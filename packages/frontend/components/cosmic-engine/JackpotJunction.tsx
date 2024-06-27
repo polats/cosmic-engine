@@ -17,10 +17,11 @@ import { JackpotWheel } from "~~/components/cosmic-engine/JackpotWheel";
 import { performRoll } from "@/lib/actions"
 import { useAccount } from "wagmi"
 import { useGlobalState } from "~~/services/store/store"
-import { useDeployedContractInfo } from "~~/hooks/scaffold-eth";
-
-import { useScaffoldReadContract } from "~~/hooks/scaffold-eth";
-import { useAnimationConfig } from "~~/hooks/scaffold-eth";
+import {    
+    useDeployedContractInfo, 
+    useScaffoldReadContract,
+    useAnimationConfig
+ } from "~~/hooks/scaffold-eth";
 
 // TODO: adjust types below when prizes are defined
 export interface Prize {
@@ -222,6 +223,7 @@ export const JackpotJunction = () => {
                             {
                                 deployedContractData &&
                                 <ReadContractDisplay
+                                fnName={"outcome"}
                                 args={[address, false]}
                                 refreshDisplayVariables={refreshDisplayVariables}
                                 deployedContractData={deployedContractData}

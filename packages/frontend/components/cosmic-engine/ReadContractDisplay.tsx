@@ -3,10 +3,12 @@ import { Abi, AbiFunction } from "abitype";
 import { Contract, ContractName, GenericContract, InheritedFunctions } from "~~/utils/scaffold-eth/contract";
 
 export const ReadContractDisplay = ({
+  fnName,
   args,
   refreshDisplayVariables,
   deployedContractData,
 }: {
+  fnName: string;
   args: any;
   refreshDisplayVariables: boolean;
   deployedContractData: Contract<ContractName>;
@@ -26,7 +28,7 @@ export const ReadContractDisplay = ({
     return isQueryableWithParams;
   })
     
-    .filter(fn => fn.name == "outcome")
+    .filter(fn => fn.name == fnName)
     .map(fn => {
       return {
         fn,

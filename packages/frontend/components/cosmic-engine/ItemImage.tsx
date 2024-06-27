@@ -1,5 +1,6 @@
 
-import { getItemImage } from "@/lib/actions"
+import { getItemLayerData } from "@/lib/actions"
+import { getBase64Image } from "@/utils/cosmic-engine/ora-client"
 import { useEffect, useState } from "react";
 import Image from "next/image";
 
@@ -34,9 +35,12 @@ type ItemImageProps = {
 
   const types = [ "Cover", "Body", "Wheel", "Beast"];
 
+
   export const ItemImage = ({
     itemId,
   }: ItemImageProps) => {
+    
+    // image is base64 string
     const [image, setImage] = useState<string>();
     const itemIdBase = (parseInt(itemId) % 28);
     const itemTerrain =  Math.floor(itemIdBase/4);
@@ -44,11 +48,11 @@ type ItemImageProps = {
     const itemTier = Math.floor(parseInt(itemId)/28);
 
     async function loadImage(itemId: string) {
-        const fetchedImage = await getItemImage(itemId);
-        if (fetchedImage) {
-            const imageJSON = JSON.parse(fetchedImage);
-            const imageData = uint8ArrayToSrc(imageJSON[0].buffer.data);
-            setImage(imageData);
+        const layerData = await getItemLayerData(itemId);
+
+        if (layerData) {
+          const fetchedImage = getBase64Image(layerData);
+          setImage(fetchedImage);
         }
 
     }
