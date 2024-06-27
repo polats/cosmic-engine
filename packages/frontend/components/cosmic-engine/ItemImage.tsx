@@ -109,7 +109,7 @@ type ItemImageProps = {
               }}
             >
               <h3 className="text-lg font-jost font-semibold p-0 m-0">
-                {`${terrain[itemTerrain].terrain.toUpperCase()} ${types[itemType].toUpperCase()}`}
+                {`${types[itemType].toUpperCase()} - ${terrain[itemTerrain].terrain.toUpperCase()}`}
               </h3>
               <span className="text-sm">lorem ipsum dolor sit amet</span>
             </div>
