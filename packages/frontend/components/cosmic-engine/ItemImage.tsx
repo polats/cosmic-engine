@@ -41,10 +41,11 @@ type ItemImageProps = {
     
     // image is base64 string
     const [image, setImage] = useState<string>();
-    const itemIdBase = (parseInt(itemId) % 28)+1;
+
+    const itemIdBase = (parseInt(itemId) % 28);
     const itemTerrain =  Math.floor(itemIdBase/4);
     const itemType = itemIdBase%4;
-    const itemTier = itemIdBase-1;
+    const itemTier = Math.floor(parseInt(itemId)/28);
 
     async function loadImage(itemId: string) {
 
@@ -113,7 +114,7 @@ type ItemImageProps = {
               }}
             >
               <h3 className="text-lg font-jost font-semibold p-0 m-0">
-                {`${terrain[itemTerrain].terrain.toUpperCase()} ${types[itemType].toUpperCase()}`}
+                {`${types[itemType].toUpperCase()} - ${terrain[itemTerrain].terrain.toUpperCase()}`}
               </h3>
               <span className="text-sm">lorem ipsum dolor sit amet</span>
             </div>
