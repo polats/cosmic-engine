@@ -6,7 +6,7 @@
 const deployedContracts = {
   31337: {
     JackpotJunction: {
-      address: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+      address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
       abi: [
         {
           inputs: [
@@ -1011,7 +1011,7 @@ const deployedContracts = {
   },
   84532: {
     JackpotJunction: {
-      address: "0xC450C1b5B01fc580b924755a369190484f0f706E",
+      address: "0x23eB8225E6460eCBeCb573576F3Dd3e5F1377227",
       abi: [
         {
           inputs: [
