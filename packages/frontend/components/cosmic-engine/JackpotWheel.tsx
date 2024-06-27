@@ -229,14 +229,14 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                         y="25" // Adjust this to center vertically inside the slice
                         textAnchor="middle"
                         fill="white"
-                        fontSize="5" // Adjust font size as needed
-                        transform={`translate(50,50) rotate(${(startAngle - (angle/2))}) rotate(${185+angle}) translate(-40,-20)`}
+                        fontSize={prize.type === 2 ? "4" : "5"} // Adjust font size as needed
+                        transform={`translate(50,50) rotate(${(startAngle - (angle/2))}) rotate(${189+angle}) translate(-40,-20)`}
                         style={{ fontFamily: 'Playwrite NZ, cursive', fontWeight: '700' }}
                     >
                         {prize.type === 0 ? 'Bust'
                             : prize.type === 1 ? 'Item'
-                            : prize.type === 2 ? '100 WEI'
-                            : prize.type === 3 ? '1000 WEI'
+                            : prize.type === 2 ? 'Itty bitty WEI'
+                            : prize.type === 3 ? 'NICE WEI'
                             : prize.type === 4 ? 'JACKPOT'
                             : null}
                         {/* {prize.color} */}
@@ -266,15 +266,14 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
     return (
         <div className="relative flex flex-col justify-end items-center h-full w-full">
             { isPrizeVisible && prizeWon && prizeWon?.prizeType !== '0'? 
-                <div className="prize-div z-10">
-                    <div className="absolute z-10 top-[-2rem] sm:top-[0rem] left-0 w-full h-full flex justify-center items-start">
-                        <div className="h-[75%] w-[63%] max-h-[340px] max-w-[258px] border rounded-xl bg-white relative">
+                <div className="prize-div z-20">
+                    <div className="absolute z-40 top-[-3.5rem] sm:top-[-2rem] left-0 w-full h-full flex justify-center items-start">
+                        <div className="h-[80%] w-[63%] max-h-[380px] max-w-[265px] border rounded-xl bg-white relative">
                             {
                                 prizeWon?.prizeType === '1' ?
                                     <ItemImage itemId={prizeWon?.prizeValue}/>
                                 :
-                                    // <DegenCard degen={prizeWon?.prizeValue}/>
-                                    null
+                                    <DegenCard type={prizeWon?.prizeType} degen={prizeWon?.prizeValue}/>
                             }
                         </div>
                     </div>
@@ -283,7 +282,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                             <div className="h-[70%] overflow-hidden "> 
                                 <Lottie options={defaultOptions} height="150%" width="100%" />
                             </div>
-                            <button className="grow z-20 accept-ring cursor-pointer flex justify-center hover:animate-none" onClick={handleAccept}>
+                            <button className="grow z-50 accept-ring cursor-pointer flex justify-center hover:animate-none" onClick={handleAccept}>
                                 <p className={` text-4xl font-bold`}>
                                     ACCEPT
                                 </p>
@@ -293,8 +292,41 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                 </div>
             : null
             } 
+            {/* 
+                67% for side banner 
+                38% jackpot
+            */}
+            <div className="absolute flex justify-center h-full w-full max-h-[500px] my-4 ">
+                <div className="absolute top-[-20%] h-[40%] w-[150%] flex justify-center items-center  ">
+                    <div className="relative sm:top-[70px] lg:top-[80px]  sm:w-[120px] sm:h-[179px] sm:left-[-15px]">
+                    {/* top-[100px]  w-[80px] h-[119px]  left-[0] */}
+                        <Image
+                            src={'/jackpotWheel/banner-small.png'}
+                            alt="jackpot-banner"
+                            fill
+                        />
+                    </div>
+                    <div className="relative z-10 sm:top-[-10%] px-[-5px] sm:w-[257px] sm:h-[98px]">
+                        {/*  top-[45px] w-[160px] h-[60px]  */}
+                        <Image
+                            src={'/jackpotWheel/banner-jackpot.png'}
+                            alt="jackpot-banner"
+                            fill
+                        />
+                    </div>
+                    <div className="relative sm:top-[70px] lg:top-[80px] sm:w-[120px] sm:h-[179px] sm:left-[15px]">
+                        {/*  top-[100px]  w-[80px] h-[119px] left-[0]*/}
+                        <Image
+                            src={'/jackpotWheel/banner-medium.png'}
+                            alt="jackpot-banner"
+                            fill
+                        />
+                    </div>
+                </div>
+
+            </div>
             <animated.div
-                className="h-full border border-[black] border-[5px] relative w-full flex justify-center items-center my-4 rounded-[50%] max-h-[500px] max-w-[500px]"
+                className="h-full sm:border sm:border-[black] sm:border-[5px] relative w-full flex justify-center items-center my-4 rounded-[50%] max-h-[500px] max-w-[500px]"
                 style={{ 
                     transform: rotateSpring.rotation.to((r) => {
                         return `rotate(${r}deg)`
@@ -303,7 +335,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
             >
                 <CircleWithSlices />
             </animated.div>
-            <div className="absolute bottom-0 left-[50%] transform -translate-x-1/2 translate-y-0 h-[50px]">
+            <div className="absolute left-[50%] bottom-[5px] sm:bottom-[0] transform -translate-x-1/2 translate-y-0 h-[50px]">
                 <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                     {/* <polygon points="20,4 35,40 5,40" fill="white"/> */}
                     <path d="M20 4 L35 40 Q20 40 5 40 Z" fill="white"/>
