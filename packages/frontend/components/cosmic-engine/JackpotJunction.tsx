@@ -41,9 +41,15 @@ export interface PrizePool {
 }
 
 import { useLocalStoragePreferences } from "@/hooks/cosmic-engine";
+import { useBlockNumber } from "wagmi";
+import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 
 export const JackpotJunction = () => {
+    // press ` to toggle cosmic console
     const cosmicConsole = useGlobalState(state => state.cosmicConsole);
+
+    const { targetNetwork } = useTargetNetwork();
+
     const [ wheelState, setWheelState ] = useState('notMoving');
     const [ isWheelActive, setIsWheelActive ] = useState(false);
     const [ prizeWon, setPrizeWon ] = useState<Prize | null>(null);
@@ -87,6 +93,13 @@ export const JackpotJunction = () => {
             }
         }
     }, [outcome]);
+
+    const { data: blockNumber } = useBlockNumber({ watch: true })
+
+    useEffect(() => {
+        // new block
+        // console.log(blockNumber);
+      }, [blockNumber])
 
     const { showAnimation } = useAnimationConfig(outcome);
 
@@ -168,7 +181,11 @@ export const JackpotJunction = () => {
                     <JackpotBalance address={deployedContractData.address} className="px-5 h-5 min-h-[0.375rem]" />
                     <span className="font-bold text-sm">Medium Prize:</span>
                     <MediumJackpotBalance address={deployedContractData.address} className="px-0 h-5 min-h-[0.375rem]" />                    
-                </div>                
+                    <span className="font-bold text-sm px-5">Current Block:</span>
+                    <div className="px-5">{blockNumber?.toString()}</div>
+                    
+                </div>               
+
         }
 
             <div className="flex flex-col justify-center items-center min-h-[100%] text-center">
