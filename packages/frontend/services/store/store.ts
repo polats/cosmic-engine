@@ -18,6 +18,8 @@ type GlobalState = {
   setTargetNetwork: (newTargetNetwork: ChainWithAttributes) => void;
   userCurrency: number;
   setUserCurrency: (newUserCurrencyState: number) => void;
+  itemImages: Buffer[];
+  setItemImages: (newItemImages: Buffer[]) => void;
 };
 
 export const useGlobalState = create<GlobalState>(set => ({
@@ -27,4 +29,6 @@ export const useGlobalState = create<GlobalState>(set => ({
   setTargetNetwork: (newTargetNetwork: ChainWithAttributes) => set(() => ({ targetNetwork: newTargetNetwork })),
   userCurrency: 0,
   setUserCurrency: (newValue: number): void => set(() => ({ userCurrency: newValue })),
+  itemImages: [],
+  setItemImages: (newItemImages: Buffer[]) => set(() => ({ itemImages: newItemImages}))
 }));

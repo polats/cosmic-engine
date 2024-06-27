@@ -19,6 +19,7 @@ export default function Home({searchParams}: SearchPageProps) {
         <link rel="preconnect" href="https://fonts.gstatic.com"  crossOrigin="anonymous"  />
         <link href="https://fonts.googleapis.com/css2?family=Playwrite+NZ:wght@100..400&display=swap" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet"/>
+
       </Head>
       <main 
         className="h-full" 

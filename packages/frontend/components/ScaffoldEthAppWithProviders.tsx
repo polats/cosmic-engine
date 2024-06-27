@@ -16,6 +16,8 @@ import { wagmiConfig } from "~~/services/web3/wagmiConfig";
 import { AuthKitProvider } from "@farcaster/auth-kit";
 import { SessionProvider } from "next-auth/react";
 import { PrivyProvider } from '@privy-io/react-auth';
+import { getAllItemLayerData } from "@/lib/actions/ora";
+import { getBase64Image } from "@/utils/cosmic-engine";
 import type { Session } from "next-auth"; 
 
 const farcasterAuthKitConfig = {
@@ -37,8 +39,24 @@ export const ScaffoldEthAppWithProviders = ({ session, children }: { session: Se
   const { resolvedTheme } = useTheme();
   const isDarkMode = resolvedTheme === "dark";
   const [mounted, setMounted] = useState(false);
+  const setItemImages = useGlobalState(({setItemImages}) => setItemImages);
+
+  async function initializeOraImages() {
+    const itemImageBuffers = await getAllItemLayerData();
+    let itemImages: Buffer[] = [];
+    if (itemImageBuffers) {
+      const itemJson = JSON.parse(itemImageBuffers);
+
+      itemJson.forEach(async (item: any) => {
+        itemImages.push(item.buffer.data);
+      });
+
+      setItemImages(itemImages);      
+    }
+  }
 
   useEffect(() => {
+    initializeOraImages();
     setMounted(true);
   }, []);
 
