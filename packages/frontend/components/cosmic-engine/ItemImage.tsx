@@ -81,19 +81,19 @@ type ItemImageProps = {
 
     return (
         <div 
-          className={`h-full w-full flex flex-col gap-y-4 border border-black border-[1px] rounded-xl p-4`} 
+          className={`h-full w-full flex flex-col gap-y-4 border border-black border-[1px] rounded-3xl p-4`} 
           style={{
             backgroundColor: terrain[itemTerrain].color
           }}
         >
-          <div className="relative rounded h-[70%] p-2">
+          <div className="relative h-[70%] p-2">
             <Image
               src={'/card-mask.png'}
               alt={'card background'}
               fill
             />
             {
-                image && <div className="h-full w-full relative">
+                image && <div className="h-full w-full relative rounded-3xl">
                   <Image 
                       src={image} 
                       alt={itemId} 

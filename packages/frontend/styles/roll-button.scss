@@ -33,7 +33,7 @@ $accept-hover: #ffe77b;
   outline: none;
   color: $accept-text;
   background: $accept-top;
-  animation: pulse 2s ease-in-out infinite;
+  // animation: pulse 2s ease-in-out infinite;
   transition: transform 150ms cubic-bezier(0, 0, 0.58, 1), background 150ms cubic-bezier(0, 0, 0.58, 1);
   &:hover {
     color: $accept-text-hover;
@@ -159,19 +159,20 @@ button {
   }
 
   $animation-name: pulse;
-  $animation-duration: 1.4s;
+  $animation-duration: 3.2s;
   $animation-timing-function: ease-in-out;
   $animation-iteration-count: infinite;
   
   .loader-pulse {
+    background-color: red ; 
     animation: #{$animation-name} #{$animation-duration} #{$animation-timing-function} #{$animation-iteration-count};
   }
   
-  // @keyframes #{$animation-name} {
-  //   0%, 100% {
-  //     opacity: 1;
-  //   }
-  //   50% {
-  //     opacity: .2;
-  //   }
-  // }
+  @keyframes #{$animation-name} {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: .2;
+    }
+  }

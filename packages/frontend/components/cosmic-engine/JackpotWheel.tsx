@@ -16,6 +16,7 @@ import "~~/styles/roll-button.scss";
 import ItemImage from "./ItemImage";
 import DegenCard from "./DegenCard";
 import Lottie from 'react-lottie';
+import "~~/styles/roll-button.scss";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -106,10 +107,27 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
     const { data: txResult } = useWaitForTransactionReceipt({
         hash: result,
     });
+    const [count, setCount] = useState(10);
+    const totalCount = 10
 
     useEffect(() => {
         setDisplayedTxResult(txResult);
     }, [txResult]);
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+          setCount(prevCount => {
+            if (prevCount > 0) {
+              return prevCount - 1;
+            } else {
+              return 10;
+            }
+          });
+        }, 3000);
+    
+        // Cleanup function to clear the interval on component unmount
+        return () => clearInterval(intervalId);
+      }, []);
+    
 
     const rotateSpring = useSpring({
         from: { rotation: 0},
@@ -263,12 +281,39 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
             </svg>
         );
     };
+
+    
+  const Segment = ({index}: {index: number}) => {
+    return (
+      <div key={index} className={`grow-1 w-full
+        ${index === 0 ? 'rounded-l-3xl': index === totalCount-1 ? 'rounded-r-3xl' : ''}
+        ${index < count ?
+          'bg-white opacity-80 border-r-2'
+        : index === count ?
+          'loader-pulse'
+        :
+          'bg-slate-800 opacity-100'
+        }
+      `}>
+      </div>
+    )
+  }
+
+
+    const Loader = () => {
+        return (
+            <div className="w-[95%] flex justify-center border rounded-3xl h-[15px]">
+              {Array(totalCount).fill(null).map((value, index) => <Segment key={index} index={index}/>)}
+            </div>
+        )
+      }
+    
     return (
         <div className="relative flex flex-col justify-end items-center h-full w-full">
             { isPrizeVisible && prizeWon && prizeWon?.prizeType !== '0'? 
                 <div className="prize-div z-20">
                     <div className="absolute z-40 top-[-3.5rem] sm:top-[-2rem] left-0 w-full h-full flex justify-center items-start">
-                        <div className="h-[80%] w-[63%] max-h-[380px] max-w-[265px] border rounded-xl bg-white relative">
+                        <div className="h-[80%] w-[63%] max-h-[380px] max-w-[265px] relative">
                             {
                                 prizeWon?.prizeType === '1' ?
                                     <ItemImage itemId={prizeWon?.prizeValue}/>
@@ -282,7 +327,8 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                             <div className="h-[70%] overflow-hidden "> 
                                 <Lottie options={defaultOptions} height="150%" width="100%" />
                             </div>
-                            <button className="grow z-50 accept-ring cursor-pointer flex justify-center hover:animate-none" onClick={handleAccept}>
+                            <button className="grow z-50 accept-ring cursor-pointer flex flex-col justify-start hover:animate-none" onClick={handleAccept}>
+                                <Loader />
                                 <p className={` text-4xl font-bold`}>
                                     ACCEPT
                                 </p>
