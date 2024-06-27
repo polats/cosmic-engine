@@ -267,8 +267,8 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
         <div className="relative flex flex-col justify-end items-center h-full w-full">
             { isPrizeVisible && prizeWon && prizeWon?.prizeType !== '0'? 
                 <div className="prize-div z-10">
-                    <div className="absolute z-10 top-[-2rem] sm:top-[0rem] left-0 w-full h-full flex justify-center items-start">
-                        <div className="h-[75%] w-[63%] max-h-[340px] max-w-[258px] border rounded-xl bg-white relative">
+                    <div className="absolute z-10 top-[-3.5rem] sm:top-[-2rem] left-0 w-full h-full flex justify-center items-start">
+                        <div className="h-[80%] w-[63%] max-h-[380px] max-w-[265px] border rounded-xl bg-white relative">
                             {
                                 prizeWon?.prizeType === '1' ?
                                     <ItemImage itemId={prizeWon?.prizeValue}/>
