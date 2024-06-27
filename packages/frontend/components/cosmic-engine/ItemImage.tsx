@@ -38,7 +38,7 @@ type ItemImageProps = {
     itemId,
   }: ItemImageProps) => {
     const [image, setImage] = useState<string>();
-    const itemIdBase = (itemId % 28)+1;
+    const itemIdBase = (parseInt(itemId) % 28)+1;
     const itemTerrain =  Math.floor(itemIdBase/4);
     const itemType = itemIdBase%4;
     const itemTier = itemIdBase-1;
