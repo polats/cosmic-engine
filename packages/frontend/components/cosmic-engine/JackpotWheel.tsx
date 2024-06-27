@@ -273,8 +273,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                                 prizeWon?.prizeType === '1' ?
                                     <ItemImage itemId={prizeWon?.prizeValue}/>
                                 :
-                                    // <DegenCard degen={prizeWon?.prizeValue}/>
-                                    null
+                                    <DegenCard type={prizeWon?.prizeType} degen={prizeWon?.prizeValue}/>
                             }
                         </div>
                     </div>
