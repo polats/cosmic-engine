@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import Image from "next/image";
-import { TIER_COLORS, Item } from '@/lib/constants';
+import { 
+    TIER_COLORS, 
+    CRAFT_COST,
+    Item } from '@/lib/constants';
 import CraftButton from './CraftButton';
 
 interface InventoryProps {
@@ -39,10 +42,10 @@ export default function Inventory (inventory: InventoryProps) {
                             }: {}
                         }                                            
                     />                    
-                    <div className={`bg-${parseInt(item.amount) >= Math.pow(2, inventory.tier) ? 'blue' : 'gray'}-500
+                    <div className={`${parseInt(item.amount) >= CRAFT_COST ? 'bg-blue-500' : 'bg-gray-500'}
                     absolute -top-4 -right-2 m-1 rounded-full text-white text-center w-6 h-6 flex items-center justify-center`}>{item.amount}</div>
                     {
-                        item === selectedItem && parseInt(item.amount) >= Math.pow(2, inventory.tier) && 
+                        item === selectedItem && parseInt(item.amount) >= CRAFT_COST && 
                             <CraftButton item={item} tier={inventory.tier} index={index}/>
                     }                    
                 </div>

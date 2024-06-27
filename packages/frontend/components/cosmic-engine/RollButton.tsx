@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { TransactionReceipt, parseEther } from "viem";
+import { getParsedError, notification } from "~~/utils/scaffold-eth";
 import { hardhat } from "viem/chains";
 import { useAccount, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { useTransactor } from "~~/hooks/scaffold-eth";
@@ -70,7 +71,14 @@ export const RollButton = ({
           const res = await writeTxn(makeWriteWithParams);
           handlePrizeWon(null);
         } catch (error) {
-          toast.error("Failed to do transaction, are you sure you have enough funds?");
+          const parsedError = getParsedError(error);
+          if (parsedError.includes("Sender doesn't have enough funds"))
+          {
+            toast.error("Not enougn funds, please grab funds from faucet");
+          }
+          else {
+            toast.error(parsedError);
+          }
           handleLoading(false);
           handleWheelActivity(false);
           handlePrizeWon(null);

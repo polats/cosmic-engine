@@ -9,7 +9,8 @@ import {
     JJ_CONTRACT_NAME,
     ITEM_ID_IMAGE_LAYER_NAMES,
     TIER_COLORS,
-    TIER_TEXT_COLORS
+    TIER_TEXT_COLORS,
+    CRAFT_COST
 } from '@/lib/constants';
 import { useEffect, useState } from "react";
 import { get } from 'http';
@@ -112,35 +113,25 @@ export default function WagonScreen(){
             <div className="overflow-x-hidden text-[black] h-full justify-center items-center px-[1rem] pt-3 max-w-[720px]">
                 <div className="bg-gray-300 w-full flex flex-col grow h-full gap-y-4 px-4 rounded-b-2xl">
                     {/* Wagon Section */}
-                    <div className="flex flex-col h-full max-h-[20%] gap-x-4 gap-y-4">
+                    <div className="text-center">
+                            <p className="font-bold" style={{ lineHeight: '0.25rem' }}>Your Wagon</p>
+                            <p style={{ fontSize: '0.75rem', lineHeight: '0.5rem'}}>Equip a full set to get better spin odds!</p>
+
+                        </div>
+
+                    <div className="flex flex-col h-full max-h-[20%] gap-x-4">
                         <div className="flex justify-between py-2">
-                            <div className="flex px-4 py-1 rounded border-[1px] border-[black]  text-sm">
-                                Money
-                            </div>
-                            <div className="flex px-4 py-1 rounded border-[1px] border-[black] text-sm">
-                                Profile
-                            </div>
                         </div>
                         {/* 2.60 */}
-                        <div className="flex justify-between items-center gap-x-6 w-full h-full sm:max-h-[60%] lg:pr-4 xl:pr-0">
+                        <div className="flex justify-between items-center gap-x-6 w-full h-full">
                             <div className="flex">
-                                <div className="w-[145px] sm:w-[280px] h-[50px] sm:h-[100px]  relative">
+                                <div className="w-[400px] h-[200px] -top-5 relative">
                                     <Image src="/wagon-sample.png" alt="wagon-sample" fill/>
                                     
                                 </div>
                             </div>
                             <div className="flex flex-col grow gap-y-1 sm:gap-y-3 max-w-[200px] sm:max-w-[300px] md:max-w-[400px] overflow-x-hidden xl:pl-[4rem]">
-                                <div className="flex w-full justify-between">
-                                    <p className="text-sm m-0">Type</p>
-                                    <span className="text-sm font-bold m-0 truncate pl-2">Unmatched</span>
-                                </div>
-                                <div className="flex w-full justify-between">
-                                    <p className="text-sm m-0">Tier</p>
-                                    <p className="text-sm font-bold m-0 truncate pl-2">2</p>
-                                </div>
-                                <div className="flex w-full justify-between">
-                                    <p className="text-sm m-0">No Bonus</p>
-                                </div>
+                               
                             </div>
                             {/* <div className="hidden xl:flex min-w-[380px] justify-center items-center gap-x-4">
                                 <WagonCard cardData={sampleData}/>
@@ -161,8 +152,8 @@ export default function WagonScreen(){
                     <div className="flex justify-between items-center">
                         <button onClick={decrementTier} style={{ fontSize: '2rem' }}>⬅️</button>
                         <div className="text-center">
-                            <p className="font-bold" style={{ lineHeight: '0.5rem', color: TIER_TEXT_COLORS[tier] }}>Tier {tier} </p>
-                            <p style={{ fontSize: '0.75rem', lineHeight: '0.5rem'}}>(Need {Math.pow(2, tier)} to craft next tier) </p>
+                            <p className="font-bold" style={{ lineHeight: '0.25rem', color: TIER_TEXT_COLORS[tier] }}>Tier {tier} </p>
+                            <p style={{ fontSize: '0.75rem', lineHeight: '0.25rem'}}>(Need {CRAFT_COST} to upgrade to next tier) </p>
                         </div>
                         <button onClick={incrementTier} style={{ fontSize: '2rem' }}>➡️</button>
                     </div>                    

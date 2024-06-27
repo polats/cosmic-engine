@@ -9,6 +9,7 @@ import {
  } from "~~/hooks/scaffold-eth";
 import { useWriteContract } from "wagmi";
 import { toast } from 'react-hot-toast';
+import { getParsedError, notification } from "~~/utils/scaffold-eth";
 
 interface CraftButtonProps {
     item: Item;
@@ -40,7 +41,14 @@ const CraftButton = ({ item, tier, index }: CraftButtonProps) => {
                   const res = await writeTxn(makeWriteWithParams);
 
                 } catch (error) {
-                  toast.error("Failed to do transaction, are you sure you have enough funds?");
+                    const parsedError = getParsedError(error);
+                    if (parsedError.includes("Sender doesn't have enough funds"))
+                    {
+                      toast.error("Not enougn funds, please grab funds from faucet");
+                    }
+                    else {
+                      toast.error(parsedError);
+                    }              
                 }
         
         }
@@ -50,7 +58,7 @@ const CraftButton = ({ item, tier, index }: CraftButtonProps) => {
         <button className="absolute bottom-0 left-1/2 transform -translate-x-1/2 m-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         onClick={handleClick}
         >
-            Craft
+            Upgrade
         </button>
     );
 }
