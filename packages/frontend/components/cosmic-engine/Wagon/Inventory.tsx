@@ -1,17 +1,12 @@
-
-type Item = {
-    name: string;
-    base64image: string;
-    amount: string;
-}
+import { useState } from 'react';
+import Image from "next/image";
+import { TIER_COLORS, Item } from '@/lib/constants';
+import CraftButton from './CraftButton';
 
 interface InventoryProps {
     data: Item[];
     tier: number;
 }
-import { useState } from 'react';
-import Image from "next/image";
-import { TIER_COLORS } from '@/lib/constants';
 
 export default function Inventory (inventory: InventoryProps) {
     const [selectedItem, setSelectedItem] = useState<Item | null>(null);
@@ -22,9 +17,9 @@ export default function Inventory (inventory: InventoryProps) {
 
     return (
         <div className="grid grid-cols-4 gap-4">
-            {inventory.data.map((item) => (
+            {inventory.data.map((item, index) => (
                 <div 
-                    className={`border w-[80px] h-[80px] bg-[#B4B4B4] ${item === selectedItem ? 'selected' : ''}`} 
+                    className={`relative border w-[80px] h-[80px] bg-[#B4B4B4] ${item === selectedItem ? 'selected' : ''}`} 
                     key={item.name}
                     onClick={() => handleItemClick(item)}
                     style={
@@ -44,7 +39,12 @@ export default function Inventory (inventory: InventoryProps) {
                             }: {}
                         }                                            
                     />                    
-                    <div className="text-center">{item.amount}</div>
+                    <div className={`bg-${parseInt(item.amount) >= Math.pow(2, inventory.tier) ? 'blue' : 'gray'}-500
+                    absolute -top-4 -right-2 m-1 rounded-full text-white text-center w-6 h-6 flex items-center justify-center`}>{item.amount}</div>
+                    {
+                        item === selectedItem && parseInt(item.amount) >= Math.pow(2, inventory.tier) && 
+                            <CraftButton item={item} tier={inventory.tier} index={index}/>
+                    }                    
                 </div>
             ))}
         </div>
