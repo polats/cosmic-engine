@@ -17,6 +17,13 @@ function arrayBufferToBase64(buffer: Buffer) {
 
     export function getBase64Image(layerData: string) {
         const imageJSON = JSON.parse(layerData);
+        console.log(imageJSON);
         const imageData = uint8ArrayToSrc(imageJSON[0].buffer.data);
         return imageData;
     }
+
+    export function getCombinedBase64Image(layerData: string) {
+      const imageJSON = JSON.parse(layerData);
+      const imageData = uint8ArrayToSrc(imageJSON.data);
+      return imageData;
+  }    

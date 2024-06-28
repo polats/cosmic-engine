@@ -11,13 +11,19 @@ import { useWriteContract } from "wagmi";
 import { toast } from 'react-hot-toast';
 import { getParsedError, notification } from "~~/utils/scaffold-eth";
 
-interface CraftButtonProps {
+interface EquipButtonProps {
     item: Item;
     tier: number;
     index: number;
+    triggerRefreshDisplayVariables: () => void;
 }
 
-const EquipButton = ({ item, tier, index }: CraftButtonProps) => {
+const EquipButton = ({ 
+    item, 
+    tier, 
+    index, 
+    triggerRefreshDisplayVariables
+}: EquipButtonProps) => {
     const { data: deployedContractData, isLoading: deployedContractLoading } = useDeployedContractInfo(JJ_CONTRACT_NAME);
     const { data: result, isPending, writeContractAsync } = useWriteContract();
     const writeTxn = useTransactor();
@@ -29,16 +35,20 @@ const EquipButton = ({ item, tier, index }: CraftButtonProps) => {
             try {
                 const indexWithTier = index + ((tier - 1) * ITEM_ID_IMAGE_LAYER_NAMES.length);
 
+                console.log("indexWithTier", indexWithTier)
+
                 const makeWriteWithParams = async() =>
                     await writeContractAsync({
                       address: deployedContractData.address,
                       // @ts-ignore
-                      functionName: "craft",
+                      functionName: "equip",
                       abi: deployedContractData.abi,
-                      args: [BigInt(indexWithTier.toString()), BigInt("1")],
+                      args: [[BigInt(indexWithTier.toString())]],
                   });
 
                   const res = await writeTxn(makeWriteWithParams);
+                  notification.success("Item equipped")
+                  triggerRefreshDisplayVariables();
 
                 } catch (error) {
                     const parsedError = getParsedError(error);
@@ -55,7 +65,7 @@ const EquipButton = ({ item, tier, index }: CraftButtonProps) => {
     };
 
     return (
-        <button className="absolute bottom-0 left-1/2 transform -translate-x-1/2 m-1 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+        <button className="absolute bottom-0 left-1/2 transform -translate-x-1/2 m-1 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
         onClick={handleClick}
         >
             Equip

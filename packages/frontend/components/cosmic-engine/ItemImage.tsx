@@ -9,21 +9,6 @@ type ItemImageProps = {
     itemId: string;
   };
 
-  function arrayBufferToBase64(buffer: Buffer) {
-    let binary = '';
-    const bytes = new Uint8Array(buffer);
-    const len = bytes.byteLength;
-    for (let i = 0; i < len; i++) {
-      binary += String.fromCharCode(bytes[i]);
-    }
-    return btoa(binary);
-  }
-
-  function uint8ArrayToSrc(uint8Array: Buffer, mimeType = 'image/png') {
-    const base64String = arrayBufferToBase64(uint8Array);
-    return `data:${mimeType};base64,${base64String}`;
-  }
-  
   const terrain = [
     {terrain: "plain", color: "#a6d13f"}, 
     {terrain: "forest", color: "#103500"},

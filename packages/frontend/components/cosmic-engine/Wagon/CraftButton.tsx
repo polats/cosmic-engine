@@ -15,9 +15,15 @@ interface CraftButtonProps {
     item: Item;
     tier: number;
     index: number;
+    triggerRefreshDisplayVariables: () => void;
 }
 
-const CraftButton = ({ item, tier, index }: CraftButtonProps) => {
+const CraftButton = ({ 
+    item, 
+    tier, 
+    index, 
+    triggerRefreshDisplayVariables
+}: CraftButtonProps) => {
     const { data: deployedContractData, isLoading: deployedContractLoading } = useDeployedContractInfo(JJ_CONTRACT_NAME);
     const { data: result, isPending, writeContractAsync } = useWriteContract();
     const writeTxn = useTransactor();
@@ -38,8 +44,11 @@ const CraftButton = ({ item, tier, index }: CraftButtonProps) => {
                       args: [BigInt(indexWithTier.toString()), BigInt("1")],
                   });
 
-                notification.success("Item crafted successfully")
-                  const res = await writeTxn(makeWriteWithParams);
+
+                const res = await writeTxn(makeWriteWithParams);
+
+                notification.success("Item upgraded")
+                triggerRefreshDisplayVariables();
 
                 } catch (error) {
                     const parsedError = getParsedError(error);
