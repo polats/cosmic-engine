@@ -132,20 +132,21 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
     const rotateSpring = useSpring({
         from: { rotation: 0},
         to: async(next, cancel) => {
+
             if (wheelState === 'notMoving') {
                 await next({ rotation: isNaN(prizeAngle) ? 70 : prizeAngle });
             }
             else if(wheelState === 'accelerating'){
-                await next({ rotation: 360 * 4, config: {duration: 1500, easing: easings.easeInQuad } })
+                await next({ rotation: 360, config: {duration: 1000, easing: easings.easeInQuad } })
                 await next({ rotation: 0, config: { duration: 0 } });
                 setIsPrizeVisible(false);
             }
             else if(wheelState === 'spinning'){
-                await next({ rotation: 360, delay:0, config: { duration: 200, easing: t => t}}); 
+                await next({ rotation: 360, delay:0, config: { duration: 400, easing: t => t}}); 
                 await next({ rotation: 0, config: { duration: 0 }});
             } 
             else if (wheelState === 'decelerating') {
-                await next({ rotation: (360 * 9)+ prizeAngle, config: { duration: 1500, easing: easings.easeOutSine } }); //TODO: Change 360 to the actual point on where the wheel should land
+                await next({ rotation: (360)+ prizeAngle, config: { duration: 1000, easing: easings.easeOutSine } }); //TODO: Change 360 to the actual point on where the wheel should land
                 if(prizeWon && prizeWon.prizeType !== '0'){
                     confetti({
                         particleCount: 200,
@@ -169,7 +170,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                 handleWheelState('accelerating')
                 setInitialLoop(false)
             }
-            else if ( (isWheelActive && (prizeWon === null || loopCount <= 10))) { //loop for minimum turns
+            else if ( (isWheelActive && (prizeWon === null || loopCount <= 15))) { //loop for minimum turns
                 setLoopCount(prev => prev+1);
                 handleWheelState('spinning');
             } else if ( isWheelActive && prizeWon) {
@@ -265,7 +266,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
     
         return (
             <svg viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="50" fill='black' />
+                {/*<circle cx="50" cy="50" r="50" fill='black' stroke='black' /> */}
                 <React.Fragment>
                     <defs>
                         {prizes.map((prize, index) => (

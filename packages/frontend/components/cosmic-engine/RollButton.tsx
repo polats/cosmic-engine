@@ -23,6 +23,7 @@ type RollButtonProps = {
   handlePrizeWon: (prize: Prize | null) => void;
   handleWheelActivity: (val: boolean) => void;
   onChange: () => void;
+  triggerRefreshDisplayVariables: () => void;
   args?: any;
   payableValue?: string;
   loading: boolean;
@@ -43,7 +44,8 @@ export const RollButton = ({
   args,
   payableValue,
   loading,
-  outcome
+  outcome,
+  triggerRefreshDisplayVariables
 }: RollButtonProps) => {
 
   const { address: userAddress, chain } = useAccount();
@@ -52,11 +54,11 @@ export const RollButton = ({
   const writeDisabled = !chain || chain?.id !== targetNetwork.id;
   const { data: result, isPending, writeContractAsync } = useWriteContract();
 
-  const handleWrite = async () => {
+  const handleSpin = async () => {
     if (writeContractAsync && deployedContractData) {
       
       try {
-          handleWheelActivity(true);
+          handleWheelActivity(true); // start turning wheel
           handleLoading(true);
           const makeWriteWithParams = async() =>
             await writeContractAsync({
@@ -74,7 +76,7 @@ export const RollButton = ({
           const parsedError = getParsedError(error);
           if (parsedError.includes("Sender doesn't have enough funds"))
           {
-            toast.error("Not enougn funds, please grab funds from faucet");
+            toast.error("Not enough funds, please grab funds from faucet");
           }
           else {
             toast.error(parsedError);
@@ -98,6 +100,9 @@ export const RollButton = ({
           handleLoading(false)
           handleWheelActivity(false);
         }
+
+        triggerRefreshDisplayVariables();
+
         onChange();
     }
   };
@@ -124,7 +129,7 @@ export const RollButton = ({
           >
             <button 
               className={`spin w-[150px] h-[64px] text-xl text-center`}
-              disabled={writeDisabled || isPending || isWheelActive} onClick={handleWrite}
+              disabled={writeDisabled || isPending || isWheelActive} onClick={handleSpin}
             >
               {isPending || loading || isWheelActive ? <span className="loading loading-spinner loading-xs"></span> : isReroll ? 'Reroll' : buttonLabel}
             </button>

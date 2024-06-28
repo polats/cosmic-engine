@@ -20,6 +20,8 @@ type GlobalState = {
   setUserCurrency: (newUserCurrencyState: number) => void;
   itemImages: Buffer[];
   setItemImages: (newItemImages: Buffer[]) => void;
+  cosmicConsole: boolean;
+  setCosmicConsole: (newCosmicConsoleState: boolean) => void;
 };
 
 export const useGlobalState = create<GlobalState>(set => ({
@@ -30,5 +32,7 @@ export const useGlobalState = create<GlobalState>(set => ({
   userCurrency: 0,
   setUserCurrency: (newValue: number): void => set(() => ({ userCurrency: newValue })),
   itemImages: [],
-  setItemImages: (newItemImages: Buffer[]) => set(() => ({ itemImages: newItemImages}))
+  setItemImages: (newItemImages: Buffer[]) => set(() => ({ itemImages: newItemImages})),
+  cosmicConsole: false,
+  setCosmicConsole: (newCosmicConsoleState: boolean) => set(() => ({ cosmicConsole: newCosmicConsoleState}))
 }));

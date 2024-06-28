@@ -1,7 +1,8 @@
 'use client';
  
-import Image from 'next/image';
+
 import WagonCard from '~~/components/cosmic-engine/Wagon/WagonCard';
+import EquippedWagon from '~~/components/cosmic-engine/Wagon/EquippedWagon';
 import Inventory from '~~/components/cosmic-engine/Wagon/Inventory';
 import { getItemLayerData } from "@/lib/actions/ora"
 import { uint8ArrayToSrc } from '@/utils/cosmic-engine/ora-client';
@@ -12,7 +13,7 @@ import {
     TIER_TEXT_COLORS,
     CRAFT_COST
 } from '@/lib/constants';
-import { useEffect, useState } from "react";
+import { useEffect, useState, useReducer } from "react";
 import { get } from 'http';
 import { useScaffoldReadContract } from "~~/hooks/scaffold-eth";
 import { useAccount } from "wagmi"
@@ -37,6 +38,7 @@ export default function WagonScreen(){
     const [inventoryData, setInventoryData] = useState<Item[]>();
     const [tier, setTier] = useState(1);
     const itemImages = useGlobalState(state => state.itemImages);
+    const [refreshDisplayVariables, triggerRefreshDisplayVariables] = useReducer(value => !value, false);
 
     // const { data: hasBonus } = useScaffoldReadContract({
     //     contractName: JJ_CONTRACT_NAME,
@@ -51,6 +53,30 @@ export default function WagonScreen(){
         args: [accountsArray(), idsArray()],
         watch: false
     });
+
+    const { data: equippedBeasts } = useScaffoldReadContract({
+        contractName: JJ_CONTRACT_NAME,
+        functionName: "EquippedBeasts",
+        args: [address]
+    });    
+
+    const { data: equippedBody } = useScaffoldReadContract({
+        contractName: JJ_CONTRACT_NAME,
+        functionName: "EquippedBody",
+        args: [address]
+    });    
+    const { data: equippedCover } = useScaffoldReadContract({
+        contractName: JJ_CONTRACT_NAME,
+        functionName: "EquippedCover",
+        args: [address]
+    });    
+    const { data: equippedWheels } = useScaffoldReadContract({
+        contractName: JJ_CONTRACT_NAME,
+        functionName: "EquippedWheels",
+        args: [address]
+    });    
+
+
 
     function accountsArray() {
 
@@ -105,8 +131,8 @@ export default function WagonScreen(){
 
     useEffect(() => {
         loadInventory();
-        }, [balanceOfBatch, tier]);  
-              
+        }, [balanceOfBatch, tier, refreshDisplayVariables]);  
+            
 
     return (
         <div className="flex justify-center h-full">
@@ -125,8 +151,15 @@ export default function WagonScreen(){
                         {/* 2.60 */}
                         <div className="flex justify-between items-center gap-x-6 w-full h-full">
                             <div className="flex">
-                                <div className="w-[400px] h-[200px] -top-5 relative">
-                                    <Image src="/wagon-sample.png" alt="wagon-sample" fill/>
+                                <div className="w-[400px] h-[240px] -top-2 relative">
+                                    {
+                                        <EquippedWagon 
+                                            equippedBeasts={equippedBeasts}
+                                            equippedBody={equippedBody}
+                                            equippedCover={equippedCover}
+                                            equippedWheels={equippedWheels}
+                                        />
+                                    }
                                     
                                 </div>
                             </div>
@@ -160,7 +193,12 @@ export default function WagonScreen(){
                     {/* Market/Inventory Section */}
                     {
                         inventoryData?.length ?
-                        <Inventory data={inventoryData} tier={tier} />
+                        <Inventory 
+                            data={inventoryData} 
+                            tier={tier} 
+                            refreshDisplayVariables={refreshDisplayVariables}
+                            triggerRefreshDisplayVariables={triggerRefreshDisplayVariables}
+                        />
                         :
                         <div className="flex justify-center items-center h-full">
                             <p className="text-lg">Loading items...</p>

@@ -1,6 +1,7 @@
 
 import { getItemLayerData } from "@/lib/actions"
 import { getBase64Image } from "@/utils/cosmic-engine/ora-client"
+import { ITEM_ID_IMAGE_LAYER_NAMES } from "@/lib/constants";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 
@@ -8,21 +9,6 @@ type ItemImageProps = {
     itemId: string;
   };
 
-  function arrayBufferToBase64(buffer: Buffer) {
-    let binary = '';
-    const bytes = new Uint8Array(buffer);
-    const len = bytes.byteLength;
-    for (let i = 0; i < len; i++) {
-      binary += String.fromCharCode(bytes[i]);
-    }
-    return btoa(binary);
-  }
-
-  function uint8ArrayToSrc(uint8Array: Buffer, mimeType = 'image/png') {
-    const base64String = arrayBufferToBase64(uint8Array);
-    return `data:${mimeType};base64,${base64String}`;
-  }
-  
   const terrain = [
     {terrain: "plain", color: "#a6d13f"}, 
     {terrain: "forest", color: "#103500"},
@@ -114,9 +100,11 @@ type ItemImageProps = {
               }}
             >
               <h3 className="text-lg font-jost font-semibold p-0 m-0">
-                {`${types[itemType].toUpperCase()} - ${terrain[itemTerrain].terrain.toUpperCase()}`}
+                {ITEM_ID_IMAGE_LAYER_NAMES[parseInt(itemId)][1]}                
               </h3>
-              <span className="text-sm">lorem ipsum dolor sit amet</span>
+              <span className="text-sm">
+                {`${types[itemType].toUpperCase()} - ${terrain[itemTerrain].terrain.toUpperCase()}`}
+              </span>
             </div>
           </div>
         </div>

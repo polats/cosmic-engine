@@ -231,5 +231,21 @@ export type ImageBufferWithOffset = {
 
   }
 
+  export async function getCombinedImageFromAttributes(attributes: any) {
+    try {
+  
+      const partsArray = (await getLayersFromXml(stackXmlBuffer as Buffer)).reverse();    
+      const imageBuffers = await selectImagesFromZip(partsArray, attributes);  
+
+      const { width, height } = await getImageSizeFromXml(stackXmlBuffer as Buffer);
+      const combinedImageBuffer = await combineImages(imageBuffers, width, height);
+      return JSON.stringify(combinedImageBuffer);
+      
+  
+    } catch (error) {
+      console.error('Error :', error);
+    }    
+  }
+
 
   
