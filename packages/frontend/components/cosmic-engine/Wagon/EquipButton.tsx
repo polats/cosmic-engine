@@ -15,7 +15,7 @@ interface EquipButtonProps {
     item: Item;
     tier: number;
     index: number;
-    triggerRefreshDisplayVariables: () => void;
+    triggerRefreshDisplayVariables?: () => void;
 }
 
 const EquipButton = ({ 
@@ -48,7 +48,9 @@ const EquipButton = ({
 
                   const res = await writeTxn(makeWriteWithParams);
                   notification.success("Item equipped")
-                  triggerRefreshDisplayVariables();
+                  if(triggerRefreshDisplayVariables){
+                      triggerRefreshDisplayVariables();
+                  }
 
                 } catch (error) {
                     const parsedError = getParsedError(error);
