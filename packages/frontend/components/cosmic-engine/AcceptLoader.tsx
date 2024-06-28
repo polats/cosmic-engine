@@ -9,15 +9,16 @@ interface AcceptLoader {
 }
 
 const AcceptLoader = ({totalCount, closePrizeLayer}: AcceptLoader) => {
-    const [count, setCount] = useState(10);
+    const [count, setCount] = useState<number>(10);
 
     useEffect(() => {
         const intervalId = setInterval(() => {
           setCount(prevCount => {
-            if (prevCount > 0) {
+            if (typeof prevCount === 'number' && prevCount > 0) {
               return prevCount - 1;
             } else {
                 closePrizeLayer()
+                return 0;
             }
           });
         }, 2000);
