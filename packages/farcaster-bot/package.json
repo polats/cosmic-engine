@@ -11,6 +11,7 @@
   "dependencies": {
     "@gradio/client": "^0.20.1",
     "@neynar/nodejs-sdk": "^1.28.0",
+    "crawler": "^2.0.1",
     "next": "14.2.3",
     "react": "^18",
     "react-dom": "^18"
