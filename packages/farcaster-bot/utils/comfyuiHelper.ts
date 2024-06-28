@@ -1,7 +1,5 @@
 import axios from 'axios';
 
-import Crawler from "crawler";
-
 export const videoOutputTypeList = ['2D', '3D'];
 export type VideoOutputType = '2D' | '3D';
 export type OutputType = 'GIF' | 'VIDEO';
@@ -405,27 +403,9 @@ export class ImageToVideoHelperService {
         });
       });
     } catch (error) {
-      const c = new Crawler({
-        callback: function(error: any, res: any) {
-          if (error) {
-            console.log({error})
-          } else {
-            const images = res.$('.person div img')
-            images.each((index: number) => {
-              // here you can save the file or save them in an array to download them later
-              console.log({
-                src: images[index].attribs.src,
-                alt: images[index].attribs.alt,
-              })
-            })
-          }
-        }
-      })
-
-      c.queue('https://www.yoursite.com')
-      // throw new Error(
-      //   'Error converting URL to Blob: ' + error,
-      // );
+      throw new Error(
+        'Error converting URL to Blob: ' + error,
+      );
     }
   }
 }
