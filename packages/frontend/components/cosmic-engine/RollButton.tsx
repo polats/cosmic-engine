@@ -131,7 +131,7 @@ export const RollButton = ({
               className={`spin w-[150px] h-[64px] text-xl text-center`}
               disabled={writeDisabled || isPending || isWheelActive} onClick={handleSpin}
             >
-              {isPending || loading || isWheelActive ? <span className="loading loading-spinner loading-xs"></span> : isReroll ? 'Reroll' : buttonLabel}
+              {isPending || loading || isWheelActive ? <span className="loading loading-spinner loading-xs"></span> : isReroll ? 'Respin' : buttonLabel}
             </button>
           </div>
         </div>
