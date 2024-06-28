@@ -72,6 +72,47 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
     const writeDisabled = !chain || chain?.id !== targetNetwork.id;
 
     const { data: result, isPending, writeContractAsync } = useWriteContract();
+    const [currentScreenSize, setCurrentScreenSize] = useState<number | null>(null);
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const updateScreenSize = () => {
+                setCurrentScreenSize(window.innerWidth);
+            };
+
+            updateScreenSize();
+
+            window.addEventListener('resize', updateScreenSize);
+            return () => window.removeEventListener('resize', updateScreenSize);
+        }
+    }, []);
+    
+    const getScreenBreakpoint = () => {
+        if (currentScreenSize === null) return 'default';
+        const width = currentScreenSize;
+        if( width > 475  && width <= 1024){
+            return 'xs';
+        } else if ( width > 1024 && width <= 1280) {
+            return 'lg';
+        } else if ( width > 1280) {
+            return 'xl';
+        } else {
+            return 'def'; //default
+        }
+    }
+    {/*
+        if( width > 475  && width <= 1024){
+                return 'xs';
+            } else if ( width > 1024 && width <= 1280) {
+                return 'lg';
+            } else if ( width > 1280 && width <= 1536) {
+                return 'xl';
+            } else if ( width > 1536  && width <= 1800) {
+                return '2xl';
+            } else if ( width > 1536) {
+                return '3xl';
+            }    
+    */}
 
     const closePrizeVisibility = () => {
         setIsPrizeVisible(false);
@@ -147,7 +188,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                 }
             } 
             else if (wheelState === 'decelerating') {
-                await next({ rotation: (360 * 9)+ prizeAngle, config: { duration: 1500, easing: easings.easeOutSine } }); //TODO: Change 360 to the actual point on where the wheel should land
+                await next({ rotation: (360 * 9)+ prizeAngle, config: { duration: 1500, easing: easings.easeOutSine } });
                 handleLoading(false)
                 if(prizeWon && prizeWon.prizeType !== '0'){
                     const timer = setTimeout(() => {
@@ -211,8 +252,8 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
         // Function to calculate text transformation
         const calculateTextTransform = (startAngle: number, endAngle: number) => {
             const midAngle = (startAngle + endAngle) / 2;
-            const x = 50 + 50 * Math.cos((Math.PI / 180) * midAngle); // Adjust 35 to place text inside the circle
-            const y = 50 + 50 * Math.sin((Math.PI / 180) * midAngle); // Adjust 35 to place text inside the circle
+            const x = 50 + 50 * Math.cos((Math.PI / 180) * midAngle);
+            const y = 50 + 50 * Math.sin((Math.PI / 180) * midAngle);
             return `rotate(${midAngle}, ${x}, ${y})`;
         };
     
@@ -252,7 +293,6 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                             : prize.type === 3 ? 'NICE WEI'
                             : prize.type === 4 ? 'JACKPOT'
                             : null}
-                        {/* {prize.color} */}
                     </text>
                 );
             });
@@ -304,22 +344,29 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
 
     const lightbulbCount = 20; // Number of lightbulbs
 
-    // useEffect(() => {
-    //     const interval = setInterval(() => {
-    //         setRotateSpring((prev) => ({ rotation: prev.rotation + 10 }));
-    //     }, 100); // Adjust the interval for desired speed
-    //     return () => clearInterval(interval);
-    // }, []);
-
     const Lightbulbs = ({ count, radius }: {count:number, radius:number}) => {
         const bulbs = [];
-        const bulbSize = 15; // Adjust as needed
-        const offsetRadius = radius + bulbSize / 2; // Add an offset to the radius
+        const bulbSize = ( getScreenBreakpoint() === 'def' ? 10 
+            : getScreenBreakpoint() === 'xs' ? 15
+            : getScreenBreakpoint() === 'lg'? 20
+            : 20
+        );
+        const offsetRadius = radius + bulbSize / 2;
     
         for (let i = 0; i < count; i++) {
             const angle = (i / count) * 2 * Math.PI;
-            const x = (offsetRadius + offsetRadius * Math.cos(angle) - bulbSize / 2) +18;
-            const y = (offsetRadius + offsetRadius * Math.sin(angle) - bulbSize / 2) +18;
+            const x = (offsetRadius + offsetRadius * Math.cos(angle) - bulbSize / 2) + (
+                getScreenBreakpoint() === 'def' ? 6 
+                : getScreenBreakpoint() === 'xs'? 9 
+                : getScreenBreakpoint() === 'lg'? 14 
+                : 14
+            );
+            const y = (offsetRadius + offsetRadius * Math.sin(angle) - bulbSize / 2) + (
+                getScreenBreakpoint() === 'def' ? 13 
+                : getScreenBreakpoint() === 'xs'? 25 
+                : getScreenBreakpoint() === 'lg'? 28
+                : 28
+            );
     
             bulbs.push(
                 <div
@@ -371,7 +418,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
       })
 
     return (
-        <div className="relative flex flex-col justify-end items-center h-full w-full">
+        <div className="relative flex flex-col border justify-end items-center h-full w-full">
             { isPrizeVisible && prizeWon && prizeWon?.prizeType !== '0'? 
                 <div className="absolute prize-div h-full w-full z-20">
                     <animated.div 
@@ -381,7 +428,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                         }}
                     >
                         <div className="absolute z-40 top-[-3.5rem] sm:top-[-2rem] left-0 w-full h-full flex justify-center items-start">
-                            <div className="h-[80%] w-[63%] max-h-[380px] max-w-[265px] relative">
+                            <div className="h-[80%] w-[63%] relative">
                                 {
                                     prizeWon?.prizeType === '1' ?
                                         <ItemImage itemId={prizeWon?.prizeValue}/>
@@ -391,7 +438,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                             </div>
                         </div>
                         <div className="absolute top-0 left-0 h-full w-full flex justify-center items-center">
-                            <div className={`overflow-hidden flex-col flex border ease-in border-[5px] bg-[#B053AA] rounded-[50%] h-full w-full max-h-[500px] max-w-[500px]`}>
+                            <div className={`overflow-hidden flex-col flex border ease-in border-[5px] bg-[#B053AA] rounded-[50%] h-full w-full`}>
                                 <div className="h-[70%] overflow-hidden "> 
                                     <Lottie options={defaultOptions} height="150%" width="100%" />
                                 </div>
@@ -411,26 +458,32 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                 67% for side banner 
                 38% jackpot
             */}
-            <div className="absolute flex justify-center h-full w-full max-h-[500px] my-4 ">
+            <div className="absolute flex justify-center w-[260px] h-[260px] xs:w-[400px] xs:h-[400px] lg:w-[530px] lg:h-[530px] my-4 ">
                 <div className="absolute top-[-20%] h-[40%] w-[150%] flex justify-center items-center  ">
-                    <div className="relative sm:top-[10px] lg:top-[0px]  sm:w-[120px] sm:h-[179px] sm:left-[-55px]">
-                    {/* top-[100px]  w-[80px] h-[119px]  left-[0] */}
+                    <div className=" relative top-[0px] xs:top-[-10px] lg:top-[-5px] left-[-10px] xs:left-[-0px] lg:left-[5px]
+                        w-[95px] h-[150px] xs:w-[118px] xs:h-[176px] lg:w-[159px] lg:h-[237px]
+                        "
+                    >
                         <Image
                             src={'/jackpotWheel/banner-small.png'}
                             alt="jackpot-banner"
                             fill
                         />
                     </div>
-                    <div className="relative z-10 sm:top-[-55%] px-[-5px] sm:w-[257px] sm:h-[98px]">
-                        {/*  top-[45px] w-[160px] h-[60px]  */}
+                    <div className="relative z-10 px-[-5px] top-[-70px] xs:top-[-80px] lg:top-[-100px]
+                         w-[110px] h-[60px] xs:w-[218px] xs:h-[83px] lg:w-[291px] lg:h-[110px]
+                    ">
                         <Image
                             src={'/jackpotWheel/banner-jackpot.png'}
                             alt="jackpot-banner"
                             fill
                         />
                     </div>
-                    <div className="relative sm:top-[10px] lg:top-[0px] sm:w-[120px] sm:h-[179px] sm:left-[55px]">
-                        {/*  top-[100px]  w-[80px] h-[119px] left-[0]*/}
+                    <div className="
+                            relative top-[0px] xs:top-[-10px] lg:top-[-5px] left-[10px] xs:left-[0px] lg:left-[5px]
+                            w-[95px] h-[150px] xs:w-[118px] xs:h-[176px] lg:w-[159px] lg:h-[237px]
+                        "
+                    >
                         <Image
                             src={'/jackpotWheel/banner-medium.png'}
                             alt="jackpot-banner"
@@ -441,7 +494,10 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
             </div>
             <div className="relative h-full w-full flex justify-center items-center">
                 <animated.div
-                    className="h-full z-[10] sm:border sm:border-[black] sm:border-[5px] relative w-full flex justify-center items-center my-4 rounded-[50%] max-h-[500px] max-w-[500px]"
+                    className="
+                        z-[10] sm:border sm:border-[black] sm:border-[5px] relative flex justify-center items-center my-4 rounded-[50%]
+                        w-[260px] h-[260px] xs:w-[400px] xs:h-[400px] lg:w-[530px] lg:h-[530px]
+                    "
                     style={{ 
                         transform: rotateSpring.rotation.to((r) => {
                             return `rotate(${r}deg)`
@@ -453,15 +509,35 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                 <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center">
                     <div 
                         className="relative z-[0] bg-[#493313] w-full h-full rounded-full border-black border-[5px]" 
-                        style={{ width: `${290 * 2}px`, height: `${290 * 2 }px` }}
+                        style={{ 
+                            width: `${
+                                getScreenBreakpoint() === 'def' ? '315' 
+                                : getScreenBreakpoint() === 'xs'? '480'
+                                : getScreenBreakpoint() === 'lg'? "600" 
+                                : ""
+                            }px`, 
+                            height: `${
+                                getScreenBreakpoint() === 'def' ? '315' 
+                                : getScreenBreakpoint() === 'xs'? '480' 
+                                : getScreenBreakpoint() === 'lg'? "625" 
+                                : ""
+                            }px` 
+                        }}
                     >
-                        <Lightbulbs count={lightbulbCount} radius={260} />
+                        <Lightbulbs count={lightbulbCount} radius={(
+                            getScreenBreakpoint() === 'def' ? 
+                                307-40 
+                            :  getScreenBreakpoint() === 'xs'? 
+                                470-60 
+                            : getScreenBreakpoint() === 'lg'? 
+                                620-80
+                            : 620-80
+                            )/2} />
                     </div>
                 </div>
             </div>
-            <div className="absolute left-[50%] bottom-[5px] sm:bottom-[0] transform -translate-x-1/2 translate-y-0 h-[50px]">
-                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    {/* <polygon points="20,4 35,40 5,40" fill="white"/> */}
+            <div className="absolute z-[10] left-[50%] bottom-[5px] sm:bottom-[0] lg:bottom-[8px] transform -translate-x-1/2 translate-y-0 h-[45px]">
+                <svg width={(getScreenBreakpoint() === 'def' || getScreenBreakpoint() === 'xs' ) ? "40" : '55'} height={(getScreenBreakpoint() === 'def' || getScreenBreakpoint() === 'xs' ) ? "40" : '55'} viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M20 4 L35 40 Q20 40 5 40 Z" fill="white"/>
                 </svg>
             </div>    

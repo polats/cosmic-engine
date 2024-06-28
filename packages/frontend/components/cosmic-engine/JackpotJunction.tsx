@@ -190,7 +190,7 @@ export const JackpotJunction = () => {
 
             <div className="flex flex-col justify-center items-center min-h-[100%] text-center">
                 {/* TODO: Add array for prize pool to make wheel dynamic  */}
-                <div className="h-full w-full grow overflow-hidden flex justify-center items-center pt-[5rem] mb-2" >
+                <div className="h-[400px] w-[300px] xs:h-[560px] xs:w-[455px] lg:h-[700px] lg:w-[600px] flex justify-center items-center pt-[5rem] mb-2" >
                     <JackpotWheel 
                         wheelState={wheelState}
                         isWheelActive={isWheelActive}

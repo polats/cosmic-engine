@@ -195,7 +195,7 @@ p {
 }
 
 .lightbulb {
-  animation: flash 1s infinite;
+  animation: flash 2.8s infinite;
 }
 
 @keyframes flash {
