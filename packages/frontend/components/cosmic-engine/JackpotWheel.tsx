@@ -16,6 +16,7 @@ import "~~/styles/roll-button.scss";
 import ItemImage from "./ItemImage";
 import DegenCard from "./DegenCard";
 import Lottie from 'react-lottie';
+import Loader from '~~/components/cosmic-engine/AcceptLoader';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -62,8 +63,8 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
     const [ initialLoop, setInitialLoop ] = useState(true);
     const [ loopCount, setLoopCount ] = useState(0);
     const [ prizeAngle, setPrizeAngle ] = useState(0);
-    const [ isPrizeVisible, setIsPrizeVisible ] = useState(false)
-
+    const [ isPrizeVisible, setIsPrizeVisible ] = useState(false);
+    const [ isLightActive, setIsLightActive ] = useState(false);
     // contract
     const { chain } = useAccount();
     const writeTxn = useTransactor();
@@ -72,8 +73,17 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
 
     const { data: result, isPending, writeContractAsync } = useWriteContract();
 
+    const closePrizeVisibility = () => {
+        setIsPrizeVisible(false);
+    }
+
     const handleAccept = () => {
-        handleWrite()
+        setIsShaking(true);
+        confetti({
+            particleCount: 200,
+            spread: 140,
+            origin: { y: 0.5},
+        });
     }
 
     useEffect(() => {
@@ -107,53 +117,37 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
     const { data: txResult } = useWaitForTransactionReceipt({
         hash: result,
     });
-    const [count, setCount] = useState(10);
-    const totalCount = 10
+    
 
     useEffect(() => {
         setDisplayedTxResult(txResult);
     }, [txResult]);
+
     useEffect(() => {
-        const intervalId = setInterval(() => {
-          setCount(prevCount => {
-            if (prevCount > 0) {
-              return prevCount - 1;
-            } else {
-              return 10;
-            }
-          });
-        }, 3000);
-    
-        // Cleanup function to clear the interval on component unmount
-        return () => clearInterval(intervalId);
-      }, []);
-    
+        if(wheelState === "accelerating"){
+            setIsLightActive(true);
+        }
+    }, [wheelState]);
 
     const rotateSpring = useSpring({
         from: { rotation: 0},
         to: async(next, cancel) => {
-
             if (wheelState === 'notMoving') {
                 await next({ rotation: isNaN(prizeAngle) ? 70 : prizeAngle });
             }
             else if(wheelState === 'accelerating'){
-                await next({ rotation: 360, config: {duration: 1000, easing: easings.easeInQuad } })
+                await next({ rotation: 360 * 4, config: {duration: 1500, easing: easings.easeInQuad } })
                 await next({ rotation: 0, config: { duration: 0 } });
                 setIsPrizeVisible(false);
             }
             else if(wheelState === 'spinning'){
-                await next({ rotation: 360, delay:0, config: { duration: 400, easing: t => t}}); 
-                await next({ rotation: 0, config: { duration: 0 }});
+                while(isWheelActive && prizeWon === null){
+                    await next({ to: [{rotation: 360}], delay:0, config: { duration: 200, easing: t => t}}); 
+                    await next({ rotation: 0, config: { duration: 0 }});
+                }
             } 
             else if (wheelState === 'decelerating') {
-                await next({ rotation: (360)+ prizeAngle, config: { duration: 1000, easing: easings.easeOutSine } }); //TODO: Change 360 to the actual point on where the wheel should land
-                if(prizeWon && prizeWon.prizeType !== '0'){
-                    confetti({
-                        particleCount: 200,
-                        spread: 140,
-                        origin: { y: 0.5},
-                    });
-                }
+                await next({ rotation: (360 * 9)+ prizeAngle, config: { duration: 1500, easing: easings.easeOutSine } }); //TODO: Change 360 to the actual point on where the wheel should land
                 handleLoading(false)
                 if(prizeWon && prizeWon.prizeType !== '0'){
                     const timer = setTimeout(() => {
@@ -170,7 +164,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                 handleWheelState('accelerating')
                 setInitialLoop(false)
             }
-            else if ( (isWheelActive && (prizeWon === null || loopCount <= 15))) { //loop for minimum turns
+            else if ( (isWheelActive && (prizeWon === null || loopCount <= 10))) { //loop for minimum turns
                 setLoopCount(prev => prev+1);
                 handleWheelState('spinning');
             } else if ( isWheelActive && prizeWon) {
@@ -266,7 +260,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
     
         return (
             <svg viewBox="0 0 100 100">
-                {/*<circle cx="50" cy="50" r="50" fill='black' stroke='black' /> */}
+                <circle cx="50" cy="50" r="50" fill='black' />
                 <React.Fragment>
                     <defs>
                         {prizes.map((prize, index) => (
@@ -283,31 +277,30 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
         );
     };
 
-    
-  const Segment = ({index}: {index: number}) => {
-    return (
-      <div key={index} className={`grow-1 w-full
-        ${index === 0 ? 'rounded-l-3xl': index === totalCount-1 ? 'rounded-r-3xl' : ''}
-        ${index < count ?
-          'bg-white opacity-80 border-r-2'
-        : index === count ?
-          'loader-pulse'
-        :
-          'bg-slate-800 opacity-100'
-        }
-      `}>
-      </div>
-    )
-  }
-
-
-    const Loader = () => {
-        return (
-            <div className="w-[95%] flex justify-center border rounded-3xl h-[15px]">
-              {Array(totalCount).fill(null).map((value, index) => <Segment key={index} index={index}/>)}
-            </div>
-        )
+    const closePrizeLayer = () => {
+        handlePrizeWon(null);
+        setIsPrizeVisible(false);
+        handleWheelState('notMoving');
+        setInitialLoop(true);
+        handleReroll(false);
+        setIsLightActive(false);
     }
+
+    const acceptPrize = () => {
+        handleWrite();
+        handlePrizeWon(null);
+        handleWheelState('notMoving');
+        setInitialLoop(true);
+        handleReroll(false);
+        setIsLightActive(false);
+    }
+    /*
+        Wheel Active: False (Undergoing animation)
+        Wheel State: Not Moving
+        Prize: NULL
+        InitialLoop: true
+        isReroll: False
+    */
 
     const lightbulbCount = 20; // Number of lightbulbs
 
@@ -331,7 +324,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
             bulbs.push(
                 <div
                     key={i}
-                    className={`${isWheelActive ? 'lightbulb' : ''}`}
+                    className={`${isLightActive ? 'lightbulb' : ''}`}
                     style={{
                         position: 'absolute',
                         width: `${bulbSize}px`,
@@ -347,34 +340,70 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
     
         return <>{bulbs}</>;
     };
+    const [isShaking, setIsShaking] = useState(false);
+    const shakeSpring = useSpring({
+        from: { x: 0 },
+        to: isShaking
+        ? [
+            { x: 10 },
+            { x: -10 },
+            { x: 8 },
+            { x: -8 },
+            { x: 6 },
+            { x: 0 },
+          ]
+        : { x: 0 },
+        reset: isShaking,
+        onRest: async () => {
+            if(isShaking){
+                setIsShaking(false)
+                await new Promise(resolve => setTimeout(resolve,800));
+                acceptPrize()
+            }
+        },
+        config: { 
+            duration: 120,
+            mass: 1,
+            tension: 500,
+            friction: 20,
+            easing: easings.easeOutCubic,
+        },
+      })
 
     return (
         <div className="relative flex flex-col justify-end items-center h-full w-full">
             { isPrizeVisible && prizeWon && prizeWon?.prizeType !== '0'? 
-                <div className="prize-div z-20">
-                    <div className="absolute z-40 top-[-3.5rem] sm:top-[-2rem] left-0 w-full h-full flex justify-center items-start">
-                        <div className="h-[80%] w-[63%] max-h-[380px] max-w-[265px] relative">
-                            {
-                                prizeWon?.prizeType === '1' ?
-                                    <ItemImage itemId={prizeWon?.prizeValue}/>
-                                :
-                                    <DegenCard type={prizeWon?.prizeType} degen={prizeWon?.prizeValue}/>
-                            }
-                        </div>
-                    </div>
-                    <div className="absolute top-0 left-0 h-full w-full flex justify-center items-center">
-                        <div className={`overflow-hidden flex-col flex border ease-in border-[5px] bg-[#B053AA] rounded-[50%] h-full w-full max-h-[500px] max-w-[500px]`}>
-                            <div className="h-[70%] overflow-hidden "> 
-                                <Lottie options={defaultOptions} height="150%" width="100%" />
+                <div className="absolute prize-div h-full w-full z-20">
+                    <animated.div 
+                        className="absolute h-full w-full" 
+                        style={{
+                            ...shakeSpring,
+                        }}
+                    >
+                        <div className="absolute z-40 top-[-3.5rem] sm:top-[-2rem] left-0 w-full h-full flex justify-center items-start">
+                            <div className="h-[80%] w-[63%] max-h-[380px] max-w-[265px] relative">
+                                {
+                                    prizeWon?.prizeType === '1' ?
+                                        <ItemImage itemId={prizeWon?.prizeValue}/>
+                                    :
+                                        <DegenCard type={prizeWon?.prizeType} degen={prizeWon?.prizeValue}/>
+                                }
                             </div>
-                            <button className="grow z-50 accept-ring cursor-pointer flex flex-col justify-start hover:animate-none" onClick={handleAccept}>
-                                <Loader />
-                                <p className={` text-4xl font-bold`}>
-                                    ACCEPT
-                                </p>
-                            </button>
                         </div>
-                    </div>
+                        <div className="absolute top-0 left-0 h-full w-full flex justify-center items-center">
+                            <div className={`overflow-hidden flex-col flex border ease-in border-[5px] bg-[#B053AA] rounded-[50%] h-full w-full max-h-[500px] max-w-[500px]`}>
+                                <div className="h-[70%] overflow-hidden "> 
+                                    <Lottie options={defaultOptions} height="150%" width="100%" />
+                                </div>
+                                <button className="grow z-50 accept-ring cursor-pointer flex flex-col justify-start hover:animate-none" onClick={handleAccept}>
+                                    <Loader totalCount={10} closePrizeLayer={closePrizeLayer}/>
+                                    <p className={` text-4xl font-bold`}>
+                                        ACCEPT
+                                    </p>
+                                </button>
+                            </div>
+                        </div>
+                    </animated.div>
                 </div>
             : null
             } 
@@ -384,7 +413,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
             */}
             <div className="absolute flex justify-center h-full w-full max-h-[500px] my-4 ">
                 <div className="absolute top-[-20%] h-[40%] w-[150%] flex justify-center items-center  ">
-                    <div className="relative sm:top-[70px] lg:top-[60px]  sm:w-[120px] sm:h-[179px] sm:left-[-55px]">
+                    <div className="relative sm:top-[10px] lg:top-[0px]  sm:w-[120px] sm:h-[179px] sm:left-[-55px]">
                     {/* top-[100px]  w-[80px] h-[119px]  left-[0] */}
                         <Image
                             src={'/jackpotWheel/banner-small.png'}
@@ -392,7 +421,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                             fill
                         />
                     </div>
-                    <div className="relative z-10 sm:top-[-20%] px-[-5px] sm:w-[257px] sm:h-[98px]">
+                    <div className="relative z-10 sm:top-[-55%] px-[-5px] sm:w-[257px] sm:h-[98px]">
                         {/*  top-[45px] w-[160px] h-[60px]  */}
                         <Image
                             src={'/jackpotWheel/banner-jackpot.png'}
@@ -400,7 +429,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                             fill
                         />
                     </div>
-                    <div className="relative sm:top-[70px] lg:top-[60px] sm:w-[120px] sm:h-[179px] sm:left-[55px]">
+                    <div className="relative sm:top-[10px] lg:top-[0px] sm:w-[120px] sm:h-[179px] sm:left-[55px]">
                         {/*  top-[100px]  w-[80px] h-[119px] left-[0]*/}
                         <Image
                             src={'/jackpotWheel/banner-medium.png'}
@@ -409,7 +438,6 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                         />
                     </div>
                 </div>
-
             </div>
             <div className="relative h-full w-full flex justify-center items-center">
                 <animated.div
