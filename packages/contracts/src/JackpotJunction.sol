@@ -3,6 +3,8 @@ pragma solidity ^0.8.13;
 
 import {ERC1155} from "../lib/openzeppelin-contracts/contracts/token/ERC1155/ERC1155.sol";
 import {ReentrancyGuard} from "../lib/openzeppelin-contracts/contracts/utils/ReentrancyGuard.sol";
+import {Base64} from "../lib/openzeppelin-contracts/contracts/utils/Base64.sol";
+import {Strings} from "../lib/openzeppelin-contracts/contracts/utils/Strings.sol";
 
 /// @title Jackpot Junction game contract
 /// @author Moonstream Engineering (engineering@moonstream.to)
@@ -40,11 +42,15 @@ contract JackpotJunction is ERC1155, ReentrancyGuard {
 
     /// Specifies the largest tier that has been unlocked for a given (itemType, terrainType) pair.
     /// @notice Item types: 0 (wagon cover), 1 (wagon body), 2 (wagon wheel), 3 (beast)
-    /// @notice Terrain types: 0 (plain), 1 (forest), 2 (swamp), 3 (water), 4 (mountain), 5 (desert), 6 (ice)
+    /// @notice Terrain types: 0 (plains), 1 (forest), 2 (swamp), 3 (water), 4 (mountain), 5 (desert), 6 (ice)
     /// @notice Encoding of ERC1155 pool IDs: tier*28 + terrainType*4 + itemType
     /// @notice itemType => terrainType => tier
     mapping(uint256 => mapping(uint256 => uint256)) public CurrentTier;
 
+    // NOTE: Only EquippedCover has a meaningful 0 value. Pool ID 0 is the tier 0 plain cover. This means that
+    // we need not add 1 to the pool ID for EquippedBody, EquippedWheels, and EquippedBeasts. This will save gas
+    // at the expense of making our code harder to understand. This is why I haven't implemented this optimization
+    // at the moment. Just recording the possibility of making it here.
     /// EquippedCover indicates the poolID of the cover that is currently equipped by the given player.
     /// @notice The mapping is address(player) => poolID + 1.
     /// @notice The value stored is poolID + 1 so that 0 indicates that no item is currently equipped in the slot.
@@ -86,6 +92,14 @@ contract JackpotJunction is ERC1155, ReentrancyGuard {
     /// Signifies that the player does not have enough items in their possession to perform an action.
     error InsufficientItems(uint256 poolID);
 
+   function supportsInterface(bytes4 interfaceID) public pure override returns (bool) {
+      return
+            interfaceID == 0x01ffc9a7 ||    // ERC-165 support (i.e. `bytes4(keccak256('supportsInterface(bytes4)'))`).
+            interfaceID == 0xd9b67a26 ||     // ERC1155 interface ID
+            interfaceID == 0x4e2312e0 ||     // ERC-1155 `ERC1155TokenReceiver` support (i.e. `bytes4(keccak256("onERC1155Received(address,address,uint256,uint256,bytes)")) ^ bytes4(keccak256("onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)"))`).
+            interfaceID == 0xc46a2148;       // IJackpotJunction interface ID
+    }
+
     /// Creates a JackpotJunction game contract.
     /// @param blocksToAct The number of blocks a player has to either reroll or accept the outcome of their current roll.
     /// @param costToRoll The cost in the finest denomination of the native token on the chain to roll.
@@ -106,6 +120,26 @@ contract JackpotJunction is ERC1155, ReentrancyGuard {
 
     /// Allows the contract to receive the native token on its blockchain.
     receive() external payable {}
+
+    function onERC1155Received(
+        address,
+        address,
+        uint256,
+        uint256,
+        bytes memory
+    ) public virtual returns (bytes4) {
+        return 0xf23a6e61;
+    }
+
+    function onERC1155BatchReceived(
+        address,
+        address,
+        uint256[] memory,
+        uint256[] memory,
+        bytes memory
+    ) public virtual returns (bytes4) {
+        return 0xbc197c81;
+    }
 
     function _enforceDeadline(address degenerate) internal view {
         if (block.number > LastRollBlock[degenerate] + BlocksToAct) {
@@ -379,13 +413,13 @@ contract JackpotJunction is ERC1155, ReentrancyGuard {
     }
 
     function craft(uint256 poolID, uint256 numOutputs) external nonReentrant returns (uint256 newPoolID) {
-        if (balanceOf(msg.sender, poolID) < 1 * numOutputs) {
+        if (balanceOf(msg.sender, poolID) < 2 * numOutputs) {
             revert InsufficientItems(poolID);
         }
 
         newPoolID = poolID + 28;
 
-        _burn(msg.sender, poolID, 1 * numOutputs);
+        _burn(msg.sender, poolID, 2 * numOutputs);
         _mint(msg.sender, newPoolID, numOutputs, "");
 
         (uint256 itemType, uint256 terrainType, uint256 tier) = genera(newPoolID);
@@ -401,5 +435,55 @@ contract JackpotJunction is ERC1155, ReentrancyGuard {
 
     function burnBatch(uint256[] memory poolIDs, uint256[] memory amounts) external {
         _burnBatch(msg.sender, poolIDs, amounts);
+    }
+
+    function poolMetadata(uint256 poolID) public pure returns (bytes memory json) {
+        (uint256 itemType, uint256 terrainType, uint256 tier) = genera(poolID);
+        string memory name = string(abi.encodePacked("Tier ", Strings.toString(tier)));
+        string memory terrainTypeName;
+        string memory itemTypeName;
+        if (terrainType == 0) {
+            terrainTypeName = "plains";
+        } else if (terrainType == 1) {
+            terrainTypeName = "forest";
+        } else if (terrainType == 2) {
+            terrainTypeName = "swamp";
+        } else if (terrainType == 3) {
+            terrainTypeName = "water";
+        } else if (terrainType == 4) {
+            terrainTypeName = "mountain";
+        } else if (terrainType == 5) {
+            terrainTypeName = "desert";
+        } else if (terrainType == 6) {
+            terrainTypeName = "ice";
+        }
+
+        if (itemType == 0) {
+            itemTypeName = "cover";
+        } else if (itemType == 1) {
+            itemTypeName = "body";
+        } else if (itemType == 2) {
+            itemTypeName = "wheels";
+        } else if (itemType == 3) {
+            itemTypeName = "beasts";
+        }
+
+        name = string(abi.encodePacked(name, unicode" ", terrainTypeName, unicode" ", itemTypeName));
+
+        json = abi.encodePacked(
+            '{"name": "',
+            name,
+            '", "decimals": 0, "attributes": [{"trait_type": "tier", "display_type": "number", "value": "',
+            Strings.toString(tier),
+            '"}, {"trait_type": "terrain_type", "display_type": "string", "value": "',
+            terrainTypeName,
+            '"}, {"trait_type": "item_type", "display_type": "string", "value": "',
+            itemTypeName,
+            '"}]}'
+        );
+    }
+
+    function uri(uint256 poolID) public pure override returns (string memory) {
+        return string(abi.encodePacked("data:application/json;base64,", Base64.encode(poolMetadata(poolID))));
     }
 }

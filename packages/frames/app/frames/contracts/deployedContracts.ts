@@ -6,7 +6,7 @@
 const deployedContracts = {
   31337: {
     JackpotJunction: {
-      address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+      address: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
       abi: [
         {
           inputs: [
@@ -781,6 +781,84 @@ const deployedContracts = {
           inputs: [
             {
               internalType: "address",
+              name: "",
+              type: "address",
+            },
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+            {
+              internalType: "uint256[]",
+              name: "",
+              type: "uint256[]",
+            },
+            {
+              internalType: "uint256[]",
+              name: "",
+              type: "uint256[]",
+            },
+            {
+              internalType: "bytes",
+              name: "",
+              type: "bytes",
+            },
+          ],
+          name: "onERC1155BatchReceived",
+          outputs: [
+            {
+              internalType: "bytes4",
+              name: "",
+              type: "bytes4",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+            {
+              internalType: "bytes",
+              name: "",
+              type: "bytes",
+            },
+          ],
+          name: "onERC1155Received",
+          outputs: [
+            {
+              internalType: "bytes4",
+              name: "",
+              type: "bytes4",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
               name: "degenerate",
               type: "address",
             },
@@ -809,6 +887,25 @@ const deployedContracts = {
             },
           ],
           stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "poolID",
+              type: "uint256",
+            },
+          ],
+          name: "poolMetadata",
+          outputs: [
+            {
+              internalType: "bytes",
+              name: "json",
+              type: "bytes",
+            },
+          ],
+          stateMutability: "pure",
           type: "function",
         },
         {
@@ -944,7 +1041,7 @@ const deployedContracts = {
           inputs: [
             {
               internalType: "bytes4",
-              name: "interfaceId",
+              name: "interfaceID",
               type: "bytes4",
             },
           ],
@@ -956,7 +1053,7 @@ const deployedContracts = {
               type: "bool",
             },
           ],
-          stateMutability: "view",
+          stateMutability: "pure",
           type: "function",
         },
         {
@@ -970,7 +1067,7 @@ const deployedContracts = {
           inputs: [
             {
               internalType: "uint256",
-              name: "",
+              name: "poolID",
               type: "uint256",
             },
           ],
@@ -982,7 +1079,7 @@ const deployedContracts = {
               type: "string",
             },
           ],
-          stateMutability: "view",
+          stateMutability: "pure",
           type: "function",
         },
         {
@@ -1011,7 +1108,7 @@ const deployedContracts = {
   },
   84532: {
     JackpotJunction: {
-      address: "0x23eB8225E6460eCBeCb573576F3Dd3e5F1377227",
+      address: "0x185b24b6e32B314182e228e44651616bE312Bb50",
       abi: [
         {
           inputs: [
@@ -1786,6 +1883,84 @@ const deployedContracts = {
           inputs: [
             {
               internalType: "address",
+              name: "",
+              type: "address",
+            },
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+            {
+              internalType: "uint256[]",
+              name: "",
+              type: "uint256[]",
+            },
+            {
+              internalType: "uint256[]",
+              name: "",
+              type: "uint256[]",
+            },
+            {
+              internalType: "bytes",
+              name: "",
+              type: "bytes",
+            },
+          ],
+          name: "onERC1155BatchReceived",
+          outputs: [
+            {
+              internalType: "bytes4",
+              name: "",
+              type: "bytes4",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+            {
+              internalType: "bytes",
+              name: "",
+              type: "bytes",
+            },
+          ],
+          name: "onERC1155Received",
+          outputs: [
+            {
+              internalType: "bytes4",
+              name: "",
+              type: "bytes4",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
               name: "degenerate",
               type: "address",
             },
@@ -1814,6 +1989,25 @@ const deployedContracts = {
             },
           ],
           stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "poolID",
+              type: "uint256",
+            },
+          ],
+          name: "poolMetadata",
+          outputs: [
+            {
+              internalType: "bytes",
+              name: "json",
+              type: "bytes",
+            },
+          ],
+          stateMutability: "pure",
           type: "function",
         },
         {
@@ -1949,7 +2143,7 @@ const deployedContracts = {
           inputs: [
             {
               internalType: "bytes4",
-              name: "interfaceId",
+              name: "interfaceID",
               type: "bytes4",
             },
           ],
@@ -1961,7 +2155,7 @@ const deployedContracts = {
               type: "bool",
             },
           ],
-          stateMutability: "view",
+          stateMutability: "pure",
           type: "function",
         },
         {
@@ -1975,7 +2169,7 @@ const deployedContracts = {
           inputs: [
             {
               internalType: "uint256",
-              name: "",
+              name: "poolID",
               type: "uint256",
             },
           ],
@@ -1987,7 +2181,7 @@ const deployedContracts = {
               type: "string",
             },
           ],
-          stateMutability: "view",
+          stateMutability: "pure",
           type: "function",
         },
         {
