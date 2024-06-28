@@ -59,8 +59,9 @@ export default function EquippedWagon (props: EquippedWagonProps) {
         if (props.equippedWheels) {
             const index = parseInt(props.equippedWheels.toString()) - 1 % ITEM_ID_IMAGE_LAYER_NAMES.length;
             const layerName = ITEM_ID_IMAGE_LAYER_NAMES[index][0];
+            const typeName = layerName.split('_')[0];
             attributes.push({ trait_type: 'fwheel', value: layerName});
-            attributes.push({ trait_type: 'bwheel', value: layerName});
+            attributes.push({ trait_type: 'bwheel', value: typeName + '_bwheel'});
             hasEquipped = true;
         }
         
