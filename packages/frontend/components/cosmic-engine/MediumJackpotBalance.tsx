@@ -80,8 +80,8 @@ export const MediumJackpotBalance = ({ address, className = "", usdMode, rawMode
           </>
         ) : (
           <>
-            <span className="text-[1.2em]">{formattedBalance.toFixed(2)}</span>
-            <span className="text-[1.5em] font-bold ml-1">{targetNetwork.nativeCurrency.symbol}</span>
+            <span className="text-[1em]">{formattedBalance.toFixed(4)}</span>
+            <span className="text-[1em] font-bold ml-1">{targetNetwork.nativeCurrency.symbol}</span>
           </>
         )}
       </div>

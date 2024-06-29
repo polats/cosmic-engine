@@ -8,9 +8,9 @@ module.exports = async ({ deployments, getNamedAccounts }) => {
 
     const { blocksToAct, costToRoll, costToReroll } = 
     {
-        blocksToAct: 40,
-        costToRoll: 100, // ethers.parseEther("1"),
-        costToReroll: 25, // ethers.parseEther("0.5")
+        blocksToAct: 15,
+        costToRoll: 100000000000, // ethers.parseEther("1"),
+        costToReroll: 25000000000, // ethers.parseEther("0.5")
     }
 
     const JackpotJunction = await deploy("JackpotJunction", {

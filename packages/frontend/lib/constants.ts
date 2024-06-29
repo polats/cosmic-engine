@@ -5,7 +5,6 @@ export type Item = {
 }
 
 export const JJ_CONTRACT_NAME = "JackpotJunction";
-export const ROLL_COST = "100";
 export const CRAFT_COST = 2;
 
 export const TIER_COLORS = [

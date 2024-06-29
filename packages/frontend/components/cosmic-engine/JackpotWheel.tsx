@@ -17,10 +17,11 @@ import Lottie from 'react-lottie';
 import Loader from '~~/components/cosmic-engine/AcceptLoader';
 import { JackpotBalance } from "./JackpotBalance";
 import { MediumJackpotBalance } from "./MediumJackpotBalance";
+import { formatGwei } from "viem";
 
 interface JackpotWheelProps {
     wheelState: string,
-    prizeSmall: number,
+    prizeSmall?: bigint,
     prizeWon?: Prize | null;
     isReroll: boolean;
     handleReroll: (val: boolean) => void;
@@ -481,7 +482,10 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                         </p>
                         <div className="flex flex-wrap overflow-hidden w-full justify-center">
                             <div className="text-[10px] xs:text-lg 4xl:text-5xl px-2 text-white">
-                                {`${prizeSmall} WEI`}
+                                {
+                                    prizeSmall != undefined  &&
+                                `${parseInt(formatGwei(prizeSmall)) * 1.5} GWEI`
+                                }
                             </div>
                         </div>
                     </div>

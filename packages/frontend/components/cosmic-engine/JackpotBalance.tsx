@@ -76,13 +76,13 @@ export const JackpotBalance = ({ address, className = "", usdMode, rawMode }: Ba
       <div className="w-full flex items-center justify-center">
         {displayUsdMode ? (
           <>
-            <span className="text-[2] font-bold mr-1">$</span>
-            <span className="text-[2em] font-bold ml-1">{(formattedBalance * price).toFixed(2)}</span>
+            <span className="text-[1.5] font-bold mr-1">$</span>
+            <span className="text-[1.5em] font-bold ml-1">{(formattedBalance * price).toFixed(2)}</span>
           </>
         ) : (
           <>
-            <span className="text-[2em] font-bold ml-1 px-2">{formattedBalance.toFixed(2)}</span>
-            <span className="text-[2em] font-bold ml-1">{targetNetwork.nativeCurrency.symbol}</span>
+            <span className="text-[1.5em] font-bold ml-1 px-2">{formattedBalance.toFixed(2)}</span>
+            <span className="text-[1.5em] font-bold ml-1">{targetNetwork.nativeCurrency.symbol}</span>
           </>
         )}
       </div>

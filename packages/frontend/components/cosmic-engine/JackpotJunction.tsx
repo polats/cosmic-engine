@@ -9,7 +9,6 @@ import { ReadContractDisplay } from "~~/components/cosmic-engine/ReadContractDis
 
 import { 
     JJ_CONTRACT_NAME, 
-    ROLL_COST,
     ITEM_ID_IMAGE_LAYER_NAMES
     } from "@/lib/constants";
 
@@ -25,7 +24,7 @@ import {
 
 import { JackpotBalance } from "./JackpotBalance";
 import { MediumJackpotBalance } from "./MediumJackpotBalance";
-
+import { formatGwei } from "viem";
  
 // TODO: adjust types below when prizes are defined
 export interface Prize {
@@ -76,6 +75,11 @@ export const JackpotJunction = () => {
         contractName: JJ_CONTRACT_NAME,
         functionName: "outcome",
         args: [address, bonus]
+    });
+
+    const { data: ROLL_COST } = useScaffoldReadContract({
+        contractName: JJ_CONTRACT_NAME,
+        functionName: "CostToRoll",
     });
 
     useEffect(() => {
@@ -184,7 +188,10 @@ export const JackpotJunction = () => {
             deployedContractData && 
                 <div className="flex flex-row justify-center items-center text-center pb-[3rem] lg:mb-[1rem] 3xl:mb-[5rem]">
                     <span className="font-bold text-sm ">Small Prize:</span>
-                    <div className="px-5">{Number(ROLL_COST)*1.5}</div>
+                    {
+                        ROLL_COST &&                        
+                            <div className="px-5">{parseInt(formatGwei(ROLL_COST)) * 1.5} GWEI</div>
+                    }
                     <span className="font-bold text-sm">Jackpot:</span>
                     <JackpotBalance address={deployedContractData.address} className="px-5 h-5 min-h-[0.375rem]" />
                     <span className="font-bold text-sm">Medium Prize:</span>
@@ -205,7 +212,7 @@ export const JackpotJunction = () => {
                         isWheelActive={isWheelActive}
                         prizeWon={prizeWon}
                         isReroll={isReroll}
-                        prizeSmall={Number(ROLL_COST)*1.5}
+                        prizeSmall={ROLL_COST}
                         handleWheelActivity={handleWheelActivity}
                         handleWheelState={handleWheelState}
                         handlePrizeWon={handlePrizeWon}
@@ -233,7 +240,7 @@ export const JackpotJunction = () => {
                                         handleWheelActivity={handleWheelActivity}
                                         outcome={outcome}
                                         loading={loading}
-                                        payableValue={ROLL_COST} // TODO: get ROLL_COST from contract
+                                        payableValue={ROLL_COST?.toString()} // TODO: get ROLL_COST from contract
                                         onChange={() => {}}
                                     />
                                     {/* {
