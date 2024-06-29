@@ -10,12 +10,13 @@ type BalanceProps = {
   address?: Address;
   className?: string;
   usdMode?: boolean;
+  rawMode?: boolean;
 };
 
 /**
  * Display (ETH & USD) balance of an ETH address.
  */
-export const JackpotBalance = ({ address, className = "", usdMode }: BalanceProps) => {
+export const JackpotBalance = ({ address, className = "", usdMode, rawMode }: BalanceProps) => {
   const { targetNetwork } = useTargetNetwork();
   const price = useGlobalState(state => state.nativeCurrencyPrice);
   const {
@@ -25,6 +26,7 @@ export const JackpotBalance = ({ address, className = "", usdMode }: BalanceProp
   } = useWatchBalance({
     address,
   });
+  const formattedBalance = balance ? Number(formatEther(balance.value))/2 : 0;
 
   const [displayUsdMode, setDisplayUsdMode] = useState(price > 0 ? Boolean(usdMode) : false);
 
@@ -33,6 +35,19 @@ export const JackpotBalance = ({ address, className = "", usdMode }: BalanceProp
       setDisplayUsdMode(prevMode => !prevMode);
     }
   };
+
+  if(rawMode){
+    return (
+      <>
+        {displayUsdMode ? 
+        `$${(formattedBalance * price).toFixed(2)}`
+        :
+        `${targetNetwork.nativeCurrency.symbol}`
+        }
+      </>
+    )
+  }
+
 
   if (!address || isLoading || balance === null) {
     return (
@@ -52,8 +67,6 @@ export const JackpotBalance = ({ address, className = "", usdMode }: BalanceProp
       </div>
     );
   }
-
-  const formattedBalance = balance ? Number(formatEther(balance.value))/2 : 0;
 
   return (
     <button
