@@ -169,7 +169,7 @@ export const JackpotJunction = () => {
     }
 
     return (
-        <div className="flex flex-col min-h-[100%] h-auto">
+        <div className="flex flex-col min-h-[100%] h-auto overflow-x-hidden">
         
         {
             // cosmicConsole && 
@@ -190,7 +190,7 @@ export const JackpotJunction = () => {
 
             <div className="flex flex-col grow justify-center items-center text-center">
                 <div className="flex justify-center items-center mb-2
-                    h-[400px] w-[300px] xs:h-[560px] xs:w-[455px] lg:h-[700px] lg:w-[600px] 3xl:w-[950px] 3xl:h-[950px] 4xl:w-[1500px] 4xl:h-[1500px]
+                    h-[400px] w-[300px] xs:h-[560px] xs:w-[455px] lg:h-[700px] lg:w-[600px] 4xl:w-[1500px] 4xl:h-[1500px]
                 " >
                     <JackpotWheel 
                         wheelState={wheelState}
