@@ -91,10 +91,8 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
         const width = currentScreenSize;
         if( width >= 475  && width < 1024){
             return 'xs';
-        } else if ( width >= 1024 && width < 1800) {
+        } else if ( width >= 1024 && width < 2560) { //3xl: width >= 1800 && width < 2560
             return 'lg';
-        } else if ( width >= 1800 && width < 2560) {
-            return '3xl';
         } else if ( width >= 2560) {
             return '4xl';
         } else {
@@ -338,7 +336,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
         const bulbSize = ( getScreenBreakpoint() === 'def' ? 10 
             : getScreenBreakpoint() === 'xs' ? 15
             : getScreenBreakpoint() === 'lg'? 20
-            : getScreenBreakpoint() === '3xl' ? 25
+            // : getScreenBreakpoint() === '3xl' ? 25
             : 40
         );
         const offsetRadius = radius + bulbSize / 2;
@@ -348,15 +346,15 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
             const x = (offsetRadius + offsetRadius * Math.cos(angle) - bulbSize / 2) + (
                 getScreenBreakpoint() === 'def' ? 6 
                 : getScreenBreakpoint() === 'xs'? 9 
-                : getScreenBreakpoint() === 'lg'? 14 
-                : getScreenBreakpoint() === '3xl'? 24
+                : getScreenBreakpoint() === 'lg'? 15 
+                // : getScreenBreakpoint() === '3xl'? 24
                 : 47
             );
             const y = (offsetRadius + offsetRadius * Math.sin(angle) - bulbSize / 2) + (
                 getScreenBreakpoint() === 'def' ? 13 
                 : getScreenBreakpoint() === 'xs'? 25 
-                : getScreenBreakpoint() === 'lg'? 28
-                : getScreenBreakpoint() === '3xl'? 22
+                : getScreenBreakpoint() === 'lg'? 20
+                // : getScreenBreakpoint() === '3xl'? 22
                 : 35
             );
     
@@ -451,52 +449,52 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                 30% jackpot [55% of screen]
             */}
             <div className="absolute flex justify-center
-             w-[260px] h-[260px] xs:w-[400px] xs:h-[400px] lg:w-[530px] lg:h-[530px] 3xl:w-[850px] 3xl:h-[850px] 4xl:w-[1320px] 4xl:h-[1320px] my-4 ">
+             w-[260px] h-[260px] xs:w-[400px] xs:h-[400px] lg:w-[530px] lg:h-[530px] 4xl:w-[1320px] 4xl:h-[1320px] my-4 ">
 
                 <div className="absolute top-[-20%] h-[40%] w-[150%] flex justify-center items-center  ">
                     <div className=" relative bg-[url('/jackpotWheel/banner-small.png')] bg-cover bg-center flex flex-col font-ibmPlexMono 
-                        top-[-65px] xs:top-[-90px] lg:top-[-90px] 3xl:top-[-60px] 4xl:top-[-110px] 
+                        top-[-65px] xs:top-[-90px] lg:top-[-90px] 4xl:top-[-110px] 
                         left-[-10px] xs:left-[-10px] lg:left-[-20px] 4xl:left-[-55px]
-                        w-[95px] xs:w-[118px] lg:w-[159px] 3xl:w-[255px] 4xl:w-[396px] 
-                        h-[71px] xs:h-[89px] lg:h-[119px] 3xl:h-[191px] 4xl:h-[297px]
-                        pt-[10px] 3xl:pt-[1.5rem] 4xl:pt-[2rem]
+                        w-[95px] xs:w-[118px] lg:w-[159px] 4xl:w-[396px] 
+                        h-[71px] xs:h-[89px] lg:h-[119px] 4xl:h-[297px]
+                        pt-[10px] 4xl:pt-[2rem]
                     ">
-                       <p className="text-xs 3xl:text-lg 4xl:text-4xl text-white m-0 p-0">
+                       <p className="text-xs 4xl:text-4xl text-white m-0 p-0">
                             Small
                         </p>
                         <div className="flex flex-wrap overflow-hidden w-full justify-center">
-                            <div className="text-[10px] xs:text-lg 3xl:text-[30px] 4xl:text-5xl px-2">
+                            <div className="text-[10px] xs:text-lg 4xl:text-5xl px-2">
                                 {`${prizeSmall} ETH`}
                             </div>
                         </div>
                     </div>
                     <div className="relative z-10 bg-[url('/jackpotWheel/banner-jackpot.png')] bg-cover bg-center flex flex-col font-ibmPlexMono px-[-5px] 
-                        top-[-90px] xs:top-[-120px] lg:top-[-140px] 3xl:top-[-130px] 4xl:top-[-200px]
-                        w-[143px] xs:w-[218px] lg:w-[291px] 3xl:w-[467px] 4xl:w-[726px]
-                        h-[42px] xs:h-[65px] lg:h-[87px] 3xl:h-[140px] 4xl:h-[217px]
-                        pt-[0.3rem] 3xl:pt-[.8rem] 4xl:pt-[1.2rem]
+                        top-[-90px] xs:top-[-120px] lg:top-[-140px] 4xl:top-[-200px]
+                        w-[143px] xs:w-[218px] lg:w-[291px] 4xl:w-[726px]
+                        h-[42px] xs:h-[65px] lg:h-[87px] 4xl:h-[217px]
+                        pt-[0.3rem] 4xl:pt-[1.2rem]
                     ">
-                        <p className="font-semibold text-xs xs:text-sm lg:text-base 3xl:text-lg 4xl:text-5xl p-0 m-0 3xl:text-2xl text-black">
+                        <p className="font-semibold text-xs xs:text-sm lg:text-base 4xl:text-5xl p-0 m-0 text-black">
                             JACKPOT
                         </p>
                         <div className="flex w-full justify-center">
-                            <div className="font-bold text-black text-sm xs:text-xl lg:text-3xl 3xl:text-5xl 4xl:text-6xl">
+                            <div className="font-bold text-black text-sm xs:text-xl lg:text-3xl 4xl:text-6xl">
                                 <JackpotBalance rawMode={true} />
                             </div>
                         </div>
                     </div>
                     <div className="relative bg-[url('/jackpotWheel/banner-medium.png')] bg-cover bg-center flex flex-col font-ibmPlexMono 
-                        top-[-65px] xs:top-[-90px] lg:top-[-90px]  3xl:top-[-60px] 4xl:top-[-108px] 
+                        top-[-65px] xs:top-[-90px] lg:top-[-90px] 4xl:top-[-108px] 
                         left-[10px] xs:left-[10px] lg:left-[20px] 4xl:left-[55px]
-                        w-[95px] xs:w-[118px] lg:w-[159px] 3xl:w-[255px] 4xl:w-[396px]
-                        h-[71px] xs:h-[89px] lg:h-[119px] 3xl:h-[191px] 4xl:h-[297px]
-                        pt-[10px] 3xl:pt-[1.5rem] 4xl:pt-[2rem]
+                        w-[95px] xs:w-[118px] lg:w-[159px] 4xl:w-[396px]
+                        h-[71px] xs:h-[89px] lg:h-[119px] 4xl:h-[297px]
+                        pt-[10px] 4xl:pt-[2rem]
                     ">
-                       <p className="text-xs 3xl:text-lg 4xl:text-4xl text-white m-0 p-0">
+                       <p className="text-xs 4xl:text-4xl text-white m-0 p-0">
                             Medium
                         </p>
                         <div className="flex flex-wrap overflow-hidden w-full justify-center">
-                            <div className="text-[10px] xs:text-lg 3xl:text-[30px] 4xl:text-5xl px-2">
+                            <div className="text-[10px] xs:text-lg 4xl:text-5xl px-2">
                                 <MediumJackpotBalance rawMode={true}/>
                             </div>
                         </div>
@@ -507,7 +505,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                 <animated.div
                     className="
                         z-[10] sm:border sm:border-[black] sm:border-[5px] relative flex justify-center items-center my-4 rounded-[50%]
-                        w-[260px] h-[260px] xs:w-[400px] xs:h-[400px] lg:w-[530px] lg:h-[530px] 3xl:w-[850px] 3xl:h-[850px] 4xl:w-[1320px] 4xl:h-[1320px]
+                        w-[260px] h-[260px] xs:w-[400px] xs:h-[400px] lg:w-[530px] lg:h-[530px] 4xl:w-[1320px] 4xl:h-[1320px]
                     "
                     style={{ 
                         transform: rotateSpring.rotation.to((r) => {
@@ -526,45 +524,41 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                                 : getScreenBreakpoint() === 'def'  ? '315' 
                                 : getScreenBreakpoint() === 'xs' ? '480'
                                 : getScreenBreakpoint() === 'lg' ? "600" 
-                                : getScreenBreakpoint() === '3xl' ? "950"
+                                // : getScreenBreakpoint() === '3xl' ? "950"
                                 : "1500" //4xl and above
                             }px`, 
                             height: `${
                                 getScreenBreakpoint() === 'none' ? '0'
                                 : getScreenBreakpoint() === 'def' ? '315' 
                                 : getScreenBreakpoint() === 'xs'? '480' 
-                                : getScreenBreakpoint() === 'lg'? "625" 
-                                : getScreenBreakpoint() === '3xl' ? "950"
+                                : getScreenBreakpoint() === 'lg'? "600" 
+                                // : getScreenBreakpoint() === '3xl' ? "950"
                                 : "1500" //4xl and above
                             }px` 
                         }}
                     >
                         <Lightbulbs count={lightbulbCount} isLightActive={isLightActive} radius={(
                             getScreenBreakpoint() === 'none' ? 0
-                            : getScreenBreakpoint() === 'def' ? 
-                                307-40 
-                            :  getScreenBreakpoint() === 'xs'? 
-                                470-60 
-                            : getScreenBreakpoint() === 'lg'? 
-                                620-80
-                            : getScreenBreakpoint() === '3xl' ? 
-                                965-100
+                            : getScreenBreakpoint() === 'def' ? 307-40 
+                            :  getScreenBreakpoint() === 'xs'? 470-60 
+                            : getScreenBreakpoint() === 'lg'? 620-80
+                            // : getScreenBreakpoint() === '3xl' ? 965-100
                             : 1515-160
                             )/2} />
                     </div>
                 </div>
             </div>
-            <div className="absolute z-[10] left-[50%] bottom-[40px] 3xl:bottom-[25px] 4xl:bottom-[80px] transform -translate-x-1/2 translate-y-0 h-[45px]">
+            <div className="absolute z-[10] left-[50%] bottom-[40px] lg:bottom-[65px] 4xl:bottom-[80px] transform -translate-x-1/2 translate-y-0 h-[45px]">
                 <svg 
                     width={
                         (getScreenBreakpoint() === 'def' || getScreenBreakpoint() === 'xs' ) ? "40" 
                         : (getScreenBreakpoint() === 'lg') ? '55'
-                        : (getScreenBreakpoint() === '3xl') ? '65'
+                        // : (getScreenBreakpoint() === '3xl') ? '65'
                         : '120'
                     } 
                     height={(getScreenBreakpoint() === 'def' || getScreenBreakpoint() === 'xs' ) ? "40" 
                         : (getScreenBreakpoint() === 'lg') ? '55'
-                        : (getScreenBreakpoint() === '3xl') ? '65'
+                        // : (getScreenBreakpoint() === '3xl') ? '65'
                         : '120'
                     } 
                     viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
