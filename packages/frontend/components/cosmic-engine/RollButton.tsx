@@ -23,6 +23,7 @@ type RollButtonProps = {
   handleWheelActivity: (val: boolean) => void;
   onChange: () => void;
   triggerRefreshDisplayVariables: () => void;
+  rerollCost: string;
   args?: any;
   payableValue?: string;
   loading: boolean;
@@ -41,6 +42,7 @@ export const RollButton = ({
   onChange,
   args,
   payableValue,
+  rerollCost,
   loading,
   outcome,
   triggerRefreshDisplayVariables
@@ -56,6 +58,8 @@ export const RollButton = ({
     if (writeContractAsync && deployedContractData) {
       
       try {
+          let actualCost = isReroll ? rerollCost : payableValue;
+        
           handleWheelActivity(true); // start turning wheel
           handleLoading(true);
           const makeWriteWithParams = async() =>
@@ -66,7 +70,7 @@ export const RollButton = ({
               abi: deployedContractData.abi,
               args: args,
               // @ts-ignore
-              value: payableValue ? BigInt(payableValue) : BigInt("0"), 
+              value: actualCost ? BigInt(actualCost) : BigInt("0"), 
           });
           const res = await writeTxn(makeWriteWithParams);
           handlePrizeWon(null);

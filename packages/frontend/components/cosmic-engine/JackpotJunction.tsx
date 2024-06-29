@@ -82,6 +82,12 @@ export const JackpotJunction = () => {
         functionName: "CostToRoll",
     });
 
+    const { data: REROLL_COST } = useScaffoldReadContract({
+        contractName: JJ_CONTRACT_NAME,
+        functionName: "CostToReroll",
+    });
+
+
     useEffect(() => {
         if(prizeWon && prizeWon.prizeType !== '0'){
             setIsReroll(true);
@@ -240,7 +246,8 @@ export const JackpotJunction = () => {
                                         handleWheelActivity={handleWheelActivity}
                                         outcome={outcome}
                                         loading={loading}
-                                        payableValue={ROLL_COST?.toString()} // TODO: get ROLL_COST from contract
+                                        rerollCost={REROLL_COST?.toString()} 
+                                        payableValue={ROLL_COST?.toString()}
                                         onChange={() => {}}
                                     />
                                     {/* {
