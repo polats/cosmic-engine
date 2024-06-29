@@ -333,7 +333,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
 
     const lightbulbCount = 20; // Number of lightbulbs
 
-    const Lightbulbs = ({ count, radius }: {count:number, radius:number}) => {
+    const Lightbulbs = ({ count, radius, isLightActive }: {count:number, radius:number, isLightActive:boolean}) => {
         const bulbs = [];
         const bulbSize = ( getScreenBreakpoint() === 'def' ? 10 
             : getScreenBreakpoint() === 'xs' ? 15
@@ -362,7 +362,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
     
             bulbs.push(
                 <div
-                    key={i}
+                    key={`bulb-${i}`}
                     className={`${isLightActive ? 'lightbulb' : ''}`}
                     style={{
                         position: 'absolute',
@@ -539,8 +539,8 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                             }px` 
                         }}
                     >
-                        <Lightbulbs count={lightbulbCount} radius={(
-                            getScreenBreakpoint() === 'none' ? '0'
+                        <Lightbulbs count={lightbulbCount} isLightActive={isLightActive} radius={(
+                            getScreenBreakpoint() === 'none' ? 0
                             : getScreenBreakpoint() === 'def' ? 
                                 307-40 
                             :  getScreenBreakpoint() === 'xs'? 
