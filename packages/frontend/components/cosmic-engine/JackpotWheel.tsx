@@ -418,7 +418,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
       })
 
     return (
-        <div className="relative flex flex-col border justify-end items-center h-full w-full">
+        <div className="relative flex flex-col justify-end items-center h-full w-full">
             { isPrizeVisible && prizeWon && prizeWon?.prizeType !== '0'? 
                 <div className="absolute prize-div h-full w-full z-20">
                     <animated.div 
@@ -458,7 +458,8 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                 67% for side banner 
                 38% jackpot
             */}
-            <div className="absolute flex justify-center w-[260px] h-[260px] xs:w-[400px] xs:h-[400px] lg:w-[530px] lg:h-[530px] my-4 ">
+            <div className="absolute flex justify-center overflow-x-hidden
+             w-[260px] h-[260px] xs:w-[400px] xs:h-[400px] lg:w-[530px] lg:h-[530px] my-4 ">
                 <div className="absolute top-[-20%] h-[40%] w-[150%] flex justify-center items-center  ">
                     <div className=" relative top-[0px] xs:top-[-10px] lg:top-[-5px] left-[-10px] xs:left-[-0px] lg:left-[5px]
                         w-[95px] h-[150px] xs:w-[118px] xs:h-[176px] lg:w-[159px] lg:h-[237px]
