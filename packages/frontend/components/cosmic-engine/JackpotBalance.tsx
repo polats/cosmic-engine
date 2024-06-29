@@ -70,20 +70,22 @@ export const JackpotBalance = ({ address, className = "", usdMode, rawMode }: Ba
 
   return (
     <button
-      className={`btn btn-sm btn-ghost flex flex-col font-normal items-center hover:bg-transparent ${className}`}
+      className={`btn btn-sm btn-ghost flex flex-col font-normal justify-start hover:bg-transparent ${className}`}
       onClick={toggleBalanceMode}
     >
-      <div className="w-full flex items-center justify-center">
+      <div className="w-full flex">
         {displayUsdMode ? (
-          <>
-            <span className="text-[1.5] font-bold mr-1">$</span>
-            <span className="text-[1.5em] font-bold ml-1">{(formattedBalance * price).toFixed(2)}</span>
-          </>
+          <div className="flex w-full justify-center">
+            <div className="font-bold text-black text-sm xs:text-xl lg:text-3xl 4xl:text-6xl">
+              {`$${(formattedBalance * price).toFixed(2)}`}
+            </div>
+          </div>
         ) : (
-          <>
-            <span className="text-[1.5em] font-bold ml-1 px-2">{formattedBalance.toFixed(2)}</span>
-            <span className="text-[1.5em] font-bold ml-1">{targetNetwork.nativeCurrency.symbol}</span>
-          </>
+          <div className="flex w-full justify-center">
+            <div className="font-bold text-black text-sm xs:text-xl lg:text-3xl 4xl:text-6xl">
+              {`${formattedBalance.toFixed(2)} ${targetNetwork.nativeCurrency.symbol}`}
+            </div>
+          </div>
         )}
       </div>
     </button>
