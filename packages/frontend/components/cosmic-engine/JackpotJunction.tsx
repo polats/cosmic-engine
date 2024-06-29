@@ -182,7 +182,7 @@ export const JackpotJunction = () => {
         {
             cosmicConsole && 
             deployedContractData && 
-                <div className="flex flex-row justify-center items-center text-center pb-[3rem] lg:mb-[1rem] 3xl:mb-[5rem]">
+                <div className="flex flex-row justify-center items-center text-center">
                     <span className="font-bold text-sm ">Small Prize:</span>
                     <div className="px-5">{Number(ROLL_COST)*1.5}</div>
                     <span className="font-bold text-sm">Jackpot:</span>
@@ -196,7 +196,7 @@ export const JackpotJunction = () => {
 
         }
 
-            <div className="flex flex-col grow justify-center items-center text-center">
+            <div className="flex flex-col grow justify-center items-center text-center pt-[5rem]">
                 <div className="flex justify-center items-center mb-2
                     h-[400px] w-[300px] xs:h-[560px] xs:w-[455px] lg:h-[700px] lg:w-[600px] 4xl:w-[1500px] 4xl:h-[1500px]
                 " >
