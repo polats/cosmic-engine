@@ -133,7 +133,6 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
             const res = await writeTxn(makeWriteWithParams);
             handlePrizeWon(null);
             setIsPrizeVisible(false)
-            handleReroll(false);
         } catch (e: any) {
             console.error("⚡️ ~ file: WriteOnlyFunctionForm.tsx:handleWrite ~ error", e);
             handlePrizeWon(null);
@@ -410,7 +409,24 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
     return (
         <div className="relative flex flex-col justify-end items-center h-full w-full">
             { isPrizeVisible && prizeWon && prizeWon?.prizeType !== '0'? 
-                <div className="absolute prize-div h-full w-full z-20">
+                <div className="absolute top-12 4xl:top-0 prize-div h-full w-full z-20" style={{
+                    width: `${
+                        getScreenBreakpoint() === 'none' ? '0'
+                        : getScreenBreakpoint() === 'def'  ? '315' 
+                        : getScreenBreakpoint() === 'xs' ? '480'
+                        : getScreenBreakpoint() === 'lg' ? "600" 
+                        // : getScreenBreakpoint() === '3xl' ? "950"
+                        : "1500" //4xl and above
+                    }px`, 
+                    height: `${
+                        getScreenBreakpoint() === 'none' ? '0'
+                        : getScreenBreakpoint() === 'def' ? '315' 
+                        : getScreenBreakpoint() === 'xs'? '480' 
+                        : getScreenBreakpoint() === 'lg'? "600" 
+                        // : getScreenBreakpoint() === '3xl' ? "950"
+                        : "1500" //4xl and above
+                    }px` 
+                }}>
                     <animated.div 
                         className="absolute h-full w-full" 
                         style={{
@@ -428,7 +444,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                             </div>
                         </div>
                         <div className="absolute top-0 left-0 h-full w-full flex justify-center items-center">
-                            <div className={`overflow-hidden flex-col flex border ease-in border-[5px] bg-[#B053AA] rounded-[50%] h-full w-full`}>
+                            <div className={`overflow-hidden flex-col flex border ease-in border-[5px] bg-[#7a4f9b] rounded-[50%] h-full w-full`}>
                                 <div className="h-[70%] overflow-hidden "> 
                                     <Lottie options={defaultOptions} height="150%" width="100%" />
                                 </div>
@@ -450,7 +466,6 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
             */}
             <div className="absolute flex justify-center
              w-[260px] h-[260px] xs:w-[400px] xs:h-[400px] lg:w-[530px] lg:h-[530px] 4xl:w-[1320px] 4xl:h-[1320px] my-4 ">
-
                 <div className="absolute top-[-20%] h-[40%] w-[150%] flex justify-center items-center  ">
                     <div className=" relative bg-[url('/jackpotWheel/banner-small.png')] bg-cover bg-center flex flex-col font-ibmPlexMono 
                         top-[-65px] xs:top-[-90px] lg:top-[-90px] 4xl:top-[-110px] 

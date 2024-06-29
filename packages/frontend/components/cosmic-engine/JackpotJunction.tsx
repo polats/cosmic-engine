@@ -79,6 +79,14 @@ export const JackpotJunction = () => {
     });
 
     useEffect(() => {
+        if(prizeWon && prizeWon.prizeType !== '0'){
+            setIsReroll(true);
+        } else {
+            setIsReroll(false);
+        }
+    }, [prizeWon]);
+
+    useEffect(() => {
         if(!outcome){
             setPrizeWon(null);
         } else {
@@ -216,7 +224,6 @@ export const JackpotJunction = () => {
                                     <RollButton
                                         isWheelActive={isWheelActive}
                                         isReroll={isReroll}
-                                        handleReroll={handleReroll}
                                         deployedContractData={deployedContractData}
                                         handlePrizeWon={handlePrizeWon}  
                                         handleLoading={handleLoading}
@@ -251,7 +258,7 @@ export const JackpotJunction = () => {
                                     className="spin w-[150px] h-[64px] text-xl text-center mb-[2.25rem]"
                                     onClick={handleRoll}
                                 >
-                                    {loading ? <span className="loading loading-spinner loading-xs"></span> : isReroll && prizeWon ? 'RESPIN' : 'SPIN'}
+                                    {loading ? <span className="loading loading-spinner loading-xs"></span> : isReroll ? 'RESPIN' : 'SPIN'}
                                 </button>                      
                         }
                         </div>
