@@ -189,7 +189,7 @@ export const JackpotJunction = () => {
                 <div className="flex flex-row justify-center items-center text-center pb-[3rem] lg:mb-[1rem] 3xl:mb-[5rem]">
                     <span className="font-bold text-sm ">Small Prize:</span>
                     {
-                        ROLL_COST &&                        
+                        ROLL_COST != undefined &&                        
                             <div className="px-5">{parseInt(formatGwei(ROLL_COST)) * 1.5} GWEI</div>
                     }
                     <span className="font-bold text-sm">Jackpot:</span>
