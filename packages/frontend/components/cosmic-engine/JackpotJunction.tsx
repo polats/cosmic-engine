@@ -169,12 +169,12 @@ export const JackpotJunction = () => {
     }
 
     return (
-        <div className="page-container">
+        <div className="flex flex-col min-h-[100%] h-auto">
         
         {
             // cosmicConsole && 
             deployedContractData && 
-                <div className="flex flex-row justify-center items-center grow-0 text-center pb-[3rem] lg:mb-[1rem] 3xl:mb-[5rem]">
+                <div className="flex flex-row justify-center items-center text-center pb-[3rem] lg:mb-[1rem] 3xl:mb-[5rem]">
                     <span className="font-bold text-sm ">Small Prize:</span>
                     <div className="px-5">{Number(ROLL_COST)*1.5}</div>
                     <span className="font-bold text-sm">Jackpot:</span>
@@ -188,7 +188,7 @@ export const JackpotJunction = () => {
 
         }
 
-            <div className="flex flex-col justify-center items-center h-full min-h-[100%] text-center">
+            <div className="flex flex-col grow justify-center items-center text-center">
                 <div className="flex justify-center items-center mb-2
                     h-[400px] w-[300px] xs:h-[560px] xs:w-[455px] lg:h-[700px] lg:w-[600px] 3xl:w-[950px] 3xl:h-[950px] 4xl:w-[1500px] 4xl:h-[1500px]
                 " >
@@ -209,7 +209,7 @@ export const JackpotJunction = () => {
                 { 
                     deployedContractData &&
                     <div>
-                        <div className="flex flex-col justify-center items-center grow-0 text-center">
+                        <div className="flex flex-col justify-center items-center text-center">
                         {
                             (isOnchain) ? 
                                 <>  
