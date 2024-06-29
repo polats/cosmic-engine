@@ -10,12 +10,13 @@ type BalanceProps = {
   address?: Address;
   className?: string;
   usdMode?: boolean;
+  rawMode?: boolean;
 };
 
 /**
  * Display (ETH & USD) balance of an ETH address.
  */
-export const MediumJackpotBalance = ({ address, className = "", usdMode }: BalanceProps) => {
+export const MediumJackpotBalance = ({ address, className = "", usdMode, rawMode }: BalanceProps) => {
   const { targetNetwork } = useTargetNetwork();
   const price = useGlobalState(state => state.nativeCurrencyPrice);
   const {
@@ -33,6 +34,18 @@ export const MediumJackpotBalance = ({ address, className = "", usdMode }: Balan
       setDisplayUsdMode(prevMode => !prevMode);
     }
   };
+
+  if(rawMode){
+    return (
+      <>
+        { displayUsdMode ? 
+          `$${(formattedBalance * price).toFixed(2)}`
+        :
+          `${targetNetwork.nativeCurrency.symbol}`
+        }
+      </>
+    )
+  }
 
   if (!address || isLoading || balance === null) {
     return (
@@ -57,7 +70,7 @@ export const MediumJackpotBalance = ({ address, className = "", usdMode }: Balan
 
   return (
     <button
-      className={`btn btn-sm btn-ghost flex flex-col font-normal items-center hover:bg-transparent ${className}`}
+      className={`btn btn-sm btn-ghost flex flex-col font-ibmPlexMono font-normal items-center hover:bg-transparent ${className}`}
       onClick={toggleBalanceMode}
     >
       <div className="w-full flex items-center justify-center">

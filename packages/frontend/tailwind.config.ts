@@ -93,6 +93,7 @@ module.exports = {
       fontFamily: {
         jost: ["Jost", "sans-serif"],
         playwriteNZ: ['Playwrite NZ', 'cursive'], 
+        ibmPlexMono: ['IBM Plex Mono', 'monospace'],
       },
     },
   },
