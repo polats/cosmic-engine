@@ -8,8 +8,6 @@ import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 import { Contract, ContractName } from "~~/utils/scaffold-eth/contract";
 import { useSpring, useSpringRef, animated, config, easings } from '@react-spring/web';
 import { Prize } from './JackpotJunction';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import { Pie } from 'react-chartjs-2';
 import { confetti } from "@tsparticles/confetti";
 import Image from 'next/image';
 import "~~/styles/roll-button.scss";
@@ -19,8 +17,6 @@ import Lottie from 'react-lottie';
 import Loader from '~~/components/cosmic-engine/AcceptLoader';
 import { JackpotBalance } from "./JackpotBalance";
 import { MediumJackpotBalance } from "./MediumJackpotBalance";
-
-ChartJS.register(ArcElement, Tooltip, Legend);
 
 interface JackpotWheelProps {
     wheelState: string,
@@ -83,7 +79,6 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
             const updateScreenSize = () => {
                 setCurrentScreenSize(window.innerWidth);
             };
-
             updateScreenSize();
 
             window.addEventListener('resize', updateScreenSize);
@@ -92,7 +87,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
     }, []);
     
     const getScreenBreakpoint = () => {
-        if (currentScreenSize === null) return 'default';
+        if (currentScreenSize === null) return 'none';
         const width = currentScreenSize;
         if( width >= 475  && width < 1024){
             return 'xs';
@@ -527,14 +522,16 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                         className="relative z-[0] bg-[#493313] w-full h-full rounded-full border-black border-[5px]" 
                         style={{ 
                             width: `${
-                                getScreenBreakpoint() === 'def'  ? '315' 
+                                getScreenBreakpoint() === 'none' ? '0'
+                                : getScreenBreakpoint() === 'def'  ? '315' 
                                 : getScreenBreakpoint() === 'xs' ? '480'
                                 : getScreenBreakpoint() === 'lg' ? "600" 
                                 : getScreenBreakpoint() === '3xl' ? "950"
                                 : "1500" //4xl and above
                             }px`, 
                             height: `${
-                                getScreenBreakpoint() === 'def' ? '315' 
+                                getScreenBreakpoint() === 'none' ? '0'
+                                : getScreenBreakpoint() === 'def' ? '315' 
                                 : getScreenBreakpoint() === 'xs'? '480' 
                                 : getScreenBreakpoint() === 'lg'? "625" 
                                 : getScreenBreakpoint() === '3xl' ? "950"
@@ -543,7 +540,8 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                         }}
                     >
                         <Lightbulbs count={lightbulbCount} radius={(
-                            getScreenBreakpoint() === 'def' ? 
+                            getScreenBreakpoint() === 'none' ? '0'
+                            : getScreenBreakpoint() === 'def' ? 
                                 307-40 
                             :  getScreenBreakpoint() === 'xs'? 
                                 470-60 
