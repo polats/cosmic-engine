@@ -174,7 +174,7 @@ export const JackpotJunction = () => {
         {
             // cosmicConsole && 
             deployedContractData && 
-                <div className="flex flex-row justify-center items-center grow-0 text-center">
+                <div className="flex flex-row justify-center items-center grow-0 text-center pb-[3rem]">
                     <span className="font-bold text-sm ">Small Prize:</span>
                     <div className="px-5">{Number(ROLL_COST)*1.5}</div>
                     <span className="font-bold text-sm">Jackpot:</span>
@@ -190,7 +190,9 @@ export const JackpotJunction = () => {
 
             <div className="flex flex-col justify-center items-center min-h-[100%] text-center">
                 {/* TODO: Add array for prize pool to make wheel dynamic  */}
-                <div className="h-[400px] w-[300px] xs:h-[560px] xs:w-[455px] lg:h-[700px] lg:w-[600px] flex justify-center items-center pt-[5rem] mb-2" >
+                <div className="flex justify-center items-center mb-2
+                    h-[400px] w-[300px] xs:h-[560px] xs:w-[455px] lg:h-[700px] lg:w-[600px] xl:h-[700px] xl:w-[700px] 3xl:w-[950px] 3xl:h-[950px] 4xl:w-[1500px] 4xl:h-[1500px]
+                " >
                     <JackpotWheel 
                         wheelState={wheelState}
                         isWheelActive={isWheelActive}
