@@ -26,6 +26,7 @@ export const JackpotBalance = ({ address, className = "", usdMode, rawMode }: Ba
   } = useWatchBalance({
     address,
   });
+  const formattedBalance = balance ? Number(formatEther(balance.value))/2 : 0;
 
   const [displayUsdMode, setDisplayUsdMode] = useState(price > 0 ? Boolean(usdMode) : false);
 
@@ -66,8 +67,6 @@ export const JackpotBalance = ({ address, className = "", usdMode, rawMode }: Ba
       </div>
     );
   }
-
-  const formattedBalance = balance ? Number(formatEther(balance.value))/2 : 0;
 
   return (
     <button

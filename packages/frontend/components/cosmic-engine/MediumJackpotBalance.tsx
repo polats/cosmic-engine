@@ -26,6 +26,7 @@ export const MediumJackpotBalance = ({ address, className = "", usdMode, rawMode
   } = useWatchBalance({
     address,
   });
+  const formattedBalance = balance ? Number(formatEther(balance.value))/64 : 0;
 
   const [displayUsdMode, setDisplayUsdMode] = useState(price > 0 ? Boolean(usdMode) : false);
 
@@ -66,7 +67,6 @@ export const MediumJackpotBalance = ({ address, className = "", usdMode, rawMode
     );
   }
 
-  const formattedBalance = balance ? Number(formatEther(balance.value))/64 : 0;
 
   return (
     <button
