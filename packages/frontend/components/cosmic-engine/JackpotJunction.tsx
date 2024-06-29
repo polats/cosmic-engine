@@ -180,7 +180,7 @@ export const JackpotJunction = () => {
         <div className="flex flex-col min-h-[100%] h-auto overflow-x-hidden">
         
         {
-            // cosmicConsole && 
+            cosmicConsole && 
             deployedContractData && 
                 <div className="flex flex-row justify-center items-center text-center pb-[3rem] lg:mb-[1rem] 3xl:mb-[5rem]">
                     <span className="font-bold text-sm ">Small Prize:</span>

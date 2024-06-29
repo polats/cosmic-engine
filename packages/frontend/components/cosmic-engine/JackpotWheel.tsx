@@ -118,6 +118,8 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
         setPrizeAngle(getAngle())
     }, [prizeWon]);
 
+    
+
     const handleWrite = async () => {
         if (writeContractAsync && deployedContractData) {
         try {
@@ -478,8 +480,8 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                             Small
                         </p>
                         <div className="flex flex-wrap overflow-hidden w-full justify-center">
-                            <div className="text-[10px] xs:text-lg 4xl:text-5xl px-2">
-                                {`${prizeSmall} ETH`}
+                            <div className="text-[10px] xs:text-lg 4xl:text-5xl px-2 text-white">
+                                {`${prizeSmall} WEI`}
                             </div>
                         </div>
                     </div>
@@ -490,11 +492,14 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                         pt-[0.3rem] 4xl:pt-[1.2rem]
                     ">
                         <p className="font-semibold text-xs xs:text-sm lg:text-base 4xl:text-5xl p-0 m-0 text-black">
-                            JACKPOT
+                            JACKPOT 
                         </p>
                         <div className="flex w-full justify-center">
                             <div className="font-bold text-black text-sm xs:text-xl lg:text-3xl 4xl:text-6xl">
-                                <JackpotBalance rawMode={true} />
+                                { 
+                                    deployedContractData &&
+                                    <JackpotBalance address={deployedContractData.address} className="px-5 h-8 min-h-[0.375rem]"/>
+                                }
                             </div>
                         </div>
                     </div>
@@ -510,7 +515,10 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                         </p>
                         <div className="flex flex-wrap overflow-hidden w-full justify-center">
                             <div className="text-[10px] xs:text-lg 4xl:text-5xl px-2">
-                                <MediumJackpotBalance rawMode={true}/>
+                            { 
+                                    deployedContractData &&
+                                    <MediumJackpotBalance address={deployedContractData.address} />
+                            }
                             </div>
                         </div>
                     </div>
