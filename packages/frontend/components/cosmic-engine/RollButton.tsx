@@ -14,7 +14,6 @@ import "~~/styles/roll-button.scss";
 
 type RollButtonProps = {
   isReroll: boolean;
-  handleReroll: (val: boolean) => void;
   deployedContractData?: Contract<ContractName>;
   buttonLabel: string;
   isWheelActive: boolean;
@@ -32,7 +31,6 @@ type RollButtonProps = {
 
 export const RollButton = ({
   isReroll,
-  handleReroll,
   deployedContractData,
   buttonLabel,
   handleIsSpinning,
