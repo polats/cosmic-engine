@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { formatGwei } from 'viem';
 
 interface DegenCardProps {
     type: string;
@@ -64,7 +65,7 @@ const DegenCard = ({type, degen}: DegenCardProps) => {
                     }}
                 >
                     <h3 className="text-lg font-jost font-semibold p-0 m-0">
-                    {`${degen} WEI`}
+                    {`${formatGwei(BigInt(degen))} GWEI`}
                     </h3>
                 </div>
             </div>
