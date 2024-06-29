@@ -22,7 +22,7 @@ export default function NavigationPage ({searchParams}: {searchParams: {tab: str
         <div className="flex w-full justify-center p-4">
             <div className="w-full z-10 bg-[#E292DD] shadow-lg rounded-lg p-2 sm:p-4 flex justify-center items-center gap-x-2 sm:gap-x-4 lg:-gap-x-6">
                 {tabs.map((currentTab, index) => (
-                    <div key={currentTab.id} className={`px-4 ${index < tabs.length - 1 ? 'border-r':''}`}>
+                    <div key={currentTab.id} className={`px-4 ${index === 1 ? 'border-r border-l':''}`}>
                         <button
                             key={currentTab.id}
                             className={`flex justify-center items-center px-4 py-2 rounded ${
@@ -30,7 +30,12 @@ export default function NavigationPage ({searchParams}: {searchParams: {tab: str
                             }`}
                             onClick={() => router.push(`/?tab=${currentTab.title}`)}
                         >
-                            <Image src={currentTab.icon} alt={`${currentTab.title} icon`} width={24} height={24} />
+                            { index === 1 ?
+                            <Image src={currentTab.icon} alt={`${currentTab.title} icon`} width={60} height={60} />
+                            :
+                            <Image src={currentTab.icon} alt={`${currentTab.title} icon`} width={40} height={40} />
+
+                            }
                         </button>
                     </div>
                 ))}
