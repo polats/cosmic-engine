@@ -290,7 +290,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
         };
     
         return (
-            <svg>
+            <svg viewBox="0 0 100 100" width="100%" height="100%">
                     {renderPaths()}
                     {renderTexts()}
             </svg>
