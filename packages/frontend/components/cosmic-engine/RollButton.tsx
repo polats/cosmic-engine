@@ -21,6 +21,7 @@ type RollButtonProps = {
   handleLoading: (val: boolean)=> void;
   handlePrizeWon: (prize: Prize | null) => void;
   handleWheelActivity: (val: boolean) => void;
+  handleIsTransactionFinished: (val: boolean) => void;
   onChange: () => void;
   triggerRefreshDisplayVariables: () => void;
   rerollCost?: string;
@@ -34,6 +35,7 @@ export const RollButton = ({
   isReroll,
   deployedContractData,
   buttonLabel,
+  handleIsTransactionFinished,
   handleIsSpinning,
   isWheelActive,
   handleWheelActivity,
@@ -59,7 +61,7 @@ export const RollButton = ({
       
       try {
           let actualCost = isReroll ? rerollCost : payableValue;
-        
+          handleIsTransactionFinished(false);
           handleWheelActivity(true); // start turning wheel
           handleLoading(true);
           const makeWriteWithParams = async() =>
@@ -84,6 +86,7 @@ export const RollButton = ({
             toast.error(parsedError);
           }
           handleLoading(false);
+          handleIsTransactionFinished(true);
           handleWheelActivity(false);
           handlePrizeWon(null);
         }
@@ -100,6 +103,7 @@ export const RollButton = ({
         } catch (error) {
           toast.error("Problem occured while rolling, please try again.");
           handleLoading(false)
+          handleIsTransactionFinished(true);
           handleWheelActivity(false);
         }
 
