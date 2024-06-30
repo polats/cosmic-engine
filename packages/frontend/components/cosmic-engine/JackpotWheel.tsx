@@ -29,6 +29,7 @@ interface JackpotWheelProps {
     handleWheelState: (val: string) => void;
     handlePrizeWon: (prize:Prize | null) => void;
     handleIsTransactionFinished: (val: boolean) => void;
+    handleIsAccepting: (val:boolean) => void ;
     deployedContractData: Contract<ContractName> | null;
     isWheelActive: boolean;
     handleWheelActivity: (val: boolean) => void;
@@ -43,6 +44,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
         prizeSmall,
         isReroll,
         handleWheelActivity,
+        handleIsAccepting,
         handleWheelState,
         handlePrizeWon,
         handleReroll,
@@ -109,6 +111,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
     }
 
     const handleAccept = () => {
+        handleIsAccepting(true);
         setIsShaking(true);
         confetti({
             particleCount: 200,
@@ -332,7 +335,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
         setIsLightActive(false);
     }
 
-    const acceptPrize = () => {
+    const acceptPrize = async () => {
         handleWrite();
         handlePrizeWon(null);
         handleWheelState('notMoving');
@@ -340,6 +343,8 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
         setInitialLoop(true);
         handleReroll(false);
         setIsLightActive(false);
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        handleIsAccepting(false);
     }
     /*
         Wheel Active: False (Undergoing animation)

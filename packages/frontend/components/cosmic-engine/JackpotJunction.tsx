@@ -54,6 +54,7 @@ export const JackpotJunction = () => {
     const [ isTransactionFinished, setIsTransactionFinished ] = useState(true);
     const [ prizeWon, setPrizeWon ] = useState<Prize | null>(null);
     const [ isReroll, setIsReroll ] = useState(false);
+    const [ isAccepting, setIsAccepting ] = useState(false);
 
     const [refreshDisplayVariables, triggerRefreshDisplayVariables] = useReducer(value => !value, false);
     const { data: deployedContractData, isLoading: deployedContractLoading } = useDeployedContractInfo(JJ_CONTRACT_NAME);
@@ -88,7 +89,6 @@ export const JackpotJunction = () => {
         functionName: "CostToReroll",
     });
 
-
     useEffect(() => {
         if(prizeWon && prizeWon.prizeType !== '0'){
             setIsReroll(true);
@@ -122,12 +122,15 @@ export const JackpotJunction = () => {
 
     const { showAnimation } = useAnimationConfig(outcome);
 
+    const handleIsAccepting = (val:boolean) => {
+        setIsAccepting(val)
+    }
+
     const handleIsTransactionFinished = (val:boolean) => {
         setIsTransactionFinished(val)
     }
 
-    const handleWheelActivity = async (val: boolean) => {
-        await new Promise(resolve => setTimeout(resolve, 2000));
+    const handleWheelActivity = (val: boolean) => {
         setIsWheelActive(val);
     }
 
@@ -227,6 +230,7 @@ export const JackpotJunction = () => {
                         isReroll={isReroll}
                         prizeSmall={ROLL_COST}
                         handleWheelActivity={handleWheelActivity}
+                        handleIsAccepting={handleIsAccepting}
                         handleWheelState={handleWheelState}
                         handlePrizeWon={handlePrizeWon}
                         handleReroll={handleReroll}
@@ -247,6 +251,7 @@ export const JackpotJunction = () => {
                                         deployedContractData={deployedContractData}
                                         handlePrizeWon={handlePrizeWon}  
                                         handleLoading={handleLoading}
+                                        isAccepting={isAccepting}
                                         buttonLabel="SPIN"
                                         handleIsTransactionFinished={handleIsTransactionFinished}
                                         triggerRefreshDisplayVariables={triggerRefreshDisplayVariables}
