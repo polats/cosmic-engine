@@ -246,8 +246,8 @@ export const JackpotJunction = () => {
                                         handleWheelActivity={handleWheelActivity}
                                         outcome={outcome}
                                         loading={loading}
-                                        rerollCost={REROLL_COST?.toString()} 
-                                        payableValue={ROLL_COST?.toString()}
+                                        rerollCost={REROLL_COST?.toString() ?? ''} 
+                                        payableValue={ROLL_COST?.toString() ?? ''}
                                         onChange={() => {}}
                                     />
                                     {/* {
