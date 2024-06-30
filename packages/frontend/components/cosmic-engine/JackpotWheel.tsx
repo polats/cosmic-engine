@@ -292,18 +292,15 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
         return (
             <svg viewBox="0 0 100 100">
                 <circle cx="50" cy="50" r="50" fill='black' />
-                <React.Fragment>
                     <defs>
                         {prizes.map((prize, index) => (
                             <clipPath key={`clipPath${index}`} id={`sliceClip${index}`}>
                                 <path d={createSlicePath(index * angle, (index + 1) * angle)} />
                             </clipPath>
                         ))}
-                        <pattern id="feltTexture" href="feltTexture.svg#feltTexture" />
                     </defs>
                     {renderPaths()}
                     {renderTexts()}
-                </React.Fragment>
             </svg>
         );
     };
