@@ -126,7 +126,8 @@ export const JackpotJunction = () => {
         setIsTransactionFinished(val)
     }
 
-    const handleWheelActivity = (val: boolean) => {
+    const handleWheelActivity = async (val: boolean) => {
+        await new Promise(resolve => setTimeout(resolve, 2000));
         setIsWheelActive(val);
     }
 
