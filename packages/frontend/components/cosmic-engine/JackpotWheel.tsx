@@ -273,13 +273,13 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                 return (
                     <text
                         key={index}
+                        className="font-playwriteNZ font-bold"
                         x="10"
                         y="25" // Adjust this to center vertically inside the slice
                         textAnchor="middle"
                         fill="white"
                         fontSize={prize.type === 2 ? "4" : "5"} // Adjust font size as needed
                         transform={`translate(50,50) rotate(${(startAngle - (angle/2))}) rotate(${189+angle}) translate(-40,-20)`}
-                        style={{ fontFamily: 'Playwrite NZ, cursive', fontWeight: '700' }}
                     >
                         {prize.type === 0 ? 'Bust'
                             : prize.type === 1 ? 'Item'
@@ -528,7 +528,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                 <animated.div
                     className="
                         z-[10] sm:border sm:border-[black] sm:border-[5px] relative flex justify-center items-center my-4 rounded-[50%]
-                        w-[400px] h-[400px] w-[250px] h-[250px] xs:w-[400px] xs:h-[400px] lg:w-[530px] lg:h-[530px] 4xl:w-[1320px] 4xl:h-[1320px]
+                        w-[250px] h-[250px] w-[250px] h-[250px] xs:w-[400px] xs:h-[400px] lg:w-[530px] lg:h-[530px] 4xl:w-[1320px] 4xl:h-[1320px]
                     "
                     style={{ 
                         transform: rotateSpring.rotation.to((r) => {
