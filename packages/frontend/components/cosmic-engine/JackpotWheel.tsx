@@ -291,7 +291,8 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
     
         return (
             <svg viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="50" fill='black' />
+                {
+                    /*
                     <defs>
                         {prizes.map((prize, index) => (
                             <clipPath key={`clipPath${index}`} id={`sliceClip${index}`}>
@@ -299,6 +300,8 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                             </clipPath>
                         ))}
                     </defs>
+                    */
+                }
                     {renderPaths()}
                     {renderTexts()}
             </svg>
@@ -531,7 +534,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                 <animated.div
                     className="
                         z-[10] sm:border sm:border-[black] sm:border-[5px] relative flex justify-center items-center my-4 rounded-[50%]
-                        w-[250px] h-[250px] xs:w-[400px] xs:h-[400px] lg:w-[530px] lg:h-[530px] 4xl:w-[1320px] 4xl:h-[1320px]
+                        w-[400px] h-[400px] w-[250px] h-[250px] xs:w-[400px] xs:h-[400px] lg:w-[530px] lg:h-[530px] 4xl:w-[1320px] 4xl:h-[1320px]
                     "
                     style={{ 
                         transform: rotateSpring.rotation.to((r) => {
@@ -541,6 +544,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                 >
                     <CircleWithSlices />
                 </animated.div>
+                
                 <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center">
                     <div 
                         className="relative z-[0] bg-[#493313] w-full h-full rounded-full border-black border-[5px]" 
