@@ -502,7 +502,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                             <div className="font-bold text-black text-sm xs:text-xl lg:text-3xl 4xl:text-6xl">
                                 { 
                                     deployedContractData &&
-                                    <JackpotBalance address={deployedContractData.address} rawMode={true} />
+                                    <JackpotBalance address={deployedContractData.address} />
                                 }
                             </div>
                         </div>
@@ -518,12 +518,10 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
                             Medium
                         </p>
                         <div className="flex flex-wrap overflow-hidden w-full justify-center">
-                            <div className="text-[10px] xs:text-lg 4xl:text-5xl px-2 text-white">
                             { 
                                     deployedContractData &&
-                                    <MediumJackpotBalance address={deployedContractData.address} rawMode={true} />
+                                    <MediumJackpotBalance address={deployedContractData.address} />
                             }
-                            </div>
                         </div>
                     </div>
                 </div>

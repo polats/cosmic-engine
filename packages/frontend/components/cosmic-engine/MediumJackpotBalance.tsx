@@ -75,14 +75,15 @@ export const MediumJackpotBalance = ({ address, className = "", usdMode, rawMode
       <div className="w-full flex items-center justify-center text-white">
         {displayUsdMode ? (
           <>
-            <span className="text-[0.8em] font-bold mr-1">$</span>
+            <span className="text-[10px] xs:text-[.9rem] lg:text-base 4xl:text-5xl px-2 text-white">$</span>
             <span>{(formattedBalance * price).toFixed(2)}</span>
           </>
         ) : (
-          <>
-            <span className="text-[1em]">{formattedBalance.toFixed(4)}</span>
-            <span className="text-[1em] font-bold ml-1">{targetNetwork.nativeCurrency.symbol}</span>
-          </>
+          <div className="flex flex-wrap overflow-hidden w-full justify-center">
+            <div className="text-[10px] xs:text-[.9rem] lg:text-base 4xl:text-5xl px-2 text-white">
+              {`${formattedBalance.toFixed(4)} ${targetNetwork.nativeCurrency.symbol}`}
+            </div>
+          </div>
         )}
       </div>
     </button>

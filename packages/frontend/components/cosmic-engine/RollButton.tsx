@@ -23,7 +23,7 @@ type RollButtonProps = {
   handleWheelActivity: (val: boolean) => void;
   onChange: () => void;
   triggerRefreshDisplayVariables: () => void;
-  rerollCost: string;
+  rerollCost?: string;
   args?: any;
   payableValue?: string;
   loading: boolean;
