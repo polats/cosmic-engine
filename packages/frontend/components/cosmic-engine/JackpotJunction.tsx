@@ -51,6 +51,7 @@ export const JackpotJunction = () => {
 
     const [ wheelState, setWheelState ] = useState('notMoving');
     const [ isWheelActive, setIsWheelActive ] = useState(false);
+    const [ isTransactionFinished, setIsTransactionFinished ] = useState(true);
     const [ prizeWon, setPrizeWon ] = useState<Prize | null>(null);
     const [ isReroll, setIsReroll ] = useState(false);
 
@@ -100,7 +101,7 @@ export const JackpotJunction = () => {
         if(!outcome){
             setPrizeWon(null);
         } else {
-            if(isWheelActive){
+            if(!isTransactionFinished){
                 const outcomeIndex = outcome[1].toString();
                 const outcomeValue = outcome[2].toString();
                 setPrizeWon({
@@ -120,6 +121,10 @@ export const JackpotJunction = () => {
       }, [blockNumber])
 
     const { showAnimation } = useAnimationConfig(outcome);
+
+    const handleIsTransactionFinished = (val:boolean) => {
+        setIsTransactionFinished(val)
+    }
 
     const handleWheelActivity = (val: boolean) => {
         setIsWheelActive(val);
@@ -217,6 +222,7 @@ export const JackpotJunction = () => {
                         wheelState={wheelState}
                         isWheelActive={isWheelActive}
                         prizeWon={prizeWon}
+                        handleIsTransactionFinished={handleIsTransactionFinished}
                         isReroll={isReroll}
                         prizeSmall={ROLL_COST}
                         handleWheelActivity={handleWheelActivity}
@@ -241,6 +247,7 @@ export const JackpotJunction = () => {
                                         handlePrizeWon={handlePrizeWon}  
                                         handleLoading={handleLoading}
                                         buttonLabel="SPIN"
+                                        handleIsTransactionFinished={handleIsTransactionFinished}
                                         triggerRefreshDisplayVariables={triggerRefreshDisplayVariables}
                                         handleIsSpinning={handleIsSpinning}
                                         handleWheelActivity={handleWheelActivity}

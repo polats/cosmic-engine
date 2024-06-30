@@ -28,6 +28,7 @@ interface JackpotWheelProps {
     handleLoading: (val:boolean) => void;
     handleWheelState: (val: string) => void;
     handlePrizeWon: (prize:Prize | null) => void;
+    handleIsTransactionFinished: (val: boolean) => void;
     deployedContractData: Contract<ContractName> | null;
     isWheelActive: boolean;
     handleWheelActivity: (val: boolean) => void;
@@ -37,6 +38,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
     const {
         isWheelActive,
         wheelState,
+        handleIsTransactionFinished,
         prizeWon, 
         prizeSmall,
         isReroll,
@@ -310,6 +312,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
         handlePrizeWon(null);
         setIsPrizeVisible(false);
         handleWheelState('notMoving');
+        handleIsTransactionFinished(true);
         setInitialLoop(true);
         handleReroll(false);
         setIsLightActive(false);
@@ -319,6 +322,7 @@ export const JackpotWheel = (props:JackpotWheelProps) => {
         handleWrite();
         handlePrizeWon(null);
         handleWheelState('notMoving');
+        handleIsTransactionFinished(true);
         setInitialLoop(true);
         handleReroll(false);
         setIsLightActive(false);
