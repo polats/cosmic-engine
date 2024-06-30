@@ -90,7 +90,7 @@ export const JackpotJunction = () => {
     });
 
     useEffect(() => {
-        if(prizeWon && prizeWon.prizeType !== '0'){
+        if(prizeWon){
             setIsReroll(true);
         } else {
             setIsReroll(false);
