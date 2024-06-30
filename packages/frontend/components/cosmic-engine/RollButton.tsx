@@ -98,7 +98,7 @@ export const RollButton = ({
             });        
           }
         } catch (error) {
-          // toast.error(error);
+          toast.error("Problem occured while rolling, please try again.");
           handleLoading(false)
           handleWheelActivity(false);
         }
