@@ -62,6 +62,7 @@ export const RollButton = ({
       try {
           let actualCost = isReroll ? rerollCost : payableValue;
           handleIsTransactionFinished(false);
+          handlePrizeWon(null);
           handleWheelActivity(true); // start turning wheel
           handleLoading(true);
           const makeWriteWithParams = async() =>
@@ -75,7 +76,6 @@ export const RollButton = ({
               value: actualCost ? BigInt(actualCost) : BigInt("0"), 
           });
           const res = await writeTxn(makeWriteWithParams);
-          handlePrizeWon(null);
         } catch (error) {
           const parsedError = getParsedError(error);
           if (parsedError.includes("Sender doesn't have enough funds"))
